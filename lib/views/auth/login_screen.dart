@@ -15,9 +15,11 @@ class LoginScreen extends StatelessWidget {
               Text(
                 'Welcome ,',
                 style: TextStyle(
-                  color: Constants.pageNameColor,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 50,
+                 fontWeight: FontWeight.w900,
+                  fontFamily: Constants.primaryFont,
+
                 ),
               ),
               const SizedBox(height: 10),
