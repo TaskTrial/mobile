@@ -3,9 +3,7 @@ class UserModel {
   String? email;
   String? uid;
   String? role;
-
   bool? isActive;
-
   UserModel({this.name, this.email, this.uid, this.role,this.isActive});
   UserModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
