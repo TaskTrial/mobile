@@ -4,21 +4,23 @@ class LoginController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final isLoading = false.obs;
-  final isPasswordVisible = false.obs;
+  final isPasswordVisible = true.obs;
   final rememberMe = false.obs;
   final formKey = GlobalKey<FormState>();
-  @override void onClose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.onClose();
-  }
+
+  // @override void onClose() {
+  //   emailController.dispose();
+  //   passwordController.dispose();
+  //   super.onClose();
+  // }
+
   bool toggleRememberMe() {
 
     rememberMe.value = !rememberMe.value;
-    print('Remember Me: ${rememberMe.value}');
     return rememberMe.value;
 
   }
+
   void validateEmail(String value) {
     if (value.isEmpty) {
       Get.snackbar('Error', 'Email cannot be empty');

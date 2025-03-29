@@ -8,14 +8,15 @@ import 'package:task_trial/widgets/my_text_field.dart';
 import '../../widgets/google_sign_in_ui.dart';
 
 class LoginScreen extends StatelessWidget {
-   LoginScreen({super.key});
+ const LoginScreen({super.key});
 
- final LoginController loginController = LoginController();
+
   @override
   Widget build(BuildContext context) {
 
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    
     return Scaffold(
       body: Container(
         height: height,
@@ -56,14 +57,21 @@ class LoginScreen extends StatelessWidget {
                     hintText: 'mail@abc.com',
                   ),
                   const SizedBox(height: 15),
-                  MyTextField(
+                  GetX<LoginController>(
+                    init: LoginController(),
+                    builder: (controller) => MyTextField(
                     title: 'Password',
-                    hintText: '*********',
-                  ),
+                    hintText: '***********',
+                    isPassword: true,
+                    obscureText: controller.isPasswordVisible.value,
+                      onPressed: () {
+                        controller.togglePasswordVisibility();
+                      },
+                  ),),
                   const SizedBox(height: 10),
                   // forgot password
                   _forgotPassword(),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 40),
                   AuthButton(onPressed: () {}, title: 'Login'),
                   const SizedBox(height: 10),
                   // sign up
@@ -93,7 +101,7 @@ class LoginScreen extends StatelessWidget {
     return Text(
       'Login to your Account',
       style: TextStyle(
-        fontSize: 22,
+        fontSize: 26,
         fontWeight: FontWeight.bold,
         fontFamily: Constants.primaryFont,
         color: Constants.pageNameColor,
