@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/controllers/login_controller.dart';
 import 'package:task_trial/utils/constants.dart';
+import 'package:task_trial/views/auth/sign_up_screen.dart';
 import 'package:task_trial/widgets/auth_button.dart';
 import 'package:task_trial/widgets/my_text_field.dart';
 
@@ -27,57 +28,56 @@ class LoginScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: SizedBox(
               height: height,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: height * 0.05,
+              child: GetX<LoginController>(
+                init: LoginController(),
+                builder: (controller) => Form(
+                  key: controller.formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: height * 0.05,
+                      ),
+                      // welcome text
+                      _welcome(),
+                      SizedBox(
+                        height: height * 0.05,
+                      ),
+                      // login message
+                      _loginMessage(),
+                      const SizedBox(height: 5),
+                      // login message hint
+                      _loginMessageHint(),
+                      const SizedBox(height: 30),
+                      // google sign in
+                      const GoogleSignInUI(),
+                      const SizedBox(height: 20),
+                      // or sign in with email
+                      _theDivider(width),
+                      const SizedBox(height: 20),
+                      // email and password text fields
+                      _emailField(controller),
+                      const SizedBox(height: 15),
+                      _passwordField(controller),
+                      const SizedBox(height: 10),
+                      // forgot password
+                      _forgotPassword(),
+                      const SizedBox(height: 40),
+                      AuthButton(onPressed: () {
+                        if (controller.formKey.currentState!.validate()) {
+                          Get.snackbar('Success', 'Go To Dashboard');
+                        }
+                  
+                      }, title: 'Login'),
+                      const SizedBox(height: 10),
+                      // sign up
+                      _signUp()
+                    ],
                   ),
-                  // welcome text
-                  _welcome(),
-                  SizedBox(
-                    height: height * 0.05,
-                  ),
-                  // login message
-                  _loginMessage(),
-                  const SizedBox(height: 5),
-                  // login message hint
-                  _loginMessageHint(),
-                  const SizedBox(height: 30),
-                  // google sign in
-                  const GoogleSignInUI(),
-                  const SizedBox(height: 20),
-                  // or sign in with email
-                  _theDivider(width),
-                  const SizedBox(height: 20),
-                  // email and password text fields
-                  MyTextField(
-                    title: 'Email',
-                    hintText: 'mail@abc.com',
-                  ),
-                  const SizedBox(height: 15),
-                  GetX<LoginController>(
-                    init: LoginController(),
-                    builder: (controller) => MyTextField(
-                    title: 'Password',
-                    hintText: '***********',
-                    isPassword: true,
-                    obscureText: controller.isPasswordVisible.value,
-                      onPressed: () {
-                        controller.togglePasswordVisibility();
-                      },
-                  ),),
-                  const SizedBox(height: 10),
-                  // forgot password
-                  _forgotPassword(),
-                  const SizedBox(height: 40),
-                  AuthButton(onPressed: () {}, title: 'Login'),
-                  const SizedBox(height: 10),
-                  // sign up
-                  _signUp()
-                ],
-              ),
+                ),
+              ),)
             ),
           ),
         ),
@@ -85,7 +85,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  _welcome() {
+   Widget _welcome() {
     return Text(
       'Welcome ,',
       style: TextStyle(
@@ -96,7 +96,6 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
-
   _loginMessage() {
     return Text(
       'Login to your Account',
@@ -108,7 +107,6 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
-
   _loginMessageHint() {
     return Text(
       'See what is going on with your business',
@@ -120,7 +118,6 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
-
   _theDivider(double width) {
     return SizedBox(
       height: 20,
@@ -136,7 +133,43 @@ class LoginScreen extends StatelessWidget {
       )),
     );
   }
-
+  _emailField(LoginController controller) {
+    return  MyTextField(
+      title: 'Email',
+      hintText: 'mail@abc.com',
+      controller: controller.emailController,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter your email';
+        }
+        if (!GetUtils.isEmail(value)) {
+          return 'Please enter a valid email';
+        }
+        return null;
+      },
+    );
+  }
+  _passwordField(LoginController controller) {
+    return MyTextField(
+      title: 'Password',
+      hintText: '***********',
+      isPassword: true,
+      obscureText: controller.isPasswordVisible.value,
+      controller: controller.passwordController,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter your password';
+        }
+        if (value.length < 6) {
+          return 'Password must be at least 6 characters';
+        }
+        return null;
+      },
+      onPressed: () {
+        controller.togglePasswordVisibility();
+      },
+    );
+  }
   _forgotPassword() {
     return GetX<LoginController>(
       init: LoginController(),
@@ -184,7 +217,13 @@ class LoginScreen extends StatelessWidget {
                   fontFamily: Constants.primaryFont,
                   fontWeight: FontWeight.bold)),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Get.offAll(
+                () => const SignUpScreen(),
+                transition: Transition.rightToLeft,
+                duration: const Duration(milliseconds: 500),
+              );
+            },
             style: TextButton.styleFrom(
               backgroundColor: Colors.transparent,
               padding: const EdgeInsets.only(left: 7),
