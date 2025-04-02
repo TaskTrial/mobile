@@ -1,24 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:task_trial/utils/constants.dart';
+import 'package:task_trial/widgets/custom_drop_down_menu.dart';
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Constants.backgroundColor,
       body: Container(
-        color: Constants.backgroundColor,
-        child: Center(
-          child: Text(
-            'Welcome to the Dashboard Screen',
-            style: TextStyle(
-              fontSize: 24,
-              color: Colors.white,
-              fontFamily: Constants.primaryFont,
-              fontWeight: FontWeight.bold,
+        color: Colors.transparent,
+        padding: const EdgeInsets.only(left: 16.0,right: 16,top: 40,bottom: 16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+          Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Overall',style: TextStyle(
+                    fontFamily: Constants.primaryFont,
+                    fontSize: 20,fontWeight: FontWeight.bold),),
+                CustomDropDownMenu()
+              ],
             ),
-          ),
-        ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  Container(
+                    width: 200,
+                    height: 100,
+                    color: Constants.transparentWhite,
+                  ),
+                  const SizedBox(width: 10),
+                  Container(
+                    width: 200,
+                    height: 100,
+                    color: Constants.transparentWhite,
+                  ),
+                  const SizedBox(width: 10),
+                  Container(
+                    width: 200,
+                    height: 100,
+                    color: Constants.transparentWhite,
+                  ),
+                ],
+              ),
+            )
+          ],
+          )
+          ],
+        )
       )
     );
   }
