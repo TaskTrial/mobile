@@ -5,5 +5,8 @@ class Constants {
   static const Color pageNameColor = Color(0xFF525252);
   static const String appName = 'TaskTrial';
   static const String primaryFont = 'NunitoSans';
+  static const String imagesPath = 'assets/images/';
+  static const String tabsPath = 'assets/images/tabs/';
+
 
  }
