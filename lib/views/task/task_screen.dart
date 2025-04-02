@@ -9,17 +9,20 @@ class TaskScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
 
-      body: Center(
-        child: Text(
-          'Welcome to the Task Screen',
-          style: TextStyle(
-            fontSize: 24,
-            color: Constants.pageNameColor,
-            fontFamily: Constants.primaryFont,
-            fontWeight: FontWeight.bold,
+      body: Container(
+        color: Constants.backgroundColor,
+        child: Center(
+          child: Text(
+            'Welcome to the Task Screen',
+            style: TextStyle(
+              fontSize: 24,
+              color: Colors.white,
+              fontFamily: Constants.primaryFont,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-      ),
+      )
     );
   }
 }

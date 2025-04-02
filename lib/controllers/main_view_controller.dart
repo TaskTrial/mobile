@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_trial/views/chat/chat_screen.dart';
 import 'package:task_trial/views/dashboard/dashboard_screen.dart';
-import 'package:task_trial/views/menu/menu_screen.dart';
+import 'package:task_trial/views/more/more_screen.dart';
 import 'package:task_trial/views/profile/profile_screen.dart';
 import 'package:task_trial/views/project/project_screen.dart';
 import 'package:task_trial/views/task/task_screen.dart';
@@ -11,16 +12,16 @@ class MainViewController extends GetxController {
   List<Widget> pages = [
     DashboardScreen(),
     ProjectScreen(),
-    ProfileScreen(),
+    ChatScreen(),
     TaskScreen(),
-    MenuScreen()
+    MoreScreen()
   ];
   List<String> pageNames = [
     'Dashboard',
-    'Project',
-    'Profile',
-    'Task',
-    'Menu'
+    'Projects',
+    'Chat',
+    'Tasks',
+    'More'
   ];
 
   @override

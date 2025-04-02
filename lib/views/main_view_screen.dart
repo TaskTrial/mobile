@@ -8,35 +8,125 @@ class MainViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return GetX<MainViewController>(
         init: MainViewController(),
         builder: (controller) => Scaffold(
+              backgroundColor: Constants.backgroundColor,
+              floatingActionButton: controller.currentPageIndex.value == 0 ||
+                      controller.currentPageIndex.value == 1
+                  ? _floatingActionButton(controller)
+                  : null,
               appBar: _appBar(controller),
-              body: PageView(
-                  controller: controller.pageController,
-                  onPageChanged: controller.onPageChanged,
-                  children: controller.pages),
+              body: Container(
+                width: screenWidth,
+                height: screenHeight,
+                color: Constants.backgroundColor,
+                child: PageView(
+                    controller: controller.pageController,
+                    onPageChanged: controller.onPageChanged,
+                    children: controller.pages),
+              ),
               bottomNavigationBar: _bottomNavigationBar(controller),
             ));
   }
   _appBar(MainViewController controller) {
     return AppBar(
-      title: Text(controller.pageNames[controller.currentPageIndex.value]),
-      backgroundColor: Colors.transparent,
+      title: Text(
+        controller.pageNames[controller.currentPageIndex.value],
+        style: TextStyle(
+            color: Constants.pageNameColor,
+            fontFamily: Constants.primaryFont,
+            fontSize: 30,
+            fontWeight: FontWeight.bold),
+      ),
+      backgroundColor: Constants.backgroundColor,
       actions: [
         IconButton(
-          icon: const Icon(Icons.notifications),
-          onPressed: () {
-            // Handle notification button press
-          },
-        ),
-        IconButton(
-          icon: const Icon(Icons.settings),
-          onPressed: () {
-            // Handle settings button press
-          },
-        ),
+            onPressed: () {
+              Get.dialog(
+                AlertDialog(
+                  title: const Text('Notification'),
+                  content: const Text('You have new notifications!'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Get.back(); // Close the dialog
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              );
+            },
+            icon: CircleAvatar(
+              backgroundColor: Colors.transparent,
+              child: Image.asset(
+                '${Constants.imagesPath}notification_true.png',
+                width: 35,
+                height: 35,
+              ),
+            )),
+     SizedBox(width: 10,),
+     GestureDetector(
+        onTap: () {
+        },
+       child: CircleAvatar(
+         radius: 30,
+          backgroundColor: Colors.white,
+         child: SizedBox(
+            height: 50,
+            width: 50,
+           child: CircleAvatar(
+             backgroundImage: const AssetImage(
+               '${Constants.imagesPath}pic.png',
+             ),
+             radius: 30,
+             backgroundColor: Colors.grey.withOpacity(0.5),
+           ),
+         ),
+       ),
+     ),
+        SizedBox(width: 20,)
       ],
+    );
+  }
+  _floatingActionButton(MainViewController controller) {
+    return FloatingActionButton(
+      onPressed: () {
+        Get.dialog(
+          AlertDialog(
+            title: const Text('Add New Project'),
+            content:
+            const Text('Do you want to add a new project?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Get.back(); // Close the dialog
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Get.back(); // Close the dialog
+                },
+                child: const Text('Add'),
+              ),
+            ],
+          ),
+        );
+      },
+      elevation: 10,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
+      backgroundColor: Constants.primaryColor,
+      child: const Icon(
+        Icons.add,
+        color: Colors.white,
+        size: 40,
+      ),
     );
   }
   _bottomNavigationBar(MainViewController controller) {

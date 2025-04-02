@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_trial/controllers/main_view_controller.dart';
 import 'package:task_trial/utils/constants.dart';
-class ProjectScreen extends StatelessWidget {
-  const ProjectScreen({super.key});
+import 'package:task_trial/views/chat/chat_screen.dart';
+import 'package:task_trial/views/dashboard/dashboard_screen.dart';
+class ChatScreen extends StatelessWidget {
+  const ChatScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Container(
         color: Constants.backgroundColor,
         child: Center(
           child: Text(
-            'Welcome to the Project Screen',
+            'Welcome to the Chat Screen',
             style: TextStyle(
               fontSize: 24,
               color: Colors.white,

@@ -7,6 +7,7 @@ import 'package:task_trial/widgets/my_text_field.dart';
 import 'package:task_trial/controllers/sign_up_controller.dart';
 
 import '../../widgets/google_sign_in_ui.dart';
+import '../dashboard/dashboard_screen.dart';
 import 'login_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -75,7 +76,11 @@ class SignUpScreen extends StatelessWidget {
                           const SizedBox(height: 40),
                           AuthButton(onPressed: () {
                             if (controller.formKey.currentState!.validate()) {
-                              Get.snackbar('Success', 'Go To Dashboard');
+                              Get.offAll(
+                                    () => const DashboardScreen(),
+                                transition: Transition.fadeIn,
+                                duration: const Duration(milliseconds: 500),
+                              );
                             }
 
                           }, title: 'Sign Up'),

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:task_trial/controllers/login_controller.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/auth/sign_up_screen.dart';
+import 'package:task_trial/views/dashboard/dashboard_screen.dart';
 import 'package:task_trial/widgets/auth_button.dart';
 import 'package:task_trial/widgets/my_text_field.dart';
 
@@ -67,7 +68,12 @@ class LoginScreen extends StatelessWidget {
                       const SizedBox(height: 40),
                       AuthButton(onPressed: () {
                         if (controller.formKey.currentState!.validate()) {
-                          Get.snackbar('Success', 'Go To Dashboard');
+                          Get.offAll(
+                            () => const DashboardScreen(),
+                            transition: Transition.fadeIn,
+                            duration: const Duration(milliseconds: 500),
+                          );
+
                         }
                   
                       }, title: 'Login'),
