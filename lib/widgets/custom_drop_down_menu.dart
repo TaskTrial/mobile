@@ -63,7 +63,7 @@ class CustomDropDownMenu extends StatelessWidget {
               color: Colors.black,
               fontSize: 12,
               fontFamily: Constants.primaryFont,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
             ),
             onSelected: (value) {
               _onMenuItemSelected(value!);

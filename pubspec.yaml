@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   get: ^4.7.2
   dio: ^5.8.0+1
+  percent_indicator: ^4.2.4
 
 dev_dependencies:
   flutter_test:
@@ -80,7 +81,18 @@ flutter:
     - family: NunitoSans
       fonts:
         - asset: assets/fonts/NunitoSans.ttf
-        - asset: assets/fonts/NunitoSans-Italict.ttf
+        - asset: assets/fonts/NunitoSans-Italic.ttf
+          style: italic
+        - asset: assets/fonts/NunitoSans-Light.ttf
+          weight: 500
+        - asset: assets/fonts/NunitoSans-Regular.ttf
+          weight: 600
+        - asset: assets/fonts/NunitoSans-SemiBold.ttf
+          weight: 700
+        - asset: assets/fonts/NunitoSans-Bold.ttf
+          weight: 800
+        - asset: assets/fonts/NunitoSans-ExtraBold.ttf
+          weight: 900
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:

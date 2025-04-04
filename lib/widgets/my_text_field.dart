@@ -44,7 +44,7 @@ class MyTextField extends StatelessWidget {
             fontSize: 14,
             color: Constants.pageNameColor,
             fontFamily: Constants.primaryFont,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
           ),
           decoration: InputDecoration(
             suffixIcon: isPassword && obscureText
