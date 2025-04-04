@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/controllers/login_controller.dart';
 import 'package:task_trial/utils/constants.dart';
+import 'package:task_trial/views/main_view_screen.dart';
 import 'package:task_trial/widgets/auth_button.dart';
 import 'package:task_trial/widgets/my_text_field.dart';
 import 'package:task_trial/controllers/sign_up_controller.dart';
@@ -77,7 +78,7 @@ class SignUpScreen extends StatelessWidget {
                           AuthButton(onPressed: () {
                             if (controller.formKey.currentState!.validate()) {
                               Get.offAll(
-                                    () => const DashboardScreen(),
+                                    () => const MainViewScreen(),
                                 transition: Transition.fadeIn,
                                 duration: const Duration(milliseconds: 500),
                               );

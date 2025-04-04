@@ -22,7 +22,7 @@ class DashboardScreen extends StatelessWidget {
               children: [
                 Text('Overall',style: TextStyle(
                     fontFamily: Constants.primaryFont,
-                    fontSize: 20,fontWeight: FontWeight.bold),),
+                    fontSize: 16,fontWeight: FontWeight.bold),),
                 CustomDropDownMenu()
               ],
             ),
@@ -30,23 +30,11 @@ class DashboardScreen extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  Container(
-                    width: 200,
-                    height: 100,
-                    color: Constants.transparentWhite,
-                  ),
-                  const SizedBox(width: 10),
-                  Container(
-                    width: 200,
-                    height: 100,
-                    color: Constants.transparentWhite,
-                  ),
-                  const SizedBox(width: 10),
-                  Container(
-                    width: 200,
-                    height: 100,
-                    color: Constants.transparentWhite,
-                  ),
+                 _overallCard(),
+                  SizedBox(width: 10,),
+                  _overallCard(),
+                  SizedBox(width: 10,),
+                  _overallCard(),
                 ],
               ),
             )
@@ -55,6 +43,13 @@ class DashboardScreen extends StatelessWidget {
           ],
         )
       )
+    );
+  }
+  _overallCard() {
+    return Container(
+      width: 200,
+      height: 100,
+      color: Constants.transparentWhite,
     );
   }
 }

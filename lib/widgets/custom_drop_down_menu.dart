@@ -17,11 +17,11 @@ class CustomDropDownMenu extends StatelessWidget {
     return  Stack(
       children: [
      Positioned(
-       top: 11,
-       left: 11,
+       top: 15,
+       left: 14,
        child: Container(
-        height: 30,
-        width: 130,
+        height: 25,
+        width: 120,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
@@ -35,7 +35,7 @@ class CustomDropDownMenu extends StatelessWidget {
       Positioned(
         child: DropdownMenu(
             initialSelection: items[0],
-            width: 150,
+            width: 140,
             enabled: true,
             textAlign: TextAlign.start,
             menuStyle: MenuStyle(

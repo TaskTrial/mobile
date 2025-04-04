@@ -4,6 +4,7 @@ import 'package:task_trial/controllers/login_controller.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/auth/sign_up_screen.dart';
 import 'package:task_trial/views/dashboard/dashboard_screen.dart';
+import 'package:task_trial/views/main_view_screen.dart';
 import 'package:task_trial/widgets/auth_button.dart';
 import 'package:task_trial/widgets/my_text_field.dart';
 
@@ -69,7 +70,7 @@ class LoginScreen extends StatelessWidget {
                       AuthButton(onPressed: () {
                         if (controller.formKey.currentState!.validate()) {
                           Get.offAll(
-                            () => const DashboardScreen(),
+                            () => const MainViewScreen(),
                             transition: Transition.fadeIn,
                             duration: const Duration(milliseconds: 500),
                           );

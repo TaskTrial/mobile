@@ -38,7 +38,7 @@ class MainViewScreen extends StatelessWidget {
         style: TextStyle(
             color: Constants.pageNameColor,
             fontFamily: Constants.primaryFont,
-            fontSize: 30,
+            fontSize: 26,
             fontWeight: FontWeight.bold),
       ),
       backgroundColor: Constants.backgroundColor,
@@ -64,8 +64,8 @@ class MainViewScreen extends StatelessWidget {
               backgroundColor: Colors.transparent,
               child: Image.asset(
                 '${Constants.imagesPath}notification_true.png',
-                width: 35,
-                height: 35,
+                width: 30,
+                height: 30,
               ),
             )),
      SizedBox(width: 10,),
@@ -73,11 +73,11 @@ class MainViewScreen extends StatelessWidget {
         onTap: () {
         },
        child: CircleAvatar(
-         radius: 30,
+         radius: 19,
           backgroundColor: Colors.white,
          child: SizedBox(
-            height: 50,
-            width: 50,
+            height: 35,
+            width: 35,
            child: CircleAvatar(
              backgroundImage: const AssetImage(
                '${Constants.imagesPath}pic.png',
@@ -157,19 +157,19 @@ class MainViewScreen extends StatelessWidget {
       String iconPath, String selectedIconPath, String label) {
     return BottomNavigationBarItem(
       icon: SizedBox(
-        height: 60,
-        width: 60,
+        height: 50,
+        width: 50,
         child: CircleAvatar(
             backgroundColor: Colors.transparent,
             child: Image.asset(
               iconPath,
-              width: 30,
-              height: 30,
+              width: 25,
+              height: 25,
             )),
       ),
       activeIcon: SizedBox(
-        height: 60,
-        width: 60,
+        height: 50,
+        width: 50,
         child: Image.asset(
           selectedIconPath,
         ),
