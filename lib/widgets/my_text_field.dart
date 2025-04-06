@@ -51,7 +51,7 @@ class MyTextField extends StatelessWidget {
                 ? IconButton(
                     icon: Icon(
                       Icons.visibility_off,
-                      color: Constants.pageNameColor.withOpacity(0.2),
+                      color: Constants.pageNameColor.withValues(alpha: 0.2),
                     ),
                     onPressed: onPressed,
                   )
@@ -59,7 +59,7 @@ class MyTextField extends StatelessWidget {
                     ? IconButton(
                         icon: Icon(
                           Icons.visibility,
-                          color: Constants.primaryColor.withOpacity(0.2),
+                          color: Constants.primaryColor.withValues(alpha: 0.2),
                         ),
                         onPressed: onPressed,
                       )
@@ -76,7 +76,7 @@ class MyTextField extends StatelessWidget {
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5),
               borderSide: BorderSide(
-                  color: Constants.pageNameColor.withOpacity(0.2), width: 1.5),
+                  color: Constants.pageNameColor.withValues(alpha: 0.2), width: 1.5),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5),

@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Task Trial',
-      home: MainViewScreen(),
+      home: LoginScreen(),
     );
   }
 }
