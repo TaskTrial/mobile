@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/controllers/main_view_controller.dart';
+import 'package:task_trial/models/login_model.dart';
 import 'package:task_trial/utils/constants.dart';
 
 class MainViewScreen extends StatelessWidget {
-  const MainViewScreen({super.key});
+   MainViewScreen({super.key});
+   final dynamic args = Get.arguments;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +45,14 @@ class MainViewScreen extends StatelessWidget {
       ),
       backgroundColor: Constants.backgroundColor,
       actions: [
+       if (args!=null)
+         Text('Hello ${LoginModel.fromJson(args).user!.role}',
+          style: TextStyle(
+              color: Constants.pageNameColor,
+              fontFamily: Constants.primaryFont,
+              fontSize: 20,
+              fontWeight: FontWeight.bold),
+        ) else SizedBox(),
         IconButton(
             onPressed: () {
               Get.dialog(

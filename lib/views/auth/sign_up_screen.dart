@@ -78,7 +78,7 @@ class SignUpScreen extends StatelessWidget {
                           AuthButton(isLoading: false,onPressed: () {
                             if (controller.formKey.currentState!.validate()) {
                               Get.offAll(
-                                    () => const MainViewScreen(),
+                                    () =>  MainViewScreen(),
                                 transition: Transition.fadeIn,
                                 duration: const Duration(milliseconds: 500),
                               );
