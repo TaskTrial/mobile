@@ -75,7 +75,7 @@ class SignUpScreen extends StatelessWidget {
                           _confirmPasswordField(controller),
                           const SizedBox(height: 10),
                           const SizedBox(height: 40),
-                          AuthButton(onPressed: () {
+                          AuthButton(isLoading: false,onPressed: () {
                             if (controller.formKey.currentState!.validate()) {
                               Get.offAll(
                                     () => const MainViewScreen(),
@@ -174,8 +174,8 @@ class SignUpScreen extends StatelessWidget {
         if (value == null || value.isEmpty) {
           return 'Please enter your password';
         }
-        if (value.length < 6) {
-          return 'Password must be at least 6 characters';
+        if (value.length < 8) {
+          return 'Password must be at least 8 characters';
         }
         return null;
       },
@@ -195,8 +195,8 @@ class SignUpScreen extends StatelessWidget {
         if (value == null || value.isEmpty) {
           return 'Please enter your password';
         }
-        if (value.length < 6) {
-          return 'Password must be at least 6 characters';
+        if (value.length < 8) {
+          return 'Password must be at least 8 characters';
         }
         if (value != controller.passwordController.text) {
           return 'Password must match the password';

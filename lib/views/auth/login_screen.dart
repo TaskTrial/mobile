@@ -67,16 +67,10 @@ class LoginScreen extends StatelessWidget {
                       // forgot password
                       _forgotPassword(),
                       const SizedBox(height: 40),
-                      AuthButton(onPressed: () {
+                      AuthButton(isLoading:controller.isLoading.value,onPressed: () {
                         if (controller.formKey.currentState!.validate()) {
-                          Get.offAll(
-                            () => const MainViewScreen(),
-                            transition: Transition.fadeIn,
-                            duration: const Duration(milliseconds: 500),
-                          );
-
+                          controller.login();
                         }
-                  
                       }, title: 'Login'),
                       const SizedBox(height: 10),
                       // sign up
@@ -167,8 +161,8 @@ class LoginScreen extends StatelessWidget {
         if (value == null || value.isEmpty) {
           return 'Please enter your password';
         }
-        if (value.length < 6) {
-          return 'Password must be at least 6 characters';
+        if (value.length < 8) {
+          return 'Password must be at least 8 characters';
         }
         return null;
       },

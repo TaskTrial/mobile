@@ -5,9 +5,11 @@ class AuthButton extends StatelessWidget {
     super.key,
     required this.onPressed,
     required this.title,
+    required this.isLoading,
   });
   final VoidCallback onPressed;
   final String title;
+  final bool isLoading;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -23,15 +25,15 @@ class AuthButton extends StatelessWidget {
           ),
           padding: const EdgeInsets.symmetric(vertical: 10),
         ),
-        child: Text(
+        child:!isLoading? Text(
           title,
-          style: const TextStyle(
+          style:  TextStyle(
             fontSize: 20,
             fontFamily: Constants.primaryFont,
             fontWeight: FontWeight.w900,
             color: Colors.white,
           ),
-        ),
+        ):CircularProgressIndicator(color: Colors.white,),
       ),
     );
   }

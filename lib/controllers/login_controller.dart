@@ -1,5 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import 'package:task_trial/utils/constants.dart';
+
+import '../views/main_view_screen.dart';
+
 class LoginController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -8,11 +14,13 @@ class LoginController extends GetxController {
   final rememberMe = false.obs;
   final formKey = GlobalKey<FormState>();
 
-  // @override void onClose() {
-  //   emailController.dispose();
-  //   passwordController.dispose();
-  //   super.onClose();
-  // }
+  final isSignedIn = false.obs;
+
+  @override void onClose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.onClose();
+  }
 
   bool toggleRememberMe() {
 
@@ -70,16 +78,46 @@ class LoginController extends GetxController {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
-  void login() {
-    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
-      Get.snackbar('Error', 'Please fill in all fields');
-      return;
-    }
-    isLoading.value = true;
-    // Simulate a network request
-    Future.delayed(const Duration(seconds: 2), () {
+   login() async{
+    try {
+      isLoading.value = true;
+
+      final response = await Dio().post(
+         'http://192.168.1.5:3000/api/auth/signin',
+        data: {
+          'email': emailController.text,
+          'password': passwordController.text,
+        },
+      );
+      print(response);
       isLoading.value = false;
-      Get.snackbar('Success', 'Logged in successfully');
-    });
-  }
+      Get.offAll(() => const MainViewScreen());
+    } on DioException catch (e) {
+     switch (e.type) {
+        case DioExceptionType.connectionTimeout:
+          Get.snackbar('Error', 'Connection timeout');
+          break;
+        case DioExceptionType.receiveTimeout:
+          Get.snackbar('Error', 'Receive timeout');
+          break;
+        case DioExceptionType.sendTimeout:
+          Get.snackbar('Error', 'Send timeout');
+          break;
+        case DioExceptionType.badResponse:
+          Get.snackbar('Error', 'Bad response: ${e.response?.statusCode}');
+          break;
+        case DioExceptionType.cancel:
+          Get.snackbar('Error', 'Request cancelled');
+          break;
+        case DioExceptionType.unknown:
+          Get.snackbar('Error', 'Unexpected error: ${e.message}');
+       case DioExceptionType.badCertificate:
+          Get.snackbar('Error', 'Bad certificate');
+          break;
+       case DioExceptionType.connectionError:
+          Get.snackbar('Error', 'Connection error');
+          break;
+      }
+    }
+   }
 }
