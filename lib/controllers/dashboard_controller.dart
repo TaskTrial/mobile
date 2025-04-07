@@ -1,6 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/controllers/dashboard_controller.dart';
+import 'package:task_trial/models/user_model.dart';
+import 'package:task_trial/utils/cache_helper.dart';
 import 'package:task_trial/utils/constants.dart';
 
 class DashboardController extends GetxController {
@@ -54,7 +57,11 @@ class DashboardController extends GetxController {
     },
 
   ];
+  @override
+  void onInit() async{
 
+    super.onInit();
+  }
   toggleCheck(int index) {
     dashboardData[index]['check'] = !dashboardData[index]['check'];
     update();

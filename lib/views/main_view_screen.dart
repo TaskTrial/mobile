@@ -3,10 +3,11 @@ import 'package:get/get.dart';
 import 'package:task_trial/controllers/main_view_controller.dart';
 import 'package:task_trial/models/login_model.dart';
 import 'package:task_trial/utils/constants.dart';
+import 'package:task_trial/views/profile/profile_screen.dart';
 
 class MainViewScreen extends StatelessWidget {
-   MainViewScreen({super.key});
-   final dynamic args = Get.arguments;
+   const MainViewScreen({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class MainViewScreen extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
     return GetX<MainViewController>(
         init: MainViewController(),
-        builder: (controller) => Scaffold(
+        builder: (controller) => !controller.isLoading.value?Scaffold(
               backgroundColor: Constants.backgroundColor,
               floatingActionButton: controller.currentPageIndex.value == 0 ||
                       controller.currentPageIndex.value == 1
@@ -31,7 +32,15 @@ class MainViewScreen extends StatelessWidget {
                     children: controller.pages),
               ),
               bottomNavigationBar: _bottomNavigationBar(controller),
-            ));
+            ): Scaffold(
+              backgroundColor: Constants.backgroundColor,
+              body: Center(
+                child: CircularProgressIndicator(
+                  color: Constants.primaryColor,
+                ),
+              ),
+        )
+    );
   }
   _appBar(MainViewController controller) {
     return AppBar(
@@ -45,14 +54,6 @@ class MainViewScreen extends StatelessWidget {
       ),
       backgroundColor: Constants.backgroundColor,
       actions: [
-       if (args!=null)
-         Text('Hello ${LoginModel.fromJson(args).user!.role}',
-          style: TextStyle(
-              color: Constants.pageNameColor,
-              fontFamily: Constants.primaryFont,
-              fontSize: 20,
-              fontWeight: FontWeight.bold),
-        ) else SizedBox(),
         IconButton(
             onPressed: () {
               Get.dialog(
@@ -81,6 +82,13 @@ class MainViewScreen extends StatelessWidget {
      SizedBox(width: 10,),
      GestureDetector(
         onTap: () {
+          print(controller.userModel.user!.toJson());
+          Get.to(
+            () =>  ProfileScreen(),
+            transition: Transition.fadeIn,
+            duration: const Duration(milliseconds: 500),
+            arguments: controller.userModel,
+          );
         },
        child: CircleAvatar(
          radius: 19,

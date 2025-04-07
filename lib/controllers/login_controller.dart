@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/models/login_model.dart';
+import 'package:task_trial/models/user_model.dart';
 import 'package:task_trial/utils/cache_helper.dart';
 
 import 'package:task_trial/utils/constants.dart';
@@ -102,8 +103,8 @@ class LoginController extends GetxController {
       CacheHelper().saveData(key: 'accessToken', value: '${loginModel.accessToken}');
       CacheHelper().saveData(key: 'refreshToken', value: '${loginModel.refreshToken}');
       isLoading.value = false;
+
       Get.offAll(() =>  MainViewScreen(),
-      arguments: loginModel.toJson(),
       );
     } on DioException catch (e) {
       isLoading.value = false;
@@ -158,4 +159,5 @@ class LoginController extends GetxController {
       }
     }
    }
+
 }

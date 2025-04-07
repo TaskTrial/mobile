@@ -1,11 +1,15 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_trial/utils/cache_helper.dart';
 import 'package:task_trial/views/chat/chat_screen.dart';
 import 'package:task_trial/views/dashboard/dashboard_screen.dart';
 import 'package:task_trial/views/more/more_screen.dart';
 import 'package:task_trial/views/profile/profile_screen.dart';
 import 'package:task_trial/views/project/project_screen.dart';
 import 'package:task_trial/views/task/task_screen.dart';
+
+import '../models/user_model.dart';
 class MainViewController extends GetxController {
   var currentPageIndex = 0.obs;
   PageController pageController = PageController(initialPage: 0);
@@ -23,13 +27,17 @@ class MainViewController extends GetxController {
     'Tasks',
     'More'
   ];
+  final isLoading = false.obs;
+   UserModel userModel = UserModel();
 
   @override
-  void onInit() {
+  void onInit() async{
     super.onInit();
     pageController.addListener(() {
       currentPageIndex.value = pageController.page!.round();
     });
+    getUser();
+
   }
 
   @override
@@ -58,5 +66,57 @@ class MainViewController extends GetxController {
     currentPageIndex.value = index;
   }
 
+  getUser() async{
+    try {
+     isLoading.value = true;
+      final response = await Dio().get(
+        'http://192.168.1.5:3000/api/users/${CacheHelper().getData(key: 'id')}',
+        options: Options(
+          headers: {
+            'authorization': 'Bearer ${CacheHelper().getData(key: 'accessToken')}',
+          },
+        ),
+      );
+      userModel = UserModel.fromJson(response.data);
+      print(userModel.user!.toJson());
+      isLoading.value = false;
+    }
+    on DioException catch (e) {
+
+      switch (e.type) {
+        case DioExceptionType.connectionTimeout:
+          Get.snackbar('Error', 'Connection timeout');
+          break;
+        case DioExceptionType.receiveTimeout:
+          Get.snackbar('Error', 'Receive timeout');
+          break;
+        case DioExceptionType.sendTimeout:
+          Get.snackbar('Error', 'Send timeout');
+          break;
+        case DioExceptionType.badResponse:
+          {
+            Get.snackbar(
+                'Error', 'Bad response: ${e.response!.data['message']}');
+                 CacheHelper().removeData(key: 'id');
+                 CacheHelper().removeData(key: 'accessToken');
+                 CacheHelper().removeData(key: 'refreshToken');
+                 isLoading.value = false;
+          }
+          break;
+        case DioExceptionType.cancel:
+          Get.snackbar('Error', 'Request cancelled');
+          break;
+        case DioExceptionType.unknown:
+          Get.snackbar('Error', 'Unexpected error: ${e.message}');
+          break;
+        case DioExceptionType.badCertificate:
+          Get.snackbar('Error', 'Bad certificate');
+          break;
+        case DioExceptionType.connectionError:
+          Get.snackbar('Error', 'Connection error');
+          break;
+      }
+    }
+  }
 
 }
