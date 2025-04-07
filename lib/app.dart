@@ -3,6 +3,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:task_trial/utils/cache_helper.dart';
 import 'package:task_trial/views/auth/login_screen.dart';
 import 'package:task_trial/views/auth/sign_up_screen.dart';
+import 'package:task_trial/views/auth/verify_screen.dart';
 import 'package:task_trial/views/landing_screen.dart';
 import 'package:task_trial/views/main_view_screen.dart';
 import 'package:task_trial/views/profile/profile_screen.dart';

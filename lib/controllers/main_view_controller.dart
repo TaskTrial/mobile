@@ -10,6 +10,7 @@ import 'package:task_trial/views/project/project_screen.dart';
 import 'package:task_trial/views/task/task_screen.dart';
 
 import '../models/user_model.dart';
+import '../views/auth/login_screen.dart';
 class MainViewController extends GetxController {
   var currentPageIndex = 0.obs;
   PageController pageController = PageController(initialPage: 0);
@@ -36,6 +37,7 @@ class MainViewController extends GetxController {
     pageController.addListener(() {
       currentPageIndex.value = pageController.page!.round();
     });
+
     getUser();
 
   }
@@ -100,6 +102,7 @@ class MainViewController extends GetxController {
                  CacheHelper().removeData(key: 'id');
                  CacheHelper().removeData(key: 'accessToken');
                  CacheHelper().removeData(key: 'refreshToken');
+                 Get.offAll(() => LoginScreen());
                  isLoading.value = false;
           }
           break;

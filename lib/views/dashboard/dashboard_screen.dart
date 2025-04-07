@@ -12,25 +12,29 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Constants.backgroundColor,
-        body: Container(
-            color: Colors.transparent,
-            padding: const EdgeInsets.only(
-                left: 16.0, right: 16, top: 40, bottom: 16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _overallPart(),
-                SizedBox(
-                  height: 20,
+        body: SingleChildScrollView(
+          child: Container(
+              color: Colors.transparent,
+              padding: const EdgeInsets.only(
+                  left: 16.0, right: 16, top: 40, bottom: 16),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _overallPart(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _tasksPart(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _projectsPart(),
+                  ],
                 ),
-                _tasksPart(),
-                SizedBox(
-                  height: 20,
-                ),
-                _projectsPart(),
-              ],
-            )));
+              )),
+        ));
   }
 
   _overallPart() {

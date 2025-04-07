@@ -44,6 +44,7 @@ class MainViewScreen extends StatelessWidget {
   }
   _appBar(MainViewController controller) {
     return AppBar(
+
       title: Text(
         controller.pageNames[controller.currentPageIndex.value],
         style: TextStyle(

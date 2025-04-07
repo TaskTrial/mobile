@@ -56,9 +56,9 @@ class SignUpScreen extends StatelessWidget {
                           _theDivider(width),
                           const SizedBox(height: 20),
                           MyTextField(
-                            title: 'Name',
+                            title: 'Username',
                             hintText: 'John Doe',
-                            controller: controller.nameController,
+                            controller: controller.userNameController,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your name';
@@ -67,21 +67,48 @@ class SignUpScreen extends StatelessWidget {
                             },
                           ),
                           const SizedBox(height: 15),
+                          Row(
+                            children: [
+                              Expanded(child: MyTextField(
+                                title: 'First Name',
+                                hintText: 'John',
+                                controller: controller.firstNameController,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter your first name';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              ),
+                              SizedBox(width: 10),
+                              Expanded(child: MyTextField(
+                                title: 'Last Name',
+                                hintText: 'Doe',
+                                controller: controller.lastNameController,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter your last name';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 15),
                           // email and password text fields
                           _emailField(controller),
                           const SizedBox(height: 15),
                           _passwordField(controller),
                           const SizedBox(height: 15),
-                          _confirmPasswordField(controller),
+                          // _confirmPasswordField(controller),
                           const SizedBox(height: 10),
                           const SizedBox(height: 40),
-                          AuthButton(isLoading: false,onPressed: () {
+                          AuthButton(isLoading: controller.isLoading.value
+                              ,onPressed: () {
                             if (controller.formKey.currentState!.validate()) {
-                              Get.offAll(
-                                    () =>  MainViewScreen(),
-                                transition: Transition.fadeIn,
-                                duration: const Duration(milliseconds: 500),
-                              );
+                              controller.signUp();
                             }
 
                           }, title: 'Sign Up'),
