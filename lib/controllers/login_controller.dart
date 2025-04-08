@@ -103,12 +103,10 @@ class LoginController extends GetxController {
       CacheHelper().saveData(key: 'accessToken', value: '${loginModel.accessToken}');
       CacheHelper().saveData(key: 'refreshToken', value: '${loginModel.refreshToken}');
       isLoading.value = false;
-
       Get.offAll(() =>  MainViewScreen(),
       );
     } on DioException catch (e) {
       isLoading.value = false;
-
      switch (e.type) {
         case DioExceptionType.connectionTimeout:
           Get.snackbar('Error', 'Connection timeout');
