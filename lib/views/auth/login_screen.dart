@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/controllers/login_controller.dart';
 import 'package:task_trial/utils/constants.dart';
+import 'package:task_trial/views/auth/forget_password_screen.dart';
 import 'package:task_trial/views/auth/sign_up_screen.dart';
 import 'package:task_trial/views/dashboard/dashboard_screen.dart';
 import 'package:task_trial/views/main_view_screen.dart';
@@ -196,7 +197,9 @@ class LoginScreen extends StatelessWidget {
             ],
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Get.to(()=> const ForgetPasswordScreen());
+            },
             child: const Text('Forgot Password?',
                 style: TextStyle(color: Constants.primaryColor,
                     fontSize: 14,

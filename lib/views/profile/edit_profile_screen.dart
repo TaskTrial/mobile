@@ -16,11 +16,11 @@ class EditProfileScreen extends StatelessWidget {
       init: ProfileController(),
       builder: (controller) {
       return Scaffold(
-        backgroundColor: const Color(0xFFF1E8E0),
+        backgroundColor: Constants.backgroundColor,
         appBar: AppBar(
-          backgroundColor: const Color(0xFFF1E8E0),
+          backgroundColor:  Colors.transparent,
           elevation: 0,
-          title: const Text("Edit Profile", style: TextStyle(color: Colors.black)),
+          title: const Text("Edit Profile", style: TextStyle(color:Constants.pageNameColor, fontSize: 24, fontFamily: Constants.primaryFont,fontWeight: FontWeight.bold)),
           centerTitle: true,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -60,13 +60,35 @@ class EditProfileScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 30),
-                _buildInputField("Username", controller.usernameController),
+                // _buildInputField("Username", controller.usernameController,
+                // validator: (value) {
+                //   if (value!.isEmpty) {
+                //     return 'Username is required';
+                //   }
+                //   return null;
+                // },
+                // ),
                 const SizedBox(height: 15),
-                _buildInputField("First Name", controller.firstNameController),
+                _buildInputField("First Name", controller.firstNameController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'First Name is required';
+                  }
+                  return null;
+                },
+                ),
                 const SizedBox(height: 15),
-                _buildInputField("Last Name", controller.lastNameController),
+                _buildInputField("Last Name", controller.lastNameController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Last Name is required';
+                  }
+                  return null;
+                },
+                ),
                 const SizedBox(height: 15),
-                _buildInputField("Job Title", controller.jobTitleController),
+                _buildInputField("Job Title", controller.jobTitleController,
+                ),
                 const SizedBox(height: 15),
                 _buildInputField("Phone", controller.phoneNumberController),
                 const SizedBox(height: 15),
@@ -74,9 +96,9 @@ class EditProfileScreen extends StatelessWidget {
                 const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: () {
-                    // Handle save logic here
-                    Get.back(); // Go back after saving
-
+                    if (controller.formKey.currentState!.validate()) {
+                     controller.editProfile();
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Constants.primaryColor,
