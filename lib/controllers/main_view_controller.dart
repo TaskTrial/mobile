@@ -8,7 +8,6 @@ import 'package:task_trial/views/more/more_screen.dart';
 import 'package:task_trial/views/profile/profile_screen.dart';
 import 'package:task_trial/views/project/project_screen.dart';
 import 'package:task_trial/views/task/task_screen.dart';
-
 import '../models/user_model.dart';
 import '../views/auth/login_screen.dart';
 class MainViewController extends GetxController {
@@ -33,12 +32,12 @@ class MainViewController extends GetxController {
 
   @override
   void onInit() async{
+    getUser();
     super.onInit();
     pageController.addListener(() {
       currentPageIndex.value = pageController.page!.round();
     });
 
-    getUser();
 
   }
 
@@ -69,8 +68,10 @@ class MainViewController extends GetxController {
   }
 
   getUser() async{
+    print('on init');
     try {
      isLoading.value = true;
+     print(isLoading.value);
       final response = await Dio().get(
         'http://192.168.1.5:3000/api/users/${CacheHelper().getData(key: 'id')}',
         options: Options(
@@ -82,9 +83,12 @@ class MainViewController extends GetxController {
       userModel = UserModel.fromJson(response.data);
       print(userModel.user!.toJson());
       isLoading.value = false;
+     print(isLoading.value);
+
     }
     on DioException catch (e) {
-
+      isLoading.value = false;
+      print(isLoading.value);
       switch (e.type) {
         case DioExceptionType.connectionTimeout:
           Get.snackbar('Error', 'Connection timeout');
