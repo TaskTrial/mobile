@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_trial/controllers/login_controller.dart';
+import 'package:task_trial/controllers/auth/login_controller.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/main_view_screen.dart';
 import 'package:task_trial/widgets/auth_button.dart';
 import 'package:task_trial/widgets/my_text_field.dart';
-import 'package:task_trial/controllers/sign_up_controller.dart';
+import 'package:task_trial/controllers/auth/sign_up_controller.dart';
 
 import '../../widgets/google_sign_in_ui.dart';
 import '../dashboard/dashboard_screen.dart';

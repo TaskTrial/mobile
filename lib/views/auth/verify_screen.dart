@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';  
-import 'package:task_trial/controllers/verify_controller.dart';
+import 'package:task_trial/controllers/auth/verify_controller.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/widgets/auth_button.dart';
 import 'package:task_trial/widgets/my_text_field.dart';

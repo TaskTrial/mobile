@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../utils/constants.dart';
-import '../views/auth/login_screen.dart';
+import '../../utils/constants.dart';
+import '../../views/auth/login_screen.dart';
 class ResetPasswordController  extends GetxController{
   final newPasswordController = TextEditingController();
   final otpController = TextEditingController();

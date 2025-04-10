@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:task_trial/views/project/project_detail_screen.dart';
 
 import '../../utils/constants.dart';
 
@@ -42,16 +44,22 @@ class ProjectCard extends StatelessWidget {
                 // Replace with your icon
               ),
               const Spacer(),
-              CircleAvatar(
-                radius: 23,
-                backgroundColor: Colors.black,
-                child:  CircleAvatar(
-                  radius: 22,
-                  backgroundColor: backgroundColor,
-                  child:Transform.rotate(
-                    angle: 45 * pi / 180, // Converts degrees to radians
-                    child: Icon(Icons.arrow_upward, size: 23,color: Colors.black,),  // Replace with your actual widget
-                  )
+              GestureDetector(
+                onTap: () {
+                 Get.to(() => ProjectDetailScreen(
+                 ));
+                },
+                child: CircleAvatar(
+                  radius: 23,
+                  backgroundColor: Colors.black,
+                  child:  CircleAvatar(
+                    radius: 22,
+                    backgroundColor: backgroundColor,
+                    child:Transform.rotate(
+                      angle: 45 * pi / 180, // Converts degrees to radians
+                      child: Icon(Icons.arrow_upward, size: 23,color: Colors.black,),  // Replace with your actual widget
+                    )
+                  ),
                 ),
               )
             ],

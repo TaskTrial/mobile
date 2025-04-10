@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../utils/constants.dart';
+import '../../utils/constants.dart';
 class ProjectController extends GetxController{
   final projectNameController = TextEditingController();
   final projectDescriptionController = TextEditingController();

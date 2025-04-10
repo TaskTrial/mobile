@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/models/login_model.dart';
 import 'package:task_trial/models/user_model.dart';
+import 'package:task_trial/services/auth_service.dart';
 import 'package:task_trial/utils/cache_helper.dart';
 
 import 'package:task_trial/utils/constants.dart';
 
-import '../views/auth/login_screen.dart';
-import '../views/auth/reset_password_screen.dart';
-import '../views/main_view_screen.dart';
+import '../../views/auth/login_screen.dart';
+import '../../views/auth/reset_password_screen.dart';
+import '../../views/main_view_screen.dart';
 
 class LoginController extends GetxController {
   final emailController = TextEditingController();
@@ -151,6 +152,7 @@ class LoginController extends GetxController {
       }
     }
    }
+
   sendOTP()async{
     try {
       final response = await Dio().post(

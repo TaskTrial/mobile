@@ -12,6 +12,7 @@ class MyTextField extends StatelessWidget {
     this.onPressed,
     this.controller,
     this.validator,
+    this.keyboardType,
   });
   final String title;
   final String hintText;
@@ -20,6 +21,7 @@ class MyTextField extends StatelessWidget {
   final VoidCallback? onPressed;
   final TextEditingController ? controller;
   final String? Function(String?)?  validator;
+  final TextInputType? keyboardType ;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -37,6 +39,7 @@ class MyTextField extends StatelessWidget {
           height: 5,
         ),
         TextFormField(
+          keyboardType: keyboardType,
           controller: controller,
           validator: validator,
           obscureText: obscureText,

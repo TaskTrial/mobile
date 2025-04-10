@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/views/auth/login_screen.dart';
 
-import '../utils/constants.dart';
+import '../../utils/constants.dart';
 class VerifyController extends GetxController{
   final formKey = GlobalKey<FormState>();
   final codeController = TextEditingController();

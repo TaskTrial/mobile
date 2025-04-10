@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_trial/controllers/login_controller.dart';
-import 'package:task_trial/controllers/reset_password_controller.dart';
+import 'package:task_trial/controllers/auth/login_controller.dart';
+import 'package:task_trial/controllers/auth/reset_password_controller.dart';
 import 'package:task_trial/views/auth/login_screen.dart';
 import 'package:task_trial/widgets/auth_button.dart';
 import 'package:task_trial/widgets/my_text_field.dart';

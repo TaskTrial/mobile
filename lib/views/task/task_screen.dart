@@ -18,47 +18,56 @@ class TaskScreen extends StatelessWidget {
 
     return GetX<TaskController>(
         init: TaskController(),
-        builder: (
-        controller) => Scaffold(
-      backgroundColor: Constants.backgroundColor,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _filter(controller),
-            const SizedBox(height: 16),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  _buildFilter("All", controller.allCount, 0, controller,colors[0]),
-                  const SizedBox(width: 8),
-                  _buildFilter("To Do", controller.todoCount, 1, controller,colors[1]),
-                  const SizedBox(width: 8),
-                  _buildFilter("In Progress", controller.inProgressCount, 2, controller,colors[2]),
-                  const SizedBox(width: 8),
-                  _buildFilter("Completed", controller.completedCount, 3, controller,colors[3]),
-                ],
+        builder: (controller) => Scaffold(
+              backgroundColor: Constants.backgroundColor,
+              body: Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, vertical: 24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _filter(controller),
+                    const SizedBox(height: 16),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          _buildFilter("All", controller.allCount, 0,
+                              controller, colors[0]),
+                          const SizedBox(width: 8),
+                          _buildFilter("To Do", controller.todoCount, 1,
+                              controller, colors[1]),
+                          const SizedBox(width: 8),
+                          _buildFilter(
+                              "In Progress",
+                              controller.inProgressCount,
+                              2,
+                              controller,
+                              colors[2]),
+                          const SizedBox(width: 8),
+                          _buildFilter("Completed", controller.completedCount,
+                              3, controller, colors[3]),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Expanded(
+                      child: Obx(() => ListView.builder(
+                            itemCount: controller.filteredTasks.length,
+                            itemBuilder: (context, index) {
+                              final task = controller.filteredTasks[index];
+                              return _buildTaskCard(task);
+                            },
+                          )),
+                    )
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 24),
-            Expanded(
-              child: Obx(() => ListView.builder(
-                itemCount: controller.filteredTasks.length,
-                itemBuilder: (context, index) {
-                  final task = controller.filteredTasks[index];
-                  return _buildTaskCard(task);
-                },
-              )),
-            )
-          ],
-        ),
-      ),
-    ));
+            ));
   }
 
-  Widget _buildFilter(String label, int count, int index, TaskController controller,Color color) {
+  Widget _buildFilter(String label, int count, int index,
+      TaskController controller, Color color) {
     final isSelected = controller.selectedFilterIndex.value == index;
     final colors = [
       Color(0xff0DA6C2).withOpacity(0.5),
@@ -74,14 +83,16 @@ class TaskScreen extends StatelessWidget {
           color: isSelected ? colors[index] : color,
           borderRadius: BorderRadius.circular(30),
         ),
-        child: Text("$label $count",
-            style: TextStyle(
-              color: isSelected ? Colors.white : Constants.pageNameColor,
-              fontSize: 14,
-              fontFamily: Constants.primaryFont,
-              fontWeight:isSelected ? FontWeight.w800 : FontWeight.w600,
-            ),
-      ),),
+        child: Text(
+          "$label $count",
+          style: TextStyle(
+            color: isSelected ? Colors.white : Constants.pageNameColor,
+            fontSize: 14,
+            fontFamily: Constants.primaryFont,
+            fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+          ),
+        ),
+      ),
     );
   }
 
@@ -105,11 +116,21 @@ class TaskScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(radius: 4, backgroundColor: task.status==TaskStatus.todo?colors[1]:task.status==TaskStatus.inProgress?colors[2]:task.status==TaskStatus.completed?colors[3]:colors[0]),
+          CircleAvatar(
+              radius: 4,
+              backgroundColor: task.status == TaskStatus.todo
+                  ? colors[1]
+                  : task.status == TaskStatus.inProgress
+                      ? colors[2]
+                      : task.status == TaskStatus.completed
+                          ? colors[3]
+                          : colors[0]),
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.only(left: 10),
-            child: Text(task.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            child: Text(task.title,
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
           ),
           const SizedBox(height: 10),
           Row(
@@ -122,12 +143,12 @@ class TaskScreen extends StatelessWidget {
               Row(
                 children: task.assignees
                     .map((avatar) => Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: CircleAvatar(
-                    radius: 12,
-                    backgroundImage: NetworkImage(avatar),
-                  ),
-                ))
+                          padding: const EdgeInsets.only(left: 4.0),
+                          child: CircleAvatar(
+                            radius: 12,
+                            backgroundImage: NetworkImage(avatar),
+                          ),
+                        ))
                     .toList(),
               )
             ],
@@ -136,11 +157,12 @@ class TaskScreen extends StatelessWidget {
       ),
     );
   }
-  _filter(TaskController controller){
-    return  Container(
+
+  _filter(TaskController controller) {
+    return Container(
       height: 50,
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
         color: Constants.transparentWhite,
         borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -151,7 +173,7 @@ class TaskScreen extends StatelessWidget {
           Text(
             "Result :",
             style: TextStyle(
-              fontSize:16,
+              fontSize: 16,
               fontFamily: Constants.primaryFont,
               fontWeight: FontWeight.w600,
               color: Constants.pageNameColor,
@@ -160,7 +182,7 @@ class TaskScreen extends StatelessWidget {
           Text(
             "${controller.filteredTasks.length}",
             style: TextStyle(
-              fontSize:16,
+              fontSize: 16,
               fontFamily: Constants.primaryFont,
               fontWeight: FontWeight.w600,
               color: Constants.pageNameColor,
@@ -170,8 +192,6 @@ class TaskScreen extends StatelessWidget {
           GestureDetector(child: Icon(Icons.sort)),
           SizedBox(width: 14),
           GestureDetector(child: Icon(Icons.filter_list_alt)),
-
-
         ],
       ),
     );

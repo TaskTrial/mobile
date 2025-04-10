@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Task Trial',
-      home:   LandingScreen(),
+      home:   MainViewScreen(),
     );
   }
 }

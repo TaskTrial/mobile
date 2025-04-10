@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_trial/controllers/login_controller.dart';
+import 'package:task_trial/controllers/auth/login_controller.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/auth/forget_password_screen.dart';
 import 'package:task_trial/views/auth/sign_up_screen.dart';
@@ -137,6 +137,7 @@ class LoginScreen extends StatelessWidget {
   }
   _emailField(LoginController controller) {
     return  MyTextField(
+      keyboardType: TextInputType.emailAddress,
       title: 'Email',
       hintText: 'mail@abc.com',
       controller: controller.emailController,
@@ -153,6 +154,7 @@ class LoginScreen extends StatelessWidget {
   }
   _passwordField(LoginController controller) {
     return MyTextField(
+      keyboardType: TextInputType.visiblePassword,
       title: 'Password',
       hintText: '***********',
       isPassword: true,
