@@ -9,53 +9,39 @@ class ProjectController extends GetxController{
   final projectEndDateController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
-  List<Map<String,dynamic>> projectList = [
-    {
-      'title': 'Fintech Mobile App UI',
-      'date': '20 July',
-      'description':
-      'Fintech app development provides more freedom to banking and other financial institutions.',
-      'progressHours': 91,
-      'teamImages': [
-        'https://randomuser.me/api/portraits/women/1.jpg',
-        'https://randomuser.me/api/portraits/men/2.jpg',
-        'https://randomuser.me/api/portraits/women/3.jpg',
-        'https://randomuser.me/api/portraits/men/4.jpg',
-        'https://randomuser.me/api/portraits/women/5.jpg',
-      ],
-      'backgroundColor': Constants.getRandomProjectCardColor(),
-    },
-    {
-      'title': 'Green sky Website Dev',
-      'date': '12 June',
-      'description':
-      'GreenSky DG focuses on evaluating and developing solar opportunities for landholders',
-      'progressHours': 15,
-      'teamImages': [
-        'https://randomuser.me/api/portraits/women/1.jpg',
-        'https://randomuser.me/api/portraits/men/2.jpg',
-        'https://randomuser.me/api/portraits/women/3.jpg',
-        'https://randomuser.me/api/portraits/men/4.jpg',
-        'https://randomuser.me/api/portraits/women/5.jpg',
-      ],
-      'backgroundColor': Constants.getRandomProjectCardColor(),
-    },
-    {
-      'title': 'Fintech Mobile App UI',
-      'date': '20 July',
-      'description':
-      'Fintech app development provides more freedom to banking and other financial institutions.',
-      'progressHours': 91,
-      'teamImages': [
-        'https://randomuser.me/api/portraits/women/7.jpg',
-        'https://randomuser.me/api/portraits/men/2.jpg',
-        'https://randomuser.me/api/portraits/women/3.jpg',
-        'https://randomuser.me/api/portraits/men/4.jpg',
-        'https://randomuser.me/api/portraits/women/5.jpg',
-      ],
-      'backgroundColor': Constants.getRandomProjectCardColor(),
-    }
+
+
+  List<Project> projects = [
+    Project(
+      id: "1",
+      title: "Fintech Mobile App UI",
+      date: "20 July",
+      description: "Fintech app development provides more freedom to banking and other financial institutions.",
+      progressHours: 10,
+      tasksIDs: ["1", "2" ,'3'],
+      backgroundColor: Constants.getRandomProjectCardColor(),
+    ),
+    Project(
+      id: "2",
+      title: "Project 2",
+      date: "2023-10-02",
+      description: "Description of project 2",
+      progressHours: 20,
+      tasksIDs: ["3", "4" , '5' , '6'],
+      backgroundColor: Constants.getRandomProjectCardColor(),
+    ),
+    Project(
+      id: "2",
+      title: "Project 2",
+      date: "2023-10-02",
+      description: "Description of project 2",
+      progressHours: 20,
+      tasksIDs: ["7", "8" , '9'],
+      backgroundColor: Constants.getRandomProjectCardColor(),
+    ),
   ];
+
+
 
   @override
   void onInit() {
@@ -70,4 +56,25 @@ class ProjectController extends GetxController{
     projectEndDateController.dispose();
     super.onClose();
   }
+
+
+}
+class Project {
+  final String id;
+  final String title;
+  final String date;
+  final String description;
+  final int progressHours;
+  final List<String> tasksIDs;
+  final Color backgroundColor;
+
+  Project({
+    required this.id,
+    required this.title,
+    required this.date,
+    required this.description,
+    required this.progressHours,
+    required this.tasksIDs,
+    required this.backgroundColor,
+  });
 }

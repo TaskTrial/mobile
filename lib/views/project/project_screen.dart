@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/controllers/project/project_controller.dart';
+import 'package:task_trial/controllers/task_controller.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/project/project_card.dart';
 
@@ -9,6 +10,7 @@ class ProjectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TaskController taskController = Get.put(TaskController());
     return Scaffold(
       backgroundColor: Constants.backgroundColor,
       body: Container(
@@ -24,17 +26,18 @@ class ProjectScreen extends StatelessWidget {
                   init: ProjectController(),
                   builder: (controller) {
                     return ListView.builder(
-                      itemCount: controller.projectList.length,
+                      itemCount: controller.projects.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 15),
                           child: ProjectCard(
-                           title: controller.projectList[index]['title'],
-                            date: controller.projectList[index]['date'],
-                            description: controller.projectList[index]['description'],
-                            progressHours: controller.projectList[index]['progressHours'],
-                            teamImages: controller.projectList[index]['teamImages'],
-                            backgroundColor: controller.projectList[index]['backgroundColor'],
+                           title:controller.projects[index].title,
+                            date: controller.projects[index].date,
+                            description: controller.projects[index].description,
+                            progressHours:controller.projects[index].progressHours,
+                            teamImages:taskController.getUserImagesByTaskIds(
+                              controller.projects[index].tasksIDs),
+                            backgroundColor: controller.projects[index].backgroundColor,
                           ),
                         );
                       },

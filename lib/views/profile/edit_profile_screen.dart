@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:task_trial/controllers/profile_controller.dart';
 import 'package:task_trial/models/user_model.dart';
 import 'package:task_trial/utils/constants.dart';
@@ -39,21 +42,38 @@ class EditProfileScreen extends StatelessWidget {
                 Center(
                   child: Stack(
                     children: [
-                      const CircleAvatar(
+                      if(controller.profileImage == null) const CircleAvatar(
                         radius: 50,
                         backgroundColor: Color(0xFFFFE3C5),
                         child: Icon(Icons.person, size: 50, color: Colors.brown),
+                      )
+                      else CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.black,
+                        child: CircleAvatar(
+                          radius: 48,
+                          backgroundImage: FileImage(File(controller.profileImage!.path)),
+                        ),
                       ),
                       Positioned(
                         bottom: 0,
                         right: 0,
-                        child: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: Colors.orange,
-                            shape: BoxShape.circle,
+                        child: GestureDetector(
+                          onTap: (){
+                            ImagePicker().pickImage(source: ImageSource.gallery).then((value) {
+                              if (value != null) {
+                                controller.uploadProfileImage(value);
+                              }
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: Colors.orange,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.edit, size: 16, color: Colors.white),
                           ),
-                          child: const Icon(Icons.edit, size: 16, color: Colors.white),
                         ),
                       )
                     ],

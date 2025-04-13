@@ -31,15 +31,15 @@ class MainViewController extends GetxController {
    UserModel userModel = UserModel();
 
   @override
-  // void onInit() async{
-  //   getUser();
-  //   super.onInit();
-  //   pageController.addListener(() {
-  //     currentPageIndex.value = pageController.page!.round();
-  //   });
-  //
-  //
-  // }
+  void onInit() async{
+    getUser();
+    super.onInit();
+    pageController.addListener(() {
+      currentPageIndex.value = pageController.page!.round();
+    });
+
+
+  }
 
   @override
   void onClose() {

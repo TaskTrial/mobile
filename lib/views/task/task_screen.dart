@@ -140,17 +140,43 @@ class TaskScreen extends StatelessWidget {
               const SizedBox(width: 6),
               Text(task.timeAgo, style: const TextStyle(fontSize: 12)),
               const Spacer(),
-              Row(
-                children: task.assignees
-                    .map((avatar) => Padding(
-                          padding: const EdgeInsets.only(left: 4.0),
-                          child: CircleAvatar(
-                            radius: 12,
-                            backgroundImage: NetworkImage(avatar),
-                          ),
-                        ))
-                    .toList(),
-              )
+              SizedBox(
+                width:
+                122, // You can adjust this depending on how many avatars
+                height: 35,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: Stack(
+                        alignment: Alignment.topRight,
+                        children: List.generate(task.assignees.length>4? 4:task.assignees.length, (index) {
+                          return Positioned(
+                            right: index * 22.0,
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 17,
+                              child: CircleAvatar(
+                                radius: 15,
+                                backgroundImage: NetworkImage(
+                                    task.assignees[index].imageUrl),
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+                    if (task.assignees.length > 4)
+                      Text('+${task.assignees.length - 4}',
+                          style: TextStyle(color: Colors.grey,
+                              fontFamily: Constants.primaryFont,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600)),
+
+
+                  ],
+                ),
+              ),
             ],
           ),
         ],

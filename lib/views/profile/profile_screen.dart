@@ -153,8 +153,12 @@ class ProfileScreen extends StatelessWidget {
   _picturePart(ProfileController  controller){
    if (controller.userModel.user!.profilePic != null) {
       return CircleAvatar(
-        radius: 40,
-        backgroundImage: NetworkImage(controller.userModel.user!.profilePic!),
+        radius: 45,
+        backgroundColor:Colors.black,
+        child: CircleAvatar(
+          radius: 43,
+          backgroundImage: NetworkImage(controller.userModel.user!.profilePic!),
+        ),
       );
     } else {
       return const CircleAvatar(

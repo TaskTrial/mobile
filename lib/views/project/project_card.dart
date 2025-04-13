@@ -88,16 +88,40 @@ class ProjectCard extends StatelessWidget {
           const SizedBox(height: 20),
           Row(
             children: [
-              ...teamImages
-                  .map((url) => Padding(
-                padding: const EdgeInsets.only(right: 0),
-                child: CircleAvatar(
-                  radius: 16,
-                  backgroundImage: NetworkImage(url),
+              SizedBox(
+                width:
+                130, // You can adjust this depending on how many avatars
+                height: 40,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Stack(
+                        children: List.generate(teamImages.length>4? 4:teamImages.length, (index) {
+                          return Positioned(
+                            left: index * 22.0,
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 17,
+                              child: CircleAvatar(
+                                radius: 15,
+                                backgroundImage: NetworkImage(
+                                    teamImages[index]),
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+                    if (teamImages.length > 4)
+                      Text('+${teamImages.length - 4}',
+                          style: TextStyle(color: Colors.grey,
+                              fontFamily: Constants.primaryFont,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600)),
+
+                  ],
                 ),
-              )
-              )
-                  ,
+              ),
               const Spacer(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,

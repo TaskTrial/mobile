@@ -91,21 +91,7 @@ class MainViewScreen extends StatelessWidget {
             arguments: controller.userModel,
           );
         },
-       child: CircleAvatar(
-         radius: 19,
-          backgroundColor: Colors.white,
-         child: SizedBox(
-            height: 35,
-            width: 35,
-           child: CircleAvatar(
-             backgroundImage: const AssetImage(
-               '${Constants.imagesPath}pic.png',
-             ),
-             radius: 30,
-             backgroundColor: Colors.grey.withOpacity(0.5),
-           ),
-         ),
-       ),
+       child: _picturePart(controller)
      ),
         SizedBox(width: 20,)
       ],
@@ -196,4 +182,34 @@ class MainViewScreen extends StatelessWidget {
       label: label,
     );
   }
+   _picturePart(MainViewController  controller){
+     if (controller.userModel.user!.profilePic != null) {
+       return CircleAvatar(
+         radius:  19 ,
+         backgroundColor: Colors.white,
+         child: SizedBox(
+           width: 35,
+            height: 35,
+           child: CircleAvatar(
+             radius: 30,
+             backgroundImage: NetworkImage(controller.userModel.user!.profilePic!),
+           ),
+         ),
+       );
+     } else {
+       return CircleAvatar(
+         backgroundColor: Colors.white,
+         radius: 19,
+         child: SizedBox(
+           width: 35,
+            height: 35,
+           child: const CircleAvatar(
+             radius: 40,
+             backgroundColor: Color(0xFFFFE3C5),
+             child: Icon(Icons.person, size: 50, color: Colors.brown),
+           ),
+         ),
+       );
+     }
+   }
 }

@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Task {
+  final String id;
   final String title;
   final String timeAgo;
-  final List<String> assignees;
+  final List<MyUser> assignees;
   final TaskStatus status;
 
   Task({
+    required this.id,
     required this.title,
     required this.timeAgo,
     required this.assignees,
@@ -17,44 +19,141 @@ class Task {
 }
 
 enum TaskStatus { all, todo, inProgress, completed }
+
 class TaskController extends GetxController {
   final RxInt selectedFilterIndex = 0.obs;
 
   final List<Task> allTasks = [
     Task(
+      id: "1",
       title: "Landing Page Design",
       timeAgo: "8 hours ago",
-      assignees: ["https://randomuser.me/api/portraits/men/3.jpg", "https://randomuser.me/api/portraits/men/2.jpg"],
+      assignees: List.generate(
+          7,
+              (index) => MyUser(
+              id: index.toString(),
+              name: 'User $index',
+              imageUrl:
+              'https://randomuser.me/api/portraits/${index % 2 == 0 ? 'men' : 'women'}/${index % 100}.jpg')),
       status: TaskStatus.todo,
     ),
     Task(
+      id: "2",
       title: "Create New Blog Post",
       timeAgo: "18 hours ago",
-      assignees: ["https://randomuser.me/api/portraits/men/4.jpg"],
+      assignees: List.generate(
+            10,
+            (index) => MyUser(
+                id: {index+7}.toString(),
+                name: 'User ${index+7}',
+                imageUrl:
+                    'https://randomuser.me/api/portraits/${index % 2 == 0 ? 'men' : 'women'}/${index % 100}.jpg'))
+      ,
       status: TaskStatus.inProgress,
     ),
     Task(
+      id: "3",
       title: "Online Course",
       timeAgo: "2 Days ago",
-      assignees: ["https://randomuser.me/api/portraits/men/7.jpg"],
+      assignees: [
+        ...List.generate(
+            4,
+            (index) => MyUser(
+                id: {index+7+10}.toString(),
+                name: 'User ${index+7+10}',
+                imageUrl:
+                    'https://randomuser.me/api/portraits/${index % 2 == 0 ? 'men' : 'women'}/${index % 100}.jpg'))
+      ],
       status: TaskStatus.inProgress,
     ),
     Task(
+      id: "4",
       title: "Offline Course",
       timeAgo: "3 Days ago",
-      assignees: ["https://randomuser.me/api/portraits/men/7.jpg"],
+      assignees: [
+        ...List.generate(
+            5,
+            (index) => MyUser(
+                id: {index+7+10+4}.toString(),
+                name: 'User ${index+7+10+4}',
+                imageUrl:
+                    'https://randomuser.me/api/portraits/${index % 2 == 0 ? 'men' : 'women'}/${index % 100}.jpg'))
+      ],
       status: TaskStatus.inProgress,
     ),
     Task(
+      id: "5",
       title: "Complete Portfolio",
       timeAgo: "7 Days ago",
-      assignees: ["https://randomuser.me/api/portraits/men/8.jpg"],
+      assignees: [
+        ...List.generate(
+            10,
+            (index) => MyUser(
+                id: {index+7+10+4+5}.toString(),
+                name: 'User ${index+7+10+4+5}',
+                imageUrl:
+                    'https://randomuser.me/api/portraits/${index % 2 == 0 ? 'men' : 'women'}/${index % 100}.jpg'))
+      ],
       status: TaskStatus.completed,
     ),
     Task(
+      id: "6",
       title: "Design New Logo",
       timeAgo: "3 Days ago",
-      assignees: ["https://randomuser.me/api/portraits/men/8.jpg"],
+      assignees: [
+        ...List.generate(
+            3,
+            (index) => MyUser(
+                id: {index+7+10+4+5+10}.toString(),
+                name: 'User ${index+7+10+4+5+10}',
+                imageUrl:
+                    'https://randomuser.me/api/portraits/${index % 2 == 0 ? 'men' : 'women'}/${index % 100}.jpg'))
+      ],
+      status: TaskStatus.todo,
+    ),
+    Task(
+      id: "7",
+      title: "Design New Logo",
+      timeAgo: "3 Days ago",
+      assignees: [
+        ...List.generate(
+            3,
+                (index) => MyUser(
+                id: {index+7+10+4+5+10}.toString(),
+                name: 'User ${index+7+10+4+5+10}',
+                imageUrl:
+                'https://randomuser.me/api/portraits/${index % 2 == 0 ? 'men' : 'women'}/${index % 100}.jpg'))
+      ],
+      status: TaskStatus.completed,
+    ),
+    Task(
+      id: "8",
+      title: "Design New Logo",
+      timeAgo: "3 Days ago",
+      assignees: [
+        ...List.generate(
+            3,
+                (index) => MyUser(
+                id: {index+7+10+4+5+10}.toString(),
+                name: 'User ${index+7+10+4+5+10}',
+                imageUrl:
+                'https://randomuser.me/api/portraits/${index % 2 == 0 ? 'men' : 'women'}/${index % 100}.jpg'))
+      ],
+      status: TaskStatus.todo,
+    ),
+    Task(
+      id: "9",
+      title: "Design New Logo",
+      timeAgo: "3 Days ago",
+      assignees: [
+        ...List.generate(
+            3,
+                (index) => MyUser(
+                id: {index+7+10+4+5+10}.toString(),
+                name: 'User ${index+7+10+4+5+10}',
+                imageUrl:
+                'https://randomuser.me/api/portraits/${index % 2 == 0 ? 'men' : 'women'}/${index % 100}.jpg'))
+      ],
       status: TaskStatus.todo,
     ),
   ];
@@ -74,7 +173,47 @@ class TaskController extends GetxController {
   }
 
   int get allCount => allTasks.length;
-  int get todoCount => allTasks.where((t) => t.status == TaskStatus.todo).length;
-  int get inProgressCount => allTasks.where((t) => t.status == TaskStatus.inProgress).length;
-  int get completedCount => allTasks.where((t) => t.status == TaskStatus.completed).length;
+  int get todoCount =>
+      allTasks.where((t) => t.status == TaskStatus.todo).length;
+  int get inProgressCount =>
+      allTasks.where((t) => t.status == TaskStatus.inProgress).length;
+  int get completedCount =>
+      allTasks.where((t) => t.status == TaskStatus.completed).length;
+//get task by id
+  Task getTaskById(String id) {
+    return allTasks.firstWhere((task) => task.id == id);
+  }
+
+  // get list of tasks by task ids
+  List<Task> getTasksByIds(List<String> ids) {
+    List<Task> tasks = [];
+    for (String id in ids) {
+      Task task = allTasks.firstWhere((task) => task.id == id);
+      tasks.add(task);
+    }
+    return tasks;
+  }
+  List<String> getUserImagesByTaskIds(List<String> ids) {
+    List<String> images = [];
+    for (String id in ids) {
+      Task task = allTasks.firstWhere((task) => task.id == id);
+      images.addAll(task.assignees.map((user) => user.imageUrl).toList());
+    }
+    return images;
+  }
+
+}
+
+
+
+class MyUser {
+  String id;
+  String name;
+  String imageUrl;
+
+  MyUser({
+    required this.id,
+    required this.name,
+    required this.imageUrl,
+  });
 }
