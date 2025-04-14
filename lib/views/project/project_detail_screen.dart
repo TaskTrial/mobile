@@ -86,10 +86,11 @@ class ProjectDetailScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: const [
                             Text("Due date",
-                                style: TextStyle(fontWeight: FontWeight.w500)),
+                                style: TextStyle(fontWeight: FontWeight.bold,fontFamily: Constants.primaryFont)),
                             SizedBox(height: 8),
                             Text("Thursday, 20 July 2023",
-                                style: TextStyle(color: Colors.black)),
+                                style: TextStyle(color: Colors.black,
+                                    fontFamily: Constants.primaryFont)),
                           ],
                         ),
                       ],

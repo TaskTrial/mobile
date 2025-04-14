@@ -21,7 +21,6 @@ class LoginController extends GetxController {
   final rememberMe = false.obs;
   final formKey = GlobalKey<FormState>();
 
-
   final otpController = TextEditingController();
 
   final isSignedIn = false.obs;
@@ -35,125 +34,22 @@ class LoginController extends GetxController {
   // }
 
   bool toggleRememberMe() {
-
     rememberMe.value = !rememberMe.value;
     return rememberMe.value;
-
   }
-
-  void validateEmail(String value) {
-    if (value.isEmpty) {
-      Get.snackbar('Error', 'Email cannot be empty');
-    } else if (!GetUtils.isEmail(value)) {
-      Get.snackbar('Error', 'Invalid email format');
-    }
-  }
-  void validatePassword(String value) {
-    if (value.isEmpty) {
-      Get.snackbar('Error', 'Password cannot be empty');
-    } else if (value.length < 6) {
-      Get.snackbar('Error', 'Password must be at least 6 characters');
-    }
-  }
-  void validateForm() {
-    if (formKey.currentState!.validate()) {
-      Get.snackbar('Success', 'Form is valid');
-    } else {
-      Get.snackbar('Error', 'Form is invalid');
-    }
-  }
-  void clearFields() {
-    emailController.clear();
-    passwordController.clear();
-  }
-  void submitForm() {
-    if (formKey.currentState!.validate()) {
-      Get.snackbar('Success', 'Form submitted successfully');
-    } else {
-      Get.snackbar('Error', 'Please fill in all fields correctly');
-    }
-  }
-
 
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
-  login() async{
-    try {
-      isLoading.value = true;
-      final response = await Dio().post(
-         'http://192.168.1.5:3000/api/auth/signin',
-        data: {
-          'email': emailController.text,
-          'password': passwordController.text,
-        },
-      );
-      print(response);
-      LoginModel loginModel = LoginModel();
-      loginModel = LoginModel.fromJson(response.data);
-      print(loginModel.toJson());
-      isLoading.value = false;
-      CacheHelper().saveData(key: 'id', value: '${loginModel.user!.id}');
-      CacheHelper().saveData(key: 'accessToken', value: '${loginModel.accessToken}');
-      CacheHelper().saveData(key: 'refreshToken', value: '${loginModel.refreshToken}');
-      isLoading.value = false;
-      Get.offAll(() =>  MainViewScreen(),
-      );
-    } on DioException catch (e) {
-      isLoading.value = false;
-     switch (e.type) {
-        case DioExceptionType.connectionTimeout:
-          Get.snackbar('Error', 'Connection timeout');
-          break;
-        case DioExceptionType.receiveTimeout:
-          Get.snackbar('Error', 'Receive timeout');
-          break;
-        case DioExceptionType.sendTimeout:
-          Get.snackbar('Error', 'Send timeout');
-          break;
-        case DioExceptionType.badResponse:
-          {
-            Get.snackbar(
-                'Error', 'Bad response: ${e.response!.data['message']}'
-           , backgroundColor: Constants.backgroundColor,
-              titleText: const Text(
-                'Error',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: Constants.primaryFont,
-                ),
-              ),
-              messageText: Text(
-                '${e.response!.data['message']}',
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontFamily: Constants.primaryFont,
-                ),
-              ),
+  login() async {
+    AuthService.login(
+        emailController: emailController,
+        passwordController: passwordController,
+        isLoading: isLoading);
+  }
 
-            );
-          }
-          break;
-        case DioExceptionType.cancel:
-          Get.snackbar('Error', 'Request cancelled');
-          break;
-        case DioExceptionType.unknown:
-          Get.snackbar('Error', 'Unexpected error: ${e.message}');
-       case DioExceptionType.badCertificate:
-          Get.snackbar('Error', 'Bad certificate');
-          break;
-       case DioExceptionType.connectionError:
-          Get.snackbar('Error', 'Connection error');
-          break;
-      }
-    }
-   }
-
-  sendOTP()async{
+  sendOTP() async {
     try {
       final response = await Dio().post(
         'http://192.168.1.5:3000/api/auth/forgotPassword',
@@ -163,7 +59,7 @@ class LoginController extends GetxController {
       );
       print(response);
       Get.snackbar('Success', 'OTP sent to ${emailController.text}');
-       Get.to(()=> ResetPasswordScreen(),arguments: emailController.text);
+      Get.to(() => ResetPasswordScreen(), arguments: emailController.text);
     } on DioException catch (e) {
       isLoading.value = false;
       switch (e.type) {
@@ -179,39 +75,34 @@ class LoginController extends GetxController {
         case DioExceptionType.badResponse:
           {
             Get.snackbar(
-              'Error', 'Bad response: ${e.response!.data['message ']}'
-              , backgroundColor: Constants.backgroundColor,
-              titleText: const Text(
-                'Error',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: Constants.primaryFont,
+                'Error', 'Bad response: ${e.response!.data['message ']}',
+                backgroundColor: Constants.backgroundColor,
+                titleText: const Text(
+                  'Error',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: Constants.primaryFont,
+                  ),
                 ),
-              ),
-              messageText: Text(
-                '${e.response!.data['message']}',
-                style:const TextStyle()
-              )
-            );
+                messageText: Text('${e.response!.data['message']}',
+                    style: const TextStyle()));
           }
           break;
         case DioExceptionType.badCertificate:
-          Get.snackbar( 'Error', 'Bad certificate');
+          Get.snackbar('Error', 'Bad certificate');
           break;
         case DioExceptionType.cancel:
           Get.snackbar('Error', 'Request cancelled');
           throw UnimplementedError();
         case DioExceptionType.connectionError:
-           Get.snackbar('Error', 'Connection error');
-           throw UnimplementedError();
+          Get.snackbar('Error', 'Connection error');
+          throw UnimplementedError();
         case DioExceptionType.unknown:
           Get.snackbar('Error', 'Unexpected error: ${e.message}');
           throw UnimplementedError();
       }
     }
   }
-
-
 }
