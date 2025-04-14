@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_trial/controllers/project/project_controller.dart';
+import 'package:task_trial/controllers/project/project_detail_controller.dart';
+import 'package:task_trial/controllers/task_controller.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/project/task_item.dart';
 
 class ProjectDetailScreen extends StatelessWidget {
-  const ProjectDetailScreen({super.key});
-
+  const ProjectDetailScreen({super.key,required this.project,required this.teamImages});
+  final Project project;
+  final List<String> teamImages ;
   @override
   Widget build(BuildContext context) {
+    ProjectDetailController controller = Get.put(ProjectDetailController(project: project));
     return Scaffold(
       backgroundColor: const Color(0xFFF0E3DA), // Background beige
       body: SafeArea(
         child: Column(
           children: [
-            // Header
            _appBar(),
-            // White card with rounded top corners
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
@@ -27,15 +30,26 @@ class ProjectDetailScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Fintech Mobile App UI",
+                     Text(
+                      project.title,
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: Constants.primaryFont,
+
+                          ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      "Fintech app development provides more freedom to banking and other financial institutions.",
-                      style: TextStyle(color: Colors.grey),
+                     Text(
+                      project.description,
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 18,
+                          fontFamily: Constants.primaryFont,
+                          fontWeight: FontWeight.w600,
+
+                      ),
                     ),
                     const SizedBox(height: 20),
 
@@ -51,14 +65,13 @@ class ProjectDetailScreen extends StatelessWidget {
                             const SizedBox(height: 8),
                             // Inside your Column (under "Assigned to")
                             SizedBox(
-                              width:
-                                  120, // You can adjust this depending on how many avatars
+                              width: 120, // You can adjust this depending on how many avatars
                               height: 40,
                               child: Row(
                                 children: [
                                   Expanded(
                                     child: Stack(
-                                      children: List.generate(4, (index) {
+                                      children: List.generate(teamImages.length>4?4:teamImages.length, (index) {
                                         return Positioned(
                                           left: index * 22.0,
                                           child: CircleAvatar(
@@ -66,16 +79,16 @@ class ProjectDetailScreen extends StatelessWidget {
                                             radius: 17,
                                             child: CircleAvatar(
                                               radius: 15,
-                                              backgroundImage: NetworkImage(
-                                                  "https://randomuser.me/api/portraits/men/$index.jpg"),
+                                              backgroundImage: NetworkImage(teamImages[index]),
                                             ),
                                           ),
                                         );
                                       }),
                                     ),
                                   ),
-                                  Text('+3',
-                                      style: TextStyle(color: Colors.grey)),
+                                  if (teamImages.length > 4)
+                                    Text('+${teamImages.length - 4}',
+                                        style: TextStyle(color: Colors.grey)),
                                 ],
                               ),
                             ),
@@ -99,45 +112,19 @@ class ProjectDetailScreen extends StatelessWidget {
 
                     // Tasks List
                     Expanded(
-                      child: ListView(
-                        children: const [
-                          TaskItem(
-                            title: "Create Design System",
-                            hours: "25 hr",
-                            avatars: [
-                              "https://randomuser.me/api/portraits/men/1.jpg",
-                              "https://randomuser.me/api/portraits/men/1.jpg",
-                              "https://randomuser.me/api/portraits/men/1.jpg"
-                            ],
-                          ),
-                          SizedBox(height: 16),
-                          TaskItem(
-                            title: "Create Wireframe",
-                            hours: "18 hr",
-                            avatars: [
-                              "https://randomuser.me/api/portraits/men/1.jpg",
-                              "https://randomuser.me/api/portraits/men/2.jpg",
-                              "https://randomuser.me/api/portraits/men/7.jpg",
-                              "https://randomuser.me/api/portraits/men/4.jpg",
-                              "https://randomuser.me/api/portraits/men/5.jpg",
-                              "https://randomuser.me/api/portraits/men/6.jpg"
-                            ],
-                          ),
-                          SizedBox(height: 16),
-                          TaskItem(
-                            title: "Landing Page Design",
-                            hours: "8 hr",
-                            avatars: [
-                              "https://randomuser.me/api/portraits/men/1.jpg",
-                              "https://randomuser.me/api/portraits/men/2.jpg",
-                              "https://randomuser.me/api/portraits/men/7.jpg",
-                              "https://randomuser.me/api/portraits/men/4.jpg",
-                              "https://randomuser.me/api/portraits/men/5.jpg",
-                              "https://randomuser.me/api/portraits/men/6.jpg"
-                            ],
-                          ),
-                        ],
-                      ),
+                      child: ListView.builder(
+                          itemCount: controller.tasks.length,
+                          itemBuilder: (context, index) {
+                            Task task = controller.tasks[index];
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 7),
+                              child: TaskItem(
+                                  title: task.title,
+                                  hours: task.timeAgo,
+                                  avatars: controller.getUserImagesByTaskId(task.id) ,
+                              ),
+                            );
+                          }, )
                     ),
                   ],
                 ),

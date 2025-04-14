@@ -18,8 +18,8 @@ class TaskItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade200),
-        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade200,width: 2),
+        borderRadius: BorderRadius.circular(16 ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

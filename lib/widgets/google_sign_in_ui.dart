@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../utils/constants.dart';
 class GoogleSignInUI extends StatelessWidget {
-  const GoogleSignInUI({super.key});
+  const GoogleSignInUI({super.key,required this.onPressed});
+
+  final VoidCallback onPressed;
+
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        // Handle Google Sign-In
-      },
+      onTap: onPressed,
       child: Container(
         alignment: Alignment.center,
         padding: const EdgeInsets.symmetric(horizontal: 20),

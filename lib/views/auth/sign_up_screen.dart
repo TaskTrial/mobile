@@ -50,7 +50,10 @@ class SignUpScreen extends StatelessWidget {
                           _loginMessageHint(),
                           const SizedBox(height: 30),
                           // google sign in
-                          const GoogleSignInUI(),
+                           GoogleSignInUI(
+                            onPressed: () {
+                            },
+                          ),
                           const SizedBox(height: 20),
                           // or sign in with email
                           _theDivider(width),

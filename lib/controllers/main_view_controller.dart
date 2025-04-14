@@ -41,11 +41,11 @@ class MainViewController extends GetxController {
 
   }
 
-  @override
-  void onClose() {
-    pageController.dispose();
-    super.onClose();
-  }
+  // @override
+  // void onClose() {
+  //   pageController.dispose();
+  //   super.onClose();
+  // }
   void onTapped(int index) {
     currentPageIndex.value = index;
     pageController.jumpToPage(index);

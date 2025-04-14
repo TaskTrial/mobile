@@ -33,7 +33,7 @@ class EditProfileServices {
         ),
       );
       print(response.data);
-      Constants.completeSnackBar(
+      Constants.successSnackBar(
           title: ' Success', message: ' Profile Image Updated Successfully !');
       Get.delete<MainViewController>();
       Get.offAll(
@@ -102,7 +102,7 @@ class EditProfileServices {
             "departmentId": "",
             "organizationId": ""
           });
-      Constants.completeSnackBar(
+      Constants.successSnackBar(
           title: 'Success', message: 'Profile Updated Successfully !');
       Get.delete<MainViewController>();
       Get.offAll(

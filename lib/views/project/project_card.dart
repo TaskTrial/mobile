@@ -2,33 +2,25 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_trial/controllers/project/project_controller.dart';
 import 'package:task_trial/views/project/project_detail_screen.dart';
 
 import '../../utils/constants.dart';
 
 class ProjectCard extends StatelessWidget {
-  final String title;
-  final String date;
-  final String description;
-  final int progressHours;
-  final List<String> teamImages;
-  final Color backgroundColor;
+final Project project;
+final List<String> teamImages;
 
   const ProjectCard({
     super.key,
-    required this.title,
-    required this.date,
-    required this.description,
-    required this.progressHours,
+  required this.project,
     required this.teamImages,
-    required this.backgroundColor,
-  });
-
+  }) ;
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: project.backgroundColor,
         borderRadius: BorderRadius.circular(20),
       ),
       padding: const EdgeInsets.all(16),
@@ -40,21 +32,21 @@ class ProjectCard extends StatelessWidget {
                CircleAvatar(
                 backgroundColor:Colors.white.withValues(alpha: 50),
                 radius: 50,
-                child: Icon(Icons.photo,size: 50,color: backgroundColor,),  // Replace with your icon
+                child: Icon(Icons.photo,size: 50,color: project.backgroundColor,),  // Replace with your icon
                 // Replace with your icon
               ),
               const Spacer(),
               GestureDetector(
                 onTap: () {
-                 Get.to(() => ProjectDetailScreen(
-                 ));
+                 Get.to(() => ProjectDetailScreen(project:project ,teamImages: teamImages,)
+                 );
                 },
                 child: CircleAvatar(
                   radius: 23,
                   backgroundColor: Colors.black,
                   child:  CircleAvatar(
                     radius: 22,
-                    backgroundColor: backgroundColor,
+                    backgroundColor: project.backgroundColor,
                     child:Transform.rotate(
                       angle: 45 * pi / 180, // Converts degrees to radians
                       child: Icon(Icons.arrow_upward, size: 23,color: Colors.black,),  // Replace with your actual widget
@@ -66,7 +58,7 @@ class ProjectCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            title,
+            project.title,
             style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold,
                 fontFamily: Constants.primaryFont),
           ),
@@ -75,14 +67,14 @@ class ProjectCard extends StatelessWidget {
             children: [
               const Icon(Icons.calendar_today, size: 16),
               const SizedBox(width: 5),
-              Text(date,
+              Text(project.date,
                   style: const TextStyle(
                       fontSize: 16, fontWeight: FontWeight.w500,fontFamily: Constants.primaryFont)),
             ],
           ),
           const SizedBox(height: 12),
           Text(
-            description,
+            project.description,
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600,fontFamily: Constants.primaryFont),
           ),
           const SizedBox(height: 20),
@@ -129,7 +121,7 @@ class ProjectCard extends StatelessWidget {
                   SizedBox(
                     width: 90, // or use MediaQuery or make it responsive
                     child: LinearProgressIndicator(
-                      value: progressHours / 100,
+                      value: project.progressHours / 100,
                       minHeight: 5,
                       backgroundColor: Colors.grey[300],
                       color: Colors.black,
@@ -137,7 +129,7 @@ class ProjectCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text('$progressHours hours',
+                  Text('${project.progressHours} hours',
                       style: const TextStyle(
                           fontWeight: FontWeight.w500, color: Color(0xFF3E4ADE))),
                 ],

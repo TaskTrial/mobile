@@ -31,13 +31,9 @@ class ProjectScreen extends StatelessWidget {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 15),
                           child: ProjectCard(
-                           title:controller.projects[index].title,
-                            date: controller.projects[index].date,
-                            description: controller.projects[index].description,
-                            progressHours:controller.projects[index].progressHours,
+                            project: controller.projects[index],
                             teamImages:taskController.getUserImagesByTaskIds(
                               controller.projects[index].tasksIDs),
-                            backgroundColor: controller.projects[index].backgroundColor,
                           ),
                         );
                       },

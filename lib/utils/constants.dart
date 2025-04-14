@@ -10,8 +10,8 @@ class Constants {
   static const Color pageNameColor = Color(0xFF525252);
   static const Color projectCardColor1 = Color(0xFFF8E9C8);
   static const Color projectCardColor2 = Color(0xFFDEECEC);
-  static const Color projectCardColor3 = Color(0xFFecdede);
-  static const Color projectCardColor4 = Color(0xFFdedeec);
+  static const Color projectCardColor3 = Color(0xffe1b4b4);
+  static const Color projectCardColor4 = Color(0xFFDED3FD);
 
 
 
@@ -25,7 +25,7 @@ class Constants {
   static const String loginUrl = 'auth/signin';
 
   static Color getRandomProjectCardColor() {
-    final colors = [projectCardColor1, projectCardColor2];
+    final colors = [projectCardColor1, projectCardColor2,projectCardColor3,projectCardColor4];
     return colors[Random().nextInt(colors.length)];
   }
 
@@ -58,14 +58,14 @@ class Constants {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 4),
       snackPosition: snackPosition,
       reverseAnimationCurve:  Curves.easeInOut,
       isDismissible: true,
       dismissDirection: DismissDirection.horizontal,
     );
   }
-  static completeSnackBar({required String title, required String message,SnackPosition snackPosition = SnackPosition.TOP }) {
+  static successSnackBar({required String title, required String message,SnackPosition snackPosition = SnackPosition.TOP }) {
     return Get.snackbar(title, message,
       colorText: Colors.white,
       backgroundColor: Colors.white,
@@ -94,7 +94,44 @@ class Constants {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 4),
+      snackPosition: snackPosition,
+      reverseAnimationCurve:  Curves.easeInOut,
+      isDismissible: true,
+      dismissDirection: DismissDirection.horizontal,
+    );
+  }
+
+  static alertSnackBar({required String title, required String message,SnackPosition snackPosition = SnackPosition.TOP }) {
+    return Get.snackbar(title, message,
+      colorText: Colors.white,
+      backgroundColor: Colors.white,
+      icon: const Icon( Icons.email , color: Colors.white),
+      titleText: Text(
+        title,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          fontFamily: Constants.primaryFont,
+        ),
+      ),
+      messageText: Text(
+        message,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontFamily: Constants.primaryFont,
+        ),
+      ),
+      margin: const EdgeInsets.all(20),
+      borderRadius: 10,
+      backgroundGradient:  LinearGradient(
+        colors: [ Colors.orangeAccent.shade700,Colors.deepOrangeAccent ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+      duration: const Duration(seconds: 4),
       snackPosition: snackPosition,
       reverseAnimationCurve:  Curves.easeInOut,
       isDismissible: true,

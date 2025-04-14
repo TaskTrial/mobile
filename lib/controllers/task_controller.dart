@@ -152,7 +152,8 @@ class TaskController extends GetxController {
                 id: {index+7+10+4+5+10}.toString(),
                 name: 'User ${index+7+10+4+5+10}',
                 imageUrl:
-                'https://randomuser.me/api/portraits/${index % 2 == 0 ? 'men' : 'women'}/${index % 100}.jpg'))
+                'https://randomuser.me/api/portraits/${index % 2 == 0 ? 'men' : 'women'}/${index % 100}.jpg')
+        )
       ],
       status: TaskStatus.todo,
     ),
@@ -201,6 +202,13 @@ class TaskController extends GetxController {
     }
     return images;
   }
+  // get users images by task id
+  List<String> getUserImagesByTaskId(String id) {
+    Task task = allTasks.firstWhere((task) => task.id == id);
+    return task.assignees.map((user) => user.imageUrl).toList();
+  }
+
+
 
 }
 
