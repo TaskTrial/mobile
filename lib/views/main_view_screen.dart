@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/controllers/main_view_controller.dart';
-import 'package:task_trial/models/login_model.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/profile/profile_screen.dart';
 
 class MainViewScreen extends StatelessWidget {
    const MainViewScreen({super.key});
-
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -159,7 +156,8 @@ class MainViewScreen extends StatelessWidget {
     );
   }
   _bottomNavigationBarItem(
-      String iconPath, String selectedIconPath, String label) {
+      String iconPath, String selectedIconPath, String label)
+  {
     return BottomNavigationBarItem(
       icon: SizedBox(
         height: 50,
@@ -206,7 +204,7 @@ class MainViewScreen extends StatelessWidget {
            child: const CircleAvatar(
              radius: 40,
              backgroundColor: Color(0xFFFFE3C5),
-             child: Icon(Icons.person, size: 50, color: Colors.brown),
+             child: Icon(Icons.person, size: 25, color: Colors.brown),
            ),
          ),
        );

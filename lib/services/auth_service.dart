@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:task_trial/views/auth/create_organization_screen.dart';
 import '../models/login_model.dart';
 import '../utils/cache_helper.dart';
 import '../utils/constants.dart';
@@ -9,14 +9,14 @@ import '../views/auth/login_screen.dart';
 import '../views/auth/reset_password_screen.dart';
 import '../views/auth/verify_screen.dart';
 import '../views/main_view_screen.dart';
+import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 
 class LoginAuthServices {
   static Future<void> login({
     required TextEditingController emailController,
     required TextEditingController passwordController,
     required RxBool isLoading,
-  }) async
-  {
+  }) async {
     try {
       isLoading.value = true;
       final response = await Dio().post(
@@ -38,8 +38,8 @@ class LoginAuthServices {
       isLoading.value = false;
       Constants.successSnackBar(
           title: 'Success', message: 'Login Successfully !');
-      Get.offAll(
-        () => MainViewScreen(),
+      await Get.offAll(
+        () => CreateOrganizationScreen(),
       );
     } on DioException catch (e) {
       isLoading.value = false;
@@ -81,8 +81,7 @@ class LoginAuthServices {
   static Future<void> sendOtpToResetPassword({
     required TextEditingController emailController,
     required RxBool isLoading,
-  }) async
-  {
+  }) async {
     try {
       final response = await Dio().post(
         'http://192.168.1.5:3000/api/auth/forgotPassword',
@@ -134,8 +133,7 @@ class LoginAuthServices {
   static Future<void> resetPassword(
       {required TextEditingController newPasswordController,
       required TextEditingController otpController,
-      required String args}) async
-  {
+      required String args}) async {
     try {
       final response = await Dio().post(
         'http://192.168.1.5:3000/api/auth/resetPassword',
@@ -145,8 +143,9 @@ class LoginAuthServices {
           "newPassword": newPasswordController.text
         },
       );
-     Constants.successSnackBar(
-          title: 'Password reset successfully', message: 'Login to your account to continue');
+      Constants.successSnackBar(
+          title: 'Password reset successfully',
+          message: 'Login to your account to continue');
       Get.offAll(() => LoginScreen());
     } on DioException catch (e) {
       switch (e.type) {
@@ -184,64 +183,42 @@ class LoginAuthServices {
     }
   }
 
-  static Future<void> loginWithGoogle() async{
+  static Future<void> loginWithGoogle() async {
     try {
-      final response = await Dio().post(
-        'http://192.168.1.5:3000/api/auth/google',
+      final result = await FlutterWebAuth2.authenticate(
+        url: "http://192.168.1.5:3000/api/auth/google",
+        callbackUrlScheme: "tasktrial",
       );
-     Constants.successSnackBar(
+      final uri = Uri.parse(result);
+      final accessToken = uri.queryParameters['accessToken'];
+      final refreshToken = uri.queryParameters['refreshToken'];
+      final userId = uri.queryParameters['userId'];
+      if (accessToken == null || refreshToken == null || userId == null) {
+        throw Exception("Missing tokens or user info in redirect URI");
+      }
+      await CacheHelper().saveData(key: 'id', value: userId);
+      await CacheHelper().saveData(key: 'accessToken', value: accessToken);
+      await CacheHelper().saveData(key: 'refreshToken', value: refreshToken);
+
+      Constants.successSnackBar(
           title: 'Login Success', message: 'Login Success');
       Get.offAll(() => MainViewScreen());
+    } catch (e) {
+      Constants.errorSnackBar(
+          title: 'Login Failed', message: 'An error occurred: $e');
     }
-    on DioException catch (e) {
-      switch (e.type) {
-        case DioExceptionType.connectionTimeout:
-          Constants.errorSnackBar(
-              title: 'Failed', message: 'Connection timeout');
-          break;
-        case DioExceptionType.receiveTimeout:
-          Constants.errorSnackBar(title: 'Failed', message: 'Receive timeout');
-          break;
-        case DioExceptionType.sendTimeout:
-          Constants.errorSnackBar(title: 'Failed', message: 'Send timeout');
-          break;
-        case DioExceptionType.badResponse:
-          {
-            Constants.errorSnackBar(
-                title: 'Failed', message: '${e.response!.data['message']}');
-          }
-          break;
-        case DioExceptionType.cancel:
-          Constants.errorSnackBar(
-              title: 'Failed', message: 'Request cancelled');
-          break;
-        case DioExceptionType.unknown:
-          Constants.errorSnackBar(
-              title: 'Error', message: 'Unexpected error: ${e.message}');
-          break;
-        case DioExceptionType.badCertificate:
-          Constants.errorSnackBar(title: 'Failed', message: 'Bad certificate');
-          break;
-        case DioExceptionType.connectionError:
-          Constants.errorSnackBar(title: 'Failed', message: 'Connection error');
-          break;
-      }
-    }
-
   }
 }
 
-class SignUpAuthServices{
-  static Future<void> signUp(
-      {
-        required TextEditingController emailController,
-        required TextEditingController passwordController,
-        required TextEditingController userNameController,
-        required TextEditingController firstNameController,
-        required TextEditingController lastNameController,
-        required RxBool isLoading,
-      }) async
-  {
+class SignUpAuthServices {
+  static Future<void> signUp({
+    required TextEditingController emailController,
+    required TextEditingController passwordController,
+    required TextEditingController userNameController,
+    required TextEditingController firstNameController,
+    required TextEditingController lastNameController,
+    required RxBool isLoading,
+  }) async {
     try {
       isLoading.value = true;
       final response = await Dio().post(
@@ -255,9 +232,12 @@ class SignUpAuthServices{
         },
       );
       print(response);
-      Constants.alertSnackBar(title: 'Check your email', message: 'We have sent you a verification code to your email');
+      Constants.alertSnackBar(
+          title: 'Check your email',
+          message: 'We have sent you a verification code to your email');
       isLoading.value = false;
-      Get.offAll(() =>  VerifyScreen(),
+      Get.offAll(
+        () => VerifyScreen(),
         arguments: {
           'email': emailController.text,
         },
@@ -300,14 +280,11 @@ class SignUpAuthServices{
     }
   }
 
-  static Future<void> verifyAccount(
-      {
-        required String email,
-        required TextEditingController codeController,
-        required RxBool isLoading,
-      }
-      ) async
-  {
+  static Future<void> verifyAccount({
+    required String email,
+    required TextEditingController codeController,
+    required RxBool isLoading,
+  }) async {
     try {
       isLoading.value = true;
       final response = await Dio().post(
@@ -319,9 +296,11 @@ class SignUpAuthServices{
       );
       print(response);
       Constants.successSnackBar(
-          title: 'Email Verified Successfully', message: 'Please , login to continue');
+          title: 'Email Verified Successfully',
+          message: 'Please , login to continue');
       isLoading.value = false;
-      Get.offAll(() =>  LoginScreen(),
+      Get.offAll(
+        () => LoginScreen(),
       );
     } on DioException catch (e) {
       isLoading.value = false;
@@ -359,8 +338,4 @@ class SignUpAuthServices{
       }
     }
   }
-
-
-
-
 }

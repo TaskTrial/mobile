@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/utils/cache_helper.dart';
+import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/chat/chat_screen.dart';
 import 'package:task_trial/views/dashboard/dashboard_screen.dart';
 import 'package:task_trial/views/more/more_screen.dart';
@@ -41,11 +42,11 @@ class MainViewController extends GetxController {
 
   }
 
-  // @override
-  // void onClose() {
-  //   pageController.dispose();
-  //   super.onClose();
-  // }
+  @override
+  void onClose() {
+    pageController.dispose();
+    super.onClose();
+  }
   void onTapped(int index) {
     currentPageIndex.value = index;
     pageController.jumpToPage(index);
@@ -67,11 +68,12 @@ class MainViewController extends GetxController {
     currentPageIndex.value = index;
   }
 
-  getUser() async{
+  Future<void> getUser() async {
     print('on init');
     try {
-     isLoading.value = true;
-     print(isLoading.value);
+      isLoading.value = true;
+      print(isLoading.value);
+
       final response = await Dio().get(
         'http://192.168.1.5:3000/api/users/${CacheHelper().getData(key: 'id')}',
         options: Options(
@@ -83,15 +85,30 @@ class MainViewController extends GetxController {
       userModel = UserModel.fromJson(response.data);
       print(userModel.user!.toJson());
       isLoading.value = false;
-     print(isLoading.value);
+      print(isLoading.value);
 
-    }
-    on DioException catch (e) {
+    } on DioException catch (e) {
+      // If token is expired
+      if (e.response?.statusCode == 401) {
+        print("Access token expired. Trying to refresh...");
+        final refreshed = await _refreshToken();
+
+        if (refreshed) {
+          // Retry original request
+          return await getUser();
+        } else {
+          // If refresh failed, logout
+          _handleLogout();
+          return;
+        }
+      }
       isLoading.value = false;
       print(isLoading.value);
+
+      // Other Dio exceptions
       switch (e.type) {
         case DioExceptionType.connectionTimeout:
-          Get.snackbar('Error', 'Connection timeout');
+          Constants.errorSnackBar(title: 'Error', message: 'Connection timeout');
           break;
         case DioExceptionType.receiveTimeout:
           Get.snackbar('Error', 'Receive timeout');
@@ -101,13 +118,8 @@ class MainViewController extends GetxController {
           break;
         case DioExceptionType.badResponse:
           {
-            Get.snackbar(
-                'Error', 'Bad response: ${e.response!.data['message']}');
-                 CacheHelper().removeData(key: 'id');
-                 CacheHelper().removeData(key: 'accessToken');
-                 CacheHelper().removeData(key: 'refreshToken');
-                 Get.offAll(() => LoginScreen());
-                 isLoading.value = false;
+            Get.snackbar('Error', 'Bad response: ${e.response?.data['message']}');
+            _handleLogout();
           }
           break;
         case DioExceptionType.cancel:
@@ -125,5 +137,104 @@ class MainViewController extends GetxController {
       }
     }
   }
+  Future<void> getOrganization() async {
+    print('get Organization');
+    try {
+      isLoading.value = true;
+      print(isLoading.value);
+      final response = await Dio().get(
+        'http://192.168.1.5:3000/api/users/${CacheHelper().getData(key: 'id')}',
+        options: Options(
+          headers: {
+            'authorization': 'Bearer ${CacheHelper().getData(key: 'accessToken')}',
+          },
+        ),
+      );
+      userModel = UserModel.fromJson(response.data);
+      print(userModel.user!.toJson());
+      isLoading.value = false;
+      print(isLoading.value);
+
+    } on DioException catch (e) {
+      // If token is expired
+      if (e.response?.statusCode == 401) {
+        print("Access token expired. Trying to refresh...");
+        final refreshed = await _refreshToken();
+
+        if (refreshed) {
+          // Retry original request
+          return await getUser();
+        } else {
+          // If refresh failed, logout
+          _handleLogout();
+          return;
+        }
+      }
+      isLoading.value = false;
+      print(isLoading.value);
+
+      // Other Dio exceptions
+      switch (e.type) {
+        case DioExceptionType.connectionTimeout:
+          Constants.errorSnackBar(title: 'Error', message: 'Connection timeout');
+          break;
+        case DioExceptionType.receiveTimeout:
+          Get.snackbar('Error', 'Receive timeout');
+          break;
+        case DioExceptionType.sendTimeout:
+          Get.snackbar('Error', 'Send timeout');
+          break;
+        case DioExceptionType.badResponse:
+          {
+            Get.snackbar('Error', 'Bad response: ${e.response?.data['message']}');
+            _handleLogout();
+          }
+          break;
+        case DioExceptionType.cancel:
+          Get.snackbar('Error', 'Request cancelled');
+          break;
+        case DioExceptionType.unknown:
+          Get.snackbar('Error', 'Unexpected error: ${e.message}');
+          break;
+        case DioExceptionType.badCertificate:
+          Get.snackbar('Error', 'Bad certificate');
+          break;
+        case DioExceptionType.connectionError:
+          Get.snackbar('Error', 'Connection error');
+          break;
+      }
+    }
+  }
+  Future<bool> _refreshToken() async {
+    try {
+      final refreshToken = CacheHelper().getData(key: 'refreshToken');
+      final response = await Dio().post(
+        'http://192.168.1.5:3000/api/auth/refreshAccessToken',
+        data: {
+          'refreshToken': refreshToken,
+        },
+      );
+      CacheHelper().saveData(key: 'accessToken', value: response.data['accessToken']);
+      if (response.data['refreshToken'] != null) {
+        CacheHelper().saveData(key: 'refreshToken', value: response.data['refreshToken']);
+      }
+      print("Token refreshed successfully.");
+      return true;
+    } on DioException catch (e) {
+      print("Token refresh failed: ${e.message}");
+      return false;
+    }
+  }
+  void _handleLogout() {
+    CacheHelper().removeData(key: 'id');
+    CacheHelper().removeData(key: 'accessToken');
+    CacheHelper().removeData(key: 'refreshToken');
+    Get.offAll(() => LoginScreen());
+  }
+
+
+  // get Organization
+
+
 
 }

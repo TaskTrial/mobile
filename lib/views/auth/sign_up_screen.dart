@@ -59,6 +59,7 @@ class SignUpScreen extends StatelessWidget {
                           _theDivider(width),
                           const SizedBox(height: 20),
                           MyTextField(
+                            keyboardType: TextInputType.name,
                             title: 'Username',
                             hintText: 'John Doe',
                             controller: controller.userNameController,
@@ -179,6 +180,7 @@ class SignUpScreen extends StatelessWidget {
   }
   _emailField(SignUpController controller) {
     return  MyTextField(
+      keyboardType: TextInputType.emailAddress,
       title: 'Email',
       hintText: 'mail@abc.com',
       controller: controller.emailController,
@@ -195,6 +197,7 @@ class SignUpScreen extends StatelessWidget {
   }
   _passwordField(SignUpController controller) {
     return MyTextField(
+      keyboardType: TextInputType.visiblePassword,
       title: 'Password',
       hintText: '***********',
       isPassword: true,

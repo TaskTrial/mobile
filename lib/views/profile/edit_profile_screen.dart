@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:task_trial/controllers/profile_controller.dart';
+import 'package:task_trial/controllers/profile/profile_controller.dart';
 import 'package:task_trial/models/user_model.dart';
 import 'package:task_trial/utils/cache_helper.dart';
 import 'package:task_trial/utils/constants.dart';

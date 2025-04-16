@@ -10,8 +10,8 @@ import 'package:task_trial/utils/cache_helper.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/main_view_screen.dart';
 
-import '../views/auth/login_screen.dart';
-import 'main_view_controller.dart';
+import '../../views/auth/login_screen.dart';
+import '../main_view_controller.dart';
 
 class ProfileController extends GetxController {
   UserModel userModel = Get.arguments;

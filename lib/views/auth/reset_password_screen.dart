@@ -17,11 +17,6 @@ class ResetPasswordScreen extends StatelessWidget {
     final ResetPasswordController controller = Get.put(ResetPasswordController());
     return Scaffold(
       backgroundColor: Colors.white,
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0,
-      //   foregroundColor: Colors.black,
-      // ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Form(

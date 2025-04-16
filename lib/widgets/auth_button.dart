@@ -28,7 +28,7 @@ class AuthButton extends StatelessWidget {
         child:!isLoading? Text(
           title,
           style:  TextStyle(
-            fontSize: 20,
+            fontSize: 18,
             fontFamily: Constants.primaryFont,
             fontWeight: FontWeight.w900,
             color: Colors.white,

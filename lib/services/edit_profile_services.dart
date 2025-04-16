@@ -42,35 +42,7 @@ class EditProfileServices {
         duration: const Duration(milliseconds: 300),
       );
     } on DioException catch (e) {
-      switch (e.type) {
-        case DioExceptionType.connectionTimeout:
-          Constants.errorSnackBar(title: 'Failed', message: 'Bad certificate');
-          break;
-        case DioExceptionType.receiveTimeout:
-          Constants.errorSnackBar(title: 'Failed', message: 'Bad certificate');
-          break;
-        case DioExceptionType.sendTimeout:
-          Constants.errorSnackBar(title: 'Failed', message: 'Bad certificate');
-          break;
-        case DioExceptionType.badResponse:
-          {
-            Constants.errorSnackBar(
-                title: 'Failed', message: '${e.response!.data['message']}');
-          }
-        case DioExceptionType.badCertificate:
-          Constants.errorSnackBar(title: 'Failed', message: 'Bad certificate');
-          throw UnimplementedError();
-        case DioExceptionType.cancel:
-          Constants.errorSnackBar(title: 'Failed', message: 'Bad certificate');
-          throw UnimplementedError();
-        case DioExceptionType.connectionError:
-          Constants.errorSnackBar(title: 'Failed', message: 'Bad certificate');
-          throw UnimplementedError();
-        case DioExceptionType.unknown:
-          Constants.errorSnackBar(
-              title: 'Error', message: 'Unexpected error: ${e.message}');
-          break;
-      }
+     _handleError(e);
     }
   }
 
@@ -112,38 +84,7 @@ class EditProfileServices {
       );
     } on DioException catch (e)
     {
-      switch (e.type) {
-        case DioExceptionType.connectionTimeout:
-          Constants.errorSnackBar(
-              title: 'Failed', message: 'Connection timeout');
-          break;
-        case DioExceptionType.receiveTimeout:
-          Constants.errorSnackBar(title: 'Failed', message: 'Receive timeout');
-          break;
-        case DioExceptionType.sendTimeout:
-          Constants.errorSnackBar(title: 'Failed', message: 'Send timeout');
-          break;
-        case DioExceptionType.badResponse:
-          {
-            Constants.errorSnackBar(
-                title: 'Failed', message: '${e.response!.data['message']}');
-          }
-          break;
-        case DioExceptionType.cancel:
-          Constants.errorSnackBar(
-              title: 'Failed', message: 'Request cancelled');
-          break;
-        case DioExceptionType.unknown:
-          Constants.errorSnackBar(
-              title: 'Error', message: 'Unexpected error: ${e.message}');
-          break;
-        case DioExceptionType.badCertificate:
-          Constants.errorSnackBar(title: 'Failed', message: 'Bad certificate');
-          break;
-        case DioExceptionType.connectionError:
-          Constants.errorSnackBar(title: 'Failed', message: 'Connection error');
-          break;
-      }
+    _handleError(e);
     }
   }
 
@@ -151,7 +92,7 @@ class EditProfileServices {
 
 
 
-  _handleError(DioException e){
+ static void _handleError(DioException e){
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
         Constants.errorSnackBar(

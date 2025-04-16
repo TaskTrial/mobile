@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_trial/controllers/profile_controller.dart';
+import 'package:task_trial/controllers/profile/profile_controller.dart';
 import 'package:task_trial/models/user_model.dart';
 import 'package:task_trial/utils/cache_helper.dart';
 import 'package:task_trial/utils/constants.dart';
@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:task_trial/views/main_view_screen.dart';
 
 import 'edit_profile_screen.dart';
+import 'my_organization_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -68,7 +69,11 @@ class ProfileScreen extends StatelessWidget {
                       );
                     }),
                 _menuItem(
-                    icon: Icons.settings, title: "Settings", onTap: () {}),
+                    icon: Icons.account_balance_sharp, title: "My Organization", onTap: () {
+                      Get.to(
+                        () => MyOrganizationScreen(),
+                      );
+                }),
                 _menuItem(
                     icon: Icons.check_circle_outline,
                     title: "Terms of Service",
@@ -178,11 +183,20 @@ class ProfileScreen extends StatelessWidget {
           SizedBox(
               width: 60,
               child: Text(label,
-                  style: const TextStyle(fontWeight: FontWeight.w600))),
+                  style: const TextStyle(
+                        fontSize: 18,
+                        fontFamily: Constants.primaryFont,
+                            color: Colors.black,
+                      fontWeight: FontWeight.w700))),
           const SizedBox(width: 10),
           Expanded(
               child:
-                  Text(content, style: const TextStyle(color: Colors.black87))),
+                  Text(content, style:
+                  TextStyle(
+                        fontSize: 16,
+                        fontFamily: Constants.primaryFont,
+                        fontWeight: FontWeight.w500,
+                      color: Colors.black87))),
         ],
       ),
     );
@@ -205,7 +219,13 @@ class ProfileScreen extends StatelessWidget {
           children: [
             Icon(icon, size: 20),
             const SizedBox(width: 16),
-            Expanded(child: Text(title, style: const TextStyle(fontSize: 16))),
+            Expanded(child: Text(title, style: const
+            TextStyle(
+                fontSize: 18,
+                fontFamily: Constants.primaryFont,
+                fontWeight: FontWeight.w600,
+                color: Colors.black
+            ))),
             const Icon(Icons.chevron_right),
           ],
         ),

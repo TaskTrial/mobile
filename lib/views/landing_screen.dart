@@ -4,6 +4,7 @@ import 'package:task_trial/controllers/dashboard_controller.dart';
 import 'package:task_trial/utils/cache_helper.dart';
 
 import 'package:task_trial/utils/constants.dart';
+import 'package:task_trial/views/auth/create_organization_screen.dart';
 import 'package:task_trial/views/auth/login_screen.dart';
 import 'package:task_trial/views/main_view_screen.dart';
 class LandingScreen extends StatefulWidget {
@@ -35,7 +36,7 @@ checkLogin() async {
   Future.delayed(Duration(seconds: 1), () async {
     if (await CacheHelper().containsKey(key: 'id')) {
       Get.offAll(
-            () => MainViewScreen(),
+            () => CreateOrganizationScreen(),
         transition: Transition.fadeIn,
         duration: Duration(milliseconds: 500),
       );
