@@ -4,6 +4,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:task_trial/models/organization_model.dart';
 import 'package:task_trial/models/user_model.dart';
 import 'package:task_trial/services/edit_profile_services.dart';
 import 'package:task_trial/utils/cache_helper.dart';
@@ -14,24 +15,26 @@ import '../../views/auth/login_screen.dart';
 import '../main_view_controller.dart';
 
 class ProfileController extends GetxController {
-  UserModel userModel = Get.arguments;
+  UserModel userModel = Get.arguments['user'];
+  OrganizationModel organizationModel = Get.arguments['org'];
+
   final usernameController =
-      TextEditingController(text: '${Get.arguments.user!.username}');
+      TextEditingController(text: '${Get.arguments['user'].user!.username}');
   final firstNameController =
-      TextEditingController(text: '${Get.arguments.user!.firstName}');
+      TextEditingController(text: '${Get.arguments['user'].user!.firstName}');
   final lastNameController =
-      TextEditingController(text: '${Get.arguments.user!.lastName}');
+      TextEditingController(text: '${Get.arguments['user'].user!.lastName}');
   final jobTitleController = TextEditingController(
-    text: '${(Get.arguments.user!.jobTitle) ?? ''}',
+    text: '${(Get.arguments['user'].user!.jobTitle) ?? ''}',
   );
   final emailController = TextEditingController(
-    text: '${Get.arguments.user!.email}',
+    text: '${Get.arguments['user'].user!.email}',
   );
   final phoneNumberController = TextEditingController(
-    text: '${(Get.arguments.user!.phoneNumber) ?? ''}',
+    text: '${(Get.arguments['user'].user!.phoneNumber) ?? ''}',
   );
   final bioController = TextEditingController(
-    text: '${(Get.arguments.user!.bio) ?? ''}',
+    text: '${(Get.arguments['user'].user!.bio) ?? ''}',
   );
   XFile? profileImage;
   final formKey = GlobalKey<FormState>();

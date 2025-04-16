@@ -35,7 +35,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                     _picturePart(controller),
+                      _picturePart(controller),
                       const SizedBox(height: 10),
                       Text(
                         "${controller.userModel.user!.firstName} ${controller.userModel.user!.lastName}",
@@ -50,11 +50,14 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       _infoRow("Email", "${controller.userModel.user!.email}"),
-                      _infoRow("Phone", "${(controller.userModel.user!.phoneNumber)?? "Not Available"}"),
+                      _infoRow("Phone",
+                          "${(controller.userModel.user!.phoneNumber) ?? "Not Available"}"),
                       _infoRow("Bio",
                           "${(controller.userModel.user!.bio) == null ? "Not Available" : controller.userModel.user!.bio}"),
-                      _infoRow("Join At", DateFormat('MMM d, y').format(DateTime.parse(controller.userModel.user!.createdAt!))),
-
+                      _infoRow(
+                          "Join At",
+                          DateFormat('MMM d, y').format(DateTime.parse(
+                              controller.userModel.user!.createdAt!))),
                     ],
                   ),
                 ),
@@ -63,17 +66,16 @@ class ProfileScreen extends StatelessWidget {
                     icon: Icons.edit,
                     title: "Edit Profile",
                     onTap: () {
-                      Get.to(
-                        () => EditProfileScreen(),
-                        arguments: controller.userModel
-                      );
+                      Get.to(() => EditProfileScreen(),
+                          arguments: controller.userModel);
                     }),
                 _menuItem(
-                    icon: Icons.account_balance_sharp, title: "My Organization", onTap: () {
-                      Get.to(
-                        () => MyOrganizationScreen(),
-                      );
-                }),
+                    icon: Icons.account_balance_sharp,
+                    title: "My Organization",
+                    onTap: () {
+                      Get.to(() => MyOrganizationScreen(),
+                          arguments: controller.organizationModel);
+                    }),
                 _menuItem(
                     icon: Icons.check_circle_outline,
                     title: "Terms of Service",
@@ -94,10 +96,10 @@ class ProfileScreen extends StatelessWidget {
                           content:
                               const Text("Are you sure you want to logout?",
                                   style: TextStyle(
-                                      fontSize: 16,
-                                      color: Constants.pageNameColor,
+                                    fontSize: 16,
+                                    color: Constants.pageNameColor,
                                     fontFamily: Constants.primaryFont,
-                                    )),
+                                  )),
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -130,13 +132,14 @@ class ProfileScreen extends StatelessWidget {
       },
     );
   }
+
   AppBar _appBar() {
     return AppBar(
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
           Get.offAll(
-            () =>  MainViewScreen(),
+            () => MainViewScreen(),
             transition: Transition.fade,
             duration: const Duration(milliseconds: 300),
           );
@@ -155,11 +158,12 @@ class ProfileScreen extends StatelessWidget {
       backgroundColor: Constants.backgroundColor,
     );
   }
-  _picturePart(ProfileController  controller){
-   if (controller.userModel.user!.profilePic != null) {
+
+  _picturePart(ProfileController controller) {
+    if (controller.userModel.user!.profilePic != null) {
       return CircleAvatar(
         radius: 45,
-        backgroundColor:Colors.black,
+        backgroundColor: Colors.black,
         child: CircleAvatar(
           radius: 43,
           backgroundImage: NetworkImage(controller.userModel.user!.profilePic!),
@@ -184,18 +188,17 @@ class ProfileScreen extends StatelessWidget {
               width: 60,
               child: Text(label,
                   style: const TextStyle(
-                        fontSize: 18,
-                        fontFamily: Constants.primaryFont,
-                            color: Colors.black,
+                      fontSize: 18,
+                      fontFamily: Constants.primaryFont,
+                      color: Colors.black,
                       fontWeight: FontWeight.w700))),
           const SizedBox(width: 10),
           Expanded(
-              child:
-                  Text(content, style:
-                  TextStyle(
-                        fontSize: 16,
-                        fontFamily: Constants.primaryFont,
-                        fontWeight: FontWeight.w500,
+              child: Text(content,
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: Constants.primaryFont,
+                      fontWeight: FontWeight.w500,
                       color: Colors.black87))),
         ],
       ),
@@ -219,18 +222,17 @@ class ProfileScreen extends StatelessWidget {
           children: [
             Icon(icon, size: 20),
             const SizedBox(width: 16),
-            Expanded(child: Text(title, style: const
-            TextStyle(
-                fontSize: 18,
-                fontFamily: Constants.primaryFont,
-                fontWeight: FontWeight.w600,
-                color: Colors.black
-            ))),
+            Expanded(
+                child: Text(title,
+                    style: const TextStyle(
+                        fontSize: 18,
+                        fontFamily: Constants.primaryFont,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black))),
             const Icon(Icons.chevron_right),
           ],
         ),
       ),
     );
   }
-  
 }

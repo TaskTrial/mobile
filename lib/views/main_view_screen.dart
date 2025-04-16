@@ -41,7 +41,6 @@ class MainViewScreen extends StatelessWidget {
   }
   _appBar(MainViewController controller) {
     return AppBar(
-
       title: Text(
         controller.pageNames[controller.currentPageIndex.value],
         style: TextStyle(
@@ -85,7 +84,7 @@ class MainViewScreen extends StatelessWidget {
             () =>  ProfileScreen(),
             transition: Transition.fadeIn,
             duration: const Duration(milliseconds: 500),
-            arguments: controller.userModel,
+            arguments: {'user':controller.userModel ,'org': controller.organizationModel},
           );
         },
        child: _picturePart(controller)

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_trial/models/organization_model.dart';
 import 'package:task_trial/utils/cache_helper.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/chat/chat_screen.dart';
@@ -30,15 +31,15 @@ class MainViewController extends GetxController {
   ];
   final isLoading = false.obs;
    UserModel userModel = UserModel();
-
+    OrganizationModel organizationModel = OrganizationModel() ;
   @override
   void onInit() async{
-    getUser();
+    await getUser();
+    await getOrganization();
     super.onInit();
     pageController.addListener(() {
       currentPageIndex.value = pageController.page!.round();
     });
-
 
   }
 
@@ -70,10 +71,13 @@ class MainViewController extends GetxController {
 
   Future<void> getUser() async {
     print('on init');
+    print('------------------------Refresh Token------------------------');
+    print(CacheHelper().getData(key: 'refreshToken'));
+    print('------------------------Refresh Token------------------------');
+
     try {
       isLoading.value = true;
       print(isLoading.value);
-
       final response = await Dio().get(
         'http://192.168.1.5:3000/api/users/${CacheHelper().getData(key: 'id')}',
         options: Options(
@@ -142,19 +146,19 @@ class MainViewController extends GetxController {
     try {
       isLoading.value = true;
       print(isLoading.value);
+      print(userModel.user!.organization['id']);
       final response = await Dio().get(
-        'http://192.168.1.5:3000/api/users/${CacheHelper().getData(key: 'id')}',
+        'http://192.168.1.5:3000/api/organization/${userModel.user!.organization['id']}',
         options: Options(
           headers: {
             'authorization': 'Bearer ${CacheHelper().getData(key: 'accessToken')}',
           },
         ),
       );
-      userModel = UserModel.fromJson(response.data);
-      print(userModel.user!.toJson());
+      organizationModel = OrganizationModel.fromJson(response.data);
+      print(organizationModel.toJson());
       isLoading.value = false;
       print(isLoading.value);
-
     } on DioException catch (e) {
       // If token is expired
       if (e.response?.statusCode == 401) {
@@ -172,7 +176,6 @@ class MainViewController extends GetxController {
       }
       isLoading.value = false;
       print(isLoading.value);
-
       // Other Dio exceptions
       switch (e.type) {
         case DioExceptionType.connectionTimeout:
@@ -232,8 +235,6 @@ class MainViewController extends GetxController {
     Get.offAll(() => LoginScreen());
   }
 
-
-  // get Organization
 
 
 
