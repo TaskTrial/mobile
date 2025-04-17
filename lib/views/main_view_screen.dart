@@ -26,7 +26,7 @@ class MainViewScreen extends StatelessWidget {
                 color: Constants.backgroundColor,
                 child: PageView(
                     controller: controller.pageController,
-                    onPageChanged: controller.onPageChanged,
+                    onPageChanged: controller.onPageSelected,
                     children: controller.pages),
               ),
               bottomNavigationBar: _bottomNavigationBar(controller),
@@ -113,7 +113,7 @@ class MainViewScreen extends StatelessWidget {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       currentIndex: controller.currentPageIndex.value,
-      onTap: controller.onTapped,
+      onTap: controller.onPageSelected,
       selectedItemColor: Colors.red,
       unselectedItemColor: Colors.white,
       backgroundColor: Colors.black,

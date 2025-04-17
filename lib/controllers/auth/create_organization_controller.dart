@@ -74,7 +74,6 @@ class CreateOrganizationController extends GetxController {
       isLoading.value = false;
     }
   }
-
   getUser() async {
     print('On init');
     try {
