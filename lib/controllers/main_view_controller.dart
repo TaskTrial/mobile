@@ -44,9 +44,10 @@ class MainViewController extends GetxController {
   }
 
   @override
-  void onClose() {
-    pageController.dispose();
-    super.onClose();
+  @override
+  void dispose() {
+    Get.delete<MainViewController>(); // This will trigger `onClose()`
+    super.dispose();
   }
   void onTapped(int index) {
     currentPageIndex.value = index;
@@ -74,7 +75,6 @@ class MainViewController extends GetxController {
     print('------------------------Refresh Token------------------------');
     print(CacheHelper().getData(key: 'refreshToken'));
     print('------------------------Refresh Token------------------------');
-
     try {
       isLoading.value = true;
       print(isLoading.value);
@@ -211,6 +211,13 @@ class MainViewController extends GetxController {
   Future<bool> _refreshToken() async {
     try {
       final refreshToken = CacheHelper().getData(key: 'refreshToken');
+      if (refreshToken == null) {
+        print("No refresh token found.");
+        return false;
+      }
+
+      print("Sending refresh token: $refreshToken");
+
       final response = await Dio().post(
         'http://192.168.1.5:3000/api/auth/refreshAccessToken',
         data: {
@@ -218,16 +225,19 @@ class MainViewController extends GetxController {
         },
       );
       CacheHelper().saveData(key: 'accessToken', value: response.data['accessToken']);
+
       if (response.data['refreshToken'] != null) {
         CacheHelper().saveData(key: 'refreshToken', value: response.data['refreshToken']);
       }
+
       print("Token refreshed successfully.");
       return true;
     } on DioException catch (e) {
-      print("Token refresh failed: ${e.message}");
+      print("Token refresh failed: ${e.response?.statusCode} - ${e.response?.data}");
       return false;
     }
   }
+
   void _handleLogout() {
     CacheHelper().removeData(key: 'id');
     CacheHelper().removeData(key: 'accessToken');

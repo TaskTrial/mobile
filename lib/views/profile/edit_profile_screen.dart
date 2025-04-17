@@ -85,27 +85,7 @@ class EditProfileScreen extends StatelessWidget {
                   _buildInputField("Bio", controller.bioController,
                       maxLines: 3, maxLength: 100),
                   const SizedBox(height: 30),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (controller.formKey.currentState!.validate()) {
-                        controller.updateProfileData();
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Constants.primaryColor,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40, vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    child: const Text("Save Changes",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontFamily: Constants.primaryFont)),
-                  ),
+                  _buildButtons(controller)
                 ],
               ),
             ),
@@ -224,6 +204,29 @@ class EditProfileScreen extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+  _buildButtons(ProfileController controller) {
+    return ElevatedButton(
+      onPressed: () {
+        if (controller.formKey.currentState!.validate()) {
+          controller.updateProfileData();
+        }
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Constants.primaryColor,
+        padding: const EdgeInsets.symmetric(
+            horizontal: 40, vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+      child: const Text("Save Changes",
+          style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontFamily: Constants.primaryFont)),
     );
   }
 }

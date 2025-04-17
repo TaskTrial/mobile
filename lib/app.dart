@@ -8,6 +8,7 @@ import 'package:task_trial/views/auth/sign_up_screen.dart';
 import 'package:task_trial/views/auth/verify_screen.dart';
 import 'package:task_trial/views/landing_screen.dart';
 import 'package:task_trial/views/main_view_screen.dart';
+import 'package:task_trial/views/profile/edit_organization_screen.dart';
 import 'package:task_trial/views/profile/my_organization_screen.dart';
 import 'package:task_trial/views/profile/profile_screen.dart';
 import 'package:task_trial/views/task/task_screen.dart';

@@ -67,7 +67,7 @@ class ProfileScreen extends StatelessWidget {
                     title: "Edit Profile",
                     onTap: () {
                       Get.to(() => EditProfileScreen(),
-                          arguments: controller.userModel);
+                          arguments: {'user':controller.userModel,'org':controller.organizationModel});
                     }),
                 _menuItem(
                     icon: Icons.account_balance_sharp,

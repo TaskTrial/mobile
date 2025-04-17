@@ -7,7 +7,7 @@ import 'package:task_trial/views/main_view_screen.dart';
 import '../../utils/cache_helper.dart';
 import '../../views/auth/login_screen.dart';
 
-class OrganizationController extends GetxController {
+class CreateOrganizationController extends GetxController {
   var isLoading = false.obs;
   var getLoading = false.obs;
   final nameController = TextEditingController();

@@ -8,7 +8,7 @@ class CreateOrganizationScreen extends StatelessWidget {
   const CreateOrganizationScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(OrganizationController());
+    final controller = Get.put(CreateOrganizationController());
     return Obx(() {
       if (!controller.initialize.value) {
         return const Scaffold(
@@ -130,7 +130,7 @@ class CreateOrganizationScreen extends StatelessWidget {
       );
     },);
   }
-  _myDropDownButton(OrganizationController controller) {
+  _myDropDownButton(CreateOrganizationController controller) {
     return  DropdownMenu(
         width: 150,
         textStyle: TextStyle(

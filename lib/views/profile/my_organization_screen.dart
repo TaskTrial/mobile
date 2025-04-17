@@ -4,12 +4,13 @@ import 'package:intl/intl.dart';
 import 'package:task_trial/controllers/main_view_controller.dart';
 import 'package:task_trial/models/organization_model.dart';
 import 'package:task_trial/utils/constants.dart';
+import 'package:task_trial/views/profile/edit_organization_screen.dart';
 
 class MyOrganizationScreen extends StatelessWidget {
   const MyOrganizationScreen({super.key});
     @override
   Widget build(BuildContext context) {
-     final OrganizationModel org = Get.arguments;
+      final OrganizationModel org = Get.arguments;
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -19,7 +20,7 @@ class MyOrganizationScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              _appBar(),
+              _appBar(org),
               SizedBox(
                 height: height * 0.05,
               ),
@@ -32,7 +33,7 @@ class MyOrganizationScreen extends StatelessWidget {
       ),
     );
   }
-  _appBar(){
+  _appBar( OrganizationModel org){
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -53,7 +54,11 @@ class MyOrganizationScreen extends StatelessWidget {
                 fontSize: 25,
                 fontWeight: FontWeight.bold),
           ),
-          IconButton(onPressed: (){}, icon:
+          IconButton(onPressed: (){
+            Get.to(()=> EditOrganizationScreen(),
+             arguments: org
+            );
+          }, icon:
           CircleAvatar(
               backgroundColor: Constants.primaryColor,
               child: Icon(Icons.edit ,color: Colors.white,)
@@ -215,11 +220,48 @@ class MyOrganizationScreen extends StatelessWidget {
       );
     } else {
       return const CircleAvatar(
-        radius: 20,
+        radius: 30,
         backgroundColor: Color(0xFFFFE3C5),
-        child: Icon(Icons.person, size: 50, color: Colors.brown),
+        child: Icon(Icons.person, size: 30, color: Colors.brown),
       );
     }
+  }
+
+  Widget _buildInputField(String label, TextEditingController controller,
+      {int maxLines = 1,
+        String? Function(String?)? validator,
+        int? maxLength}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label,
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontFamily: Constants.primaryFont)),
+        const SizedBox(height: 6),
+        TextFormField(
+          maxLength: maxLength,
+          controller: controller,
+          maxLines: maxLines,
+          validator: validator,
+          decoration: InputDecoration(
+            hintText: '$label is Empty!',
+            hintStyle: const TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+                fontFamily: Constants.primaryFont),
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
 }
