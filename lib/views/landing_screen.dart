@@ -4,7 +4,7 @@ import 'package:task_trial/controllers/dashboard_controller.dart';
 import 'package:task_trial/utils/cache_helper.dart';
 
 import 'package:task_trial/utils/constants.dart';
-import 'package:task_trial/views/auth/create_organization_screen.dart';
+import 'package:task_trial/views/organization/create_organization_screen.dart';
 import 'package:task_trial/views/auth/login_screen.dart';
 import 'package:task_trial/views/main_view_screen.dart';
 class LandingScreen extends StatefulWidget {

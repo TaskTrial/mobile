@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_trial/views/auth/create_organization_screen.dart';
+import 'package:task_trial/views/organization/create_organization_screen.dart';
 import '../models/login_model.dart';
 import '../utils/cache_helper.dart';
 import '../utils/constants.dart';

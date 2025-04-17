@@ -141,7 +141,6 @@ class MainViewController extends GetxController {
     CacheHelper().removeData(key: 'refreshToken');
     Get.offAll(() => LoginScreen());
   }
-
   void _handleDioError(DioException e) {
     isLoading.value = false;
 

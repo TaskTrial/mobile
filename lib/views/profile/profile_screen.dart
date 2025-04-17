@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:task_trial/views/main_view_screen.dart';
 
 import 'edit_profile_screen.dart';
-import 'my_organization_screen.dart';
+import '../organization/organization_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});

@@ -4,10 +4,10 @@ import 'package:intl/intl.dart';
 import 'package:task_trial/controllers/main_view_controller.dart';
 import 'package:task_trial/models/organization_model.dart';
 import 'package:task_trial/utils/constants.dart';
-import 'package:task_trial/views/profile/edit_organization_screen.dart';
+import 'package:task_trial/views/organization/edit_organization_screen.dart';
 
-class MyOrganizationScreen extends StatelessWidget {
-  const MyOrganizationScreen({super.key});
+class OrganizationScreen extends StatelessWidget {
+  const OrganizationScreen({super.key});
     @override
   Widget build(BuildContext context) {
       final OrganizationModel org = Get.arguments;
