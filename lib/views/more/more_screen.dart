@@ -1,27 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/controllers/main_view_controller.dart';
+import 'package:task_trial/models/organization_model.dart';
 import 'package:task_trial/utils/constants.dart';
+import 'package:task_trial/views/profile/my_organization_screen.dart';
+import 'package:task_trial/widgets/more_button.dart';
 class MoreScreen extends StatelessWidget {
-  const MoreScreen({super.key});
-
+  final OrganizationModel organization;
+  const MoreScreen({super.key, required this.organization});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      backgroundColor: Constants.backgroundColor,
       body: Container(
+        padding: const EdgeInsets.all(20),
         color: Constants.backgroundColor,
-        child: Center(
-          child: Text(
-            'Welcome to the More Screen',
-            style: TextStyle(
-              fontSize: 24,
-              color: Colors.white,
-              fontFamily: Constants.primaryFont,
-              fontWeight: FontWeight.bold,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: 20),
+            MoreButton(icon: Icons.account_balance_rounded,label: 'My Organization',
+            onTap: () {
+              Get.to(() => MyOrganizationScreen(),
+                arguments:  organization,
+              );
+            },
             ),
-          ),
-        ),
+            SizedBox(height: 20),
+            MoreButton(icon: Icons.apartment,label: 'My Departments',),
+            SizedBox(height: 20),
+
+            MoreButton(icon: Icons.people_alt,label: 'My Teams',)
+
+          ],
+        )
       )
     );
   }

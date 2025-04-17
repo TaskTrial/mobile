@@ -69,13 +69,13 @@ class ProfileScreen extends StatelessWidget {
                       Get.to(() => EditProfileScreen(),
                           arguments: {'user':controller.userModel,'org':controller.organizationModel});
                     }),
-                _menuItem(
-                    icon: Icons.account_balance_sharp,
-                    title: "My Organization",
-                    onTap: () {
-                      Get.to(() => MyOrganizationScreen(),
-                          arguments: controller.organizationModel);
-                    }),
+                // _menuItem(
+                //     icon: Icons.account_balance_sharp,
+                //     title: "My Organization",
+                //     onTap: () {
+                //       Get.to(() => MyOrganizationScreen(),
+                //           arguments: controller.organizationModel);
+                //     }),
                 _menuItem(
                     icon: Icons.check_circle_outline,
                     title: "Terms of Service",
@@ -138,11 +138,7 @@ class ProfileScreen extends StatelessWidget {
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {
-          Get.offAll(
-            () => MainViewScreen(),
-            transition: Transition.fade,
-            duration: const Duration(milliseconds: 300),
-          );
+          Get.back();
         },
       ),
       centerTitle: true,

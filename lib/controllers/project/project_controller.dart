@@ -46,13 +46,10 @@ class ProjectController extends GetxController{
       backgroundColor:Constants.projectCardColor4,
     ),
   ];
-
-
   @override
   void onInit() {
     super.onInit();
   }
-
   @override
   void onClose() {
     projectNameController.dispose();
@@ -72,7 +69,6 @@ class Project {
   final int progressHours;
   final List<String> tasksIDs;
   final Color backgroundColor;
-
   Project({
     required this.id,
     required this.title,

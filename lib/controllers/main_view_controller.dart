@@ -15,13 +15,7 @@ import '../views/auth/login_screen.dart';
 class MainViewController extends GetxController {
   var currentPageIndex = 0.obs;
   PageController pageController = PageController(initialPage: 0);
-  List<Widget> pages = [
-    DashboardScreen(),
-    ProjectScreen(),
-    ChatScreen(),
-    TaskScreen(),
-    MoreScreen()
-  ];
+  List<Widget> pages = [];
   List<String> pageNames = [
     'Dashboard',
     'Projects',
@@ -31,17 +25,26 @@ class MainViewController extends GetxController {
   ];
   final isLoading = false.obs;
    UserModel userModel = UserModel();
-    OrganizationModel organizationModel = OrganizationModel() ;
+   OrganizationModel organizationModel = OrganizationModel() ;
   @override
   void onInit() async{
+    isLoading.value = true;
     await getUser();
     await getOrganization();
+    pages = [
+      DashboardScreen(),
+      ProjectScreen(),
+      ChatScreen(),
+      TaskScreen(),
+      MoreScreen(organization: organizationModel),
+    ];
     super.onInit();
     pageController.addListener(() {
       currentPageIndex.value = pageController.page!.round();
     });
-
+    isLoading.value = false;
   }
+
 
   @override
   @override
@@ -76,7 +79,6 @@ class MainViewController extends GetxController {
     print(CacheHelper().getData(key: 'refreshToken'));
     print('------------------------Refresh Token------------------------');
     try {
-      isLoading.value = true;
       print(isLoading.value);
       final response = await Dio().get(
         'http://192.168.1.5:3000/api/users/${CacheHelper().getData(key: 'id')}',
@@ -88,7 +90,6 @@ class MainViewController extends GetxController {
       );
       userModel = UserModel.fromJson(response.data);
       print(userModel.user!.toJson());
-      isLoading.value = false;
       print(isLoading.value);
 
     } on DioException catch (e) {
@@ -106,7 +107,6 @@ class MainViewController extends GetxController {
           return;
         }
       }
-      isLoading.value = false;
       print(isLoading.value);
 
       // Other Dio exceptions
@@ -144,7 +144,7 @@ class MainViewController extends GetxController {
   Future<void> getOrganization() async {
     print('get Organization');
     try {
-      isLoading.value = true;
+
       print(isLoading.value);
       print(userModel.user!.organization['id']);
       final response = await Dio().get(
@@ -157,14 +157,16 @@ class MainViewController extends GetxController {
       );
       organizationModel = OrganizationModel.fromJson(response.data);
       print(organizationModel.toJson());
-      isLoading.value = false;
+
       print(isLoading.value);
+      CacheHelper()
+          .saveData(key: 'orgId', value: '${organizationModel.id}');
+      print(CacheHelper().getData(key: 'orgId'));
     } on DioException catch (e) {
       // If token is expired
       if (e.response?.statusCode == 401) {
         print("Access token expired. Trying to refresh...");
         final refreshed = await _refreshToken();
-
         if (refreshed) {
           // Retry original request
           return await getUser();
@@ -174,7 +176,7 @@ class MainViewController extends GetxController {
           return;
         }
       }
-      isLoading.value = false;
+
       print(isLoading.value);
       // Other Dio exceptions
       switch (e.type) {

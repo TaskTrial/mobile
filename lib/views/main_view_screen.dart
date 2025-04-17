@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:task_trial/controllers/main_view_controller.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/profile/profile_screen.dart';
+import 'package:task_trial/widgets/create_dialog.dart';
 
 class MainViewScreen extends StatelessWidget {
    const MainViewScreen({super.key});
@@ -82,8 +83,6 @@ class MainViewScreen extends StatelessWidget {
           print(controller.userModel.user!.toJson());
           Get.to(
             () =>  ProfileScreen(),
-            transition: Transition.fadeIn,
-            duration: const Duration(milliseconds: 500),
             arguments: {'user':controller.userModel ,'org': controller.organizationModel},
           );
         },
@@ -96,27 +95,7 @@ class MainViewScreen extends StatelessWidget {
   _floatingActionButton(MainViewController controller) {
     return FloatingActionButton(
       onPressed: () {
-        Get.dialog(
-          AlertDialog(
-            title: const Text('Add New Project'),
-            content:
-            const Text('Do you want to add a new project?'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Get.back(); // Close the dialog
-                },
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Get.back(); // Close the dialog
-                },
-                child: const Text('Add'),
-              ),
-            ],
-          ),
-        );
+        CreateDialog.showCreateDialog();
       },
       elevation: 10,
       shape: RoundedRectangleBorder(
@@ -158,6 +137,7 @@ class MainViewScreen extends StatelessWidget {
       String iconPath, String selectedIconPath, String label)
   {
     return BottomNavigationBarItem(
+
       icon: SizedBox(
         height: 50,
         width: 50,

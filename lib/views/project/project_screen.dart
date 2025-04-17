@@ -13,7 +13,7 @@ class ProjectScreen extends StatelessWidget {
     final TaskController taskController = Get.put(TaskController());
     return Scaffold(
       backgroundColor: Constants.backgroundColor,
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
         height: double.infinity,
         child: Column(
@@ -25,17 +25,33 @@ class ProjectScreen extends StatelessWidget {
               child: GetBuilder<ProjectController>(
                   init: ProjectController(),
                   builder: (controller) {
-                    return ListView.builder(
-                      itemCount: controller.projects.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 15),
-                          child: ProjectCard(
-                            project: controller.projects[index],
-                            teamImages:taskController.getUserImagesByTaskIds(
-                              controller.projects[index].tasksIDs),
+                    int size = controller.projects.length;
+                    if (size == 0) {
+                      return Center(
+                        child:  Text('No Projects !'
+                          ,style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            color:Constants.pageNameColor,
+                            fontFamily: Constants.primaryFont,
                           ),
-                        );
+
+                        ),
+                      );
+                    }
+                    return ListView.builder(
+                      itemCount: size,
+                      itemBuilder: (context, index) {
+
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 15),
+                            child: ProjectCard(
+                              project: controller.projects[index],
+                              teamImages:taskController.getUserImagesByTaskIds(
+                                  controller.projects[index].tasksIDs),
+                            ),
+                          );
+
                       },
                     );
                   },)
