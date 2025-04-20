@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/models/departments_model.dart';
 import 'package:task_trial/models/organization_model.dart';
+import 'package:task_trial/models/teams_model.dart';
 import 'package:task_trial/models/user_model.dart';
 import 'package:task_trial/utils/cache_helper.dart';
 import 'package:task_trial/utils/constants.dart';
@@ -22,19 +23,23 @@ class MainViewController extends GetxController {
   UserModel userModel = UserModel();
   OrganizationModel organizationModel = OrganizationModel();
   DepartmentsModel departmentsModel = DepartmentsModel();
+  TeamsModel teamsModel = TeamsModel();
   @override
   void onInit() async {
     super.onInit();
     isLoading.value = true;
+    bool ref = await _refreshToken();
+    print('------------------------- $ref -------------------------');
     await getUser();
     await getOrganization();
     await getDepartments();
+    await getTeams();
     pages = [
       DashboardScreen(),
       ProjectScreen(),
       ChatScreen(),
       TaskScreen(),
-      MoreScreen(organization: organizationModel , departments: departmentsModel,),
+      MoreScreen(organization: organizationModel , departments: departmentsModel,teams: teamsModel,),
     ];
     pageController.addListener(() {
       currentPageIndex.value = pageController.page?.round() ?? 0;
@@ -42,7 +47,6 @@ class MainViewController extends GetxController {
 
     isLoading.value = false;
   }
-
   @override
   void dispose() {
     pageController.dispose();
@@ -65,7 +69,6 @@ class MainViewController extends GetxController {
         'http://192.168.1.5:3000/api/users/$userId',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
-
       userModel = UserModel.fromJson(response.data);
       print(userModel.toJson());
     } on DioException catch (e) {
@@ -109,6 +112,7 @@ class MainViewController extends GetxController {
       departmentsModel = DepartmentsModel.fromJson(response.data);
       print(departmentsModel.toJson());
     } on DioException catch (e) {
+      print('---------------${e.response?.statusCode}---------');
       if (e.response?.statusCode == 401 && await _refreshToken()) {
         return await getDepartments(); // Retry after refresh
       } else {
@@ -117,21 +121,41 @@ class MainViewController extends GetxController {
       }
     }
   }
+  Future<void> getTeams() async {
+    print('Get Teams Method');
+    final accessToken = CacheHelper().getData(key: 'accessToken');
+    final orgId = CacheHelper().getData(key: 'orgId');
+    try {
+      final response = await Dio().get(
+        'http://192.168.1.5:3000/api/organization/$orgId/teams/all',
+        options: Options(headers: {'authorization': 'Bearer $accessToken'}),
+      );
+      teamsModel = TeamsModel.fromJson(response.data);
+      print(teamsModel.toJson());
+    } on DioException catch (e) {
+      print('---------------${e.response?.statusCode}---------');
+      if (e.response?.statusCode == 401 && await _refreshToken()) {
+        return await getDepartments(); // Retry after refresh
+      } else {
+        Constants.errorSnackBar(title: 'Error', message: e.toString());
+        print(e.toString());
+      }
+    }
+  }
   Future<bool> _refreshToken() async {
     final refreshToken = CacheHelper().getData(key: 'refreshToken');
+    print('ref $refreshToken');
     if (refreshToken == null) return false;
     try {
       final response = await Dio().post(
         'http://192.168.1.5:3000/api/auth/refreshAccessToken',
-        data: {'refreshToken': refreshToken},
       );
       CacheHelper().saveData(key: 'accessToken', value: response.data['accessToken']);
-      if (response.data['refreshToken'] != null) {
-        CacheHelper().saveData(key: 'refreshToken', value: response.data['refreshToken']);
-      }
+      print(response.data);
       return true;
     } catch (e) {
       print("Token refresh failed.");
+      print( e.toString());
       return false;
     }
   }

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 class Constants {
   static const Color primaryColor = Color(0xFFE65F2B);
   static const Color backgroundColor = Color(0xFFEBDFD7);
@@ -137,6 +138,11 @@ class Constants {
       isDismissible: true,
       dismissDirection: DismissDirection.horizontal,
     );
+  }
+
+  static formatDate({required String date,String format ='MMM d, y'}){
+    return DateFormat(format).format(DateTime.parse(
+        date));
   }
 
 

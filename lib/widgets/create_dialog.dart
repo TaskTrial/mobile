@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:task_trial/utils/cache_helper.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/department/create_department_screen.dart';
+import 'package:task_trial/views/team/create_team_screen.dart';
 
 class CreateDialog {
   static void showCreateDialog() {
@@ -26,8 +27,7 @@ class CreateDialog {
               print("Create Department");
             }),
             _buildOptionTile(Icons.group, "Team", () {
-              Get.back();
-              // Navigate to your team creation screen
+             Get.to(()=>CreateTeamScreen(organizationId: CacheHelper().getData(key: 'orgId')));
               print("Create Team");
             }),
             _buildOptionTile(Icons.work, "Project", () {

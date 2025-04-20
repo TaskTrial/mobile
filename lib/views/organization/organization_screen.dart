@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:task_trial/controllers/main_view_controller.dart';
 import 'package:task_trial/models/organization_model.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/organization/edit_organization_screen.dart';
@@ -190,7 +189,6 @@ class OrganizationScreen extends StatelessWidget {
     );
   }
   _picturePart(OrganizationModel org){
-      print(org.logoUrl);
     if (org.logoUrl != null && org.logoUrl!.trim().isNotEmpty) {
       return CircleAvatar(
         radius: 45,
@@ -227,41 +225,6 @@ class OrganizationScreen extends StatelessWidget {
     }
   }
 
-  Widget _buildInputField(String label, TextEditingController controller,
-      {int maxLines = 1,
-        String? Function(String?)? validator,
-        int? maxLength}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label,
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontFamily: Constants.primaryFont)),
-        const SizedBox(height: 6),
-        TextFormField(
-          maxLength: maxLength,
-          controller: controller,
-          maxLines: maxLines,
-          validator: validator,
-          decoration: InputDecoration(
-            hintText: '$label is Empty!',
-            hintStyle: const TextStyle(
-                color: Colors.grey,
-                fontSize: 14,
-                fontFamily: Constants.primaryFont),
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide.none,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+
 
 }

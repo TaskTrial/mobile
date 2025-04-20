@@ -87,7 +87,6 @@ class CreateOrganizationController extends GetxController {
       );
       userModel = UserModel.fromJson(response.data);
       print(userModel.user!.toJson());
-
     } on DioException catch (e) {
       // If token is expired
       if (e.response?.statusCode == 401) {
@@ -143,9 +142,6 @@ class CreateOrganizationController extends GetxController {
         },
       );
       CacheHelper().saveData(key: 'accessToken', value: response.data['accessToken']);
-      if (response.data['refreshToken'] != null) {
-        CacheHelper().saveData(key: 'refreshToken', value: response.data['refreshToken']);
-      }
       print("Token refreshed successfully.");
       return true;
     } on DioException catch (e) {

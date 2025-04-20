@@ -3,7 +3,6 @@ class DepartmentsModel {
   final Pagination? pagination;
 
   DepartmentsModel({this.departments, this.pagination});
-
   factory DepartmentsModel.fromJson(Map<String, dynamic> json) {
     final data = json['data'];
     return DepartmentsModel(
@@ -15,7 +14,6 @@ class DepartmentsModel {
           : null,
     );
   }
-
   Map<String, dynamic> toJson() {
     return {
       'departments': departments?.map((e) => e.toJson()).toList(),
@@ -23,7 +21,6 @@ class DepartmentsModel {
     };
   }
 }
-
 class Department {
   final String? id;
   final String? name;
