@@ -3,55 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:task_trial/utils/constants.dart';
 class DepartmentController extends GetxController{
 
-  final List<Department> departments = const [
-    Department(
-      name: 'Design',
-      description: 'Responsible for creating visual assets',
-      tasks: 5,
-      members: [
-        'https://i.pravatar.cc/150?img=1',
-        'https://i.pravatar.cc/150?img=2',
-        'https://i.pravatar.cc/150?img=3',
-      ],
-    ),
-    Department(
-      name: 'Development',
-      description: 'Builds and maintains the software product',
-      tasks: 8,
-      members: [
-        'https://i.pravatar.cc/150?img=4',
-        'https://i.pravatar.cc/150?img=5',
-        'https://i.pravatar.cc/150?img=6',
-      ],
-    ),
-    Department(
-      name: 'Marketing',
-      description: 'Manages product promotion campaigns',
-      tasks: 12,
-      members: [
-        'https://i.pravatar.cc/150?img=7',
-        'https://i.pravatar.cc/150?img=8',
-        'https://i.pravatar.cc/150?img=9',
-      ],
-    ),
-    Department(
-      name: 'Sales',
-      description: 'Handles customer relations and sales',
-      tasks: 6,
-      members: [
-        'https://i.pravatar.cc/150?img=10',
-        'https://i.pravatar.cc/150?img=11',
-        'https://i.pravatar.cc/150?img=12',
-      ],
-    ),
-    Department(
-      name: 'Department',
-      description: 'Handles customer relations and sales',
-      tasks: 6,
-      members: [
-      ],
-    ),
-  ];
   IconData getIconForDepartment(String name) {
     switch (name.toLowerCase()) {
       case 'design':
@@ -81,17 +32,4 @@ class DepartmentController extends GetxController{
         return Constants.primaryColor.withOpacity(0.4);
     }
   }
-}
-class Department {
-  final String name;
-  final String description;
-  final int tasks;
-  final List<String> members;
-
-  const Department({
-    required this.name,
-    required this.description,
-    required this.tasks,
-    required this.members,
-  });
 }

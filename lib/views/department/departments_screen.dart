@@ -5,6 +5,7 @@ import 'package:task_trial/models/departments_model.dart';
 import 'package:task_trial/utils/cache_helper.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/department/create_department_screen.dart';
+import 'package:task_trial/views/department/single_department_screen.dart';
 
 class DepartmentsScreen extends StatelessWidget {
   const DepartmentsScreen({super.key, required this.departmentsModel});
@@ -53,125 +54,131 @@ class DepartmentsScreen extends StatelessWidget {
           itemCount: departmentsModel.departments!.length,
           itemBuilder: (context, index) {
             final dept = departmentsModel.departments![index];
-            return Container(
-              margin: const EdgeInsets.only(bottom: 16),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Row(
-                children: [
-                  // Icon + colored circle
-                  CircleAvatar(
-                    radius: 28,
-                    backgroundColor: controller.getColorForDepartment(dept.name!),
-                    child: Icon(
-                      controller.getIconForDepartment(dept.name!),
-                      color: Colors.white,
-                      size: 28,
+            return GestureDetector(
+              onTap: () {
+                print(dept);
+                Get.to(()=>SingleDepartmentScreen(department: dept));
+              },
+              child: Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: Row(
+                  children: [
+                    // Icon + colored circle
+                    CircleAvatar(
+                      radius: 28,
+                      backgroundColor: controller.getColorForDepartment(dept.name!),
+                      child: Icon(
+                        controller.getIconForDepartment(dept.name!),
+                        color: Colors.white,
+                        size: 28,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 16),
-                  // Texts + overlapping avatars
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          dept.name!,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: Constants.primaryFont,
+                    const SizedBox(width: 16),
+                    // Texts + overlapping avatars
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            dept.name!,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: Constants.primaryFont,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          dept.description!,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                            fontFamily: Constants.primaryFont,
-                            fontWeight: FontWeight.w700,
+                          const SizedBox(height: 4),
+                          Text(
+                            dept.description!,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                              fontFamily: Constants.primaryFont,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 15),
-                        Row(
-                          children: [
-                            Text('Created at : ' ,
-                              style: TextStyle(
-                                fontFamily: Constants.primaryFont,
-                                color: Colors.grey,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
+                          const SizedBox(height: 15),
+                          Row(
+                            children: [
+                              Text('Created at : ' ,
+                                style: TextStyle(
+                                  fontFamily: Constants.primaryFont,
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            Text(
-                              Constants.formatDate(date: dept.createdAt!),
-                              style: TextStyle(
-                                fontFamily: Constants.primaryFont,
-                                color: Colors.grey,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
+                              Text(
+                                Constants.formatDate(date: dept.createdAt!),
+                                style: TextStyle(
+                                  fontFamily: Constants.primaryFont,
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox( height: 2,),
-                        Row(
-                          children: [
-                            Text('Created by : ' ,
-                              style: TextStyle(
-                                fontFamily: Constants.primaryFont,
-                                color: Colors.grey,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
+                            ],
+                          ),
+                          SizedBox( height: 2,),
+                          Row(
+                            children: [
+                              Text('Created by : ' ,
+                                style: TextStyle(
+                                  fontFamily: Constants.primaryFont,
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            Text(
-                              '${dept.manager!.firstName} ${dept.manager!.lastName}',
-                              style: TextStyle(
-                                fontFamily: Constants.primaryFont,
-                                color: Colors.grey,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
+                              Text(
+                                '${dept.manager!.firstName} ${dept.manager!.lastName}',
+                                style: TextStyle(
+                                  fontFamily: Constants.primaryFont,
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                          ],
-                        )
+                            ],
+                          )
 
-                        // dept.isEmpty?Container():
-                        // SizedBox(
-                        //   width:
-                        //       avatarDiameter + (dept.members.length - 1) * step,
-                        //   height: avatarDiameter,
-                        //   child: Stack(
-                        //     children: dept.members.asMap().entries.map((entry) {
-                        //       final i = entry.key;
-                        //       final url = entry.value;
-                        //       return Positioned(
-                        //         left: i * step,
-                        //         child: CircleAvatar(
-                        //           radius: avatarRadius,
-                        //           backgroundImage: NetworkImage(url),
-                        //         ),
-                        //       );
-                        //     }).toList(),
-                        //   ),
-                        // ),
-                      ],
+                          // dept.isEmpty?Container():
+                          // SizedBox(
+                          //   width:
+                          //       avatarDiameter + (dept.members.length - 1) * step,
+                          //   height: avatarDiameter,
+                          //   child: Stack(
+                          //     children: dept.members.asMap().entries.map((entry) {
+                          //       final i = entry.key;
+                          //       final url = entry.value;
+                          //       return Positioned(
+                          //         left: i * step,
+                          //         child: CircleAvatar(
+                          //           radius: avatarRadius,
+                          //           backgroundImage: NetworkImage(url),
+                          //         ),
+                          //       );
+                          //     }).toList(),
+                          //   ),
+                          // ),
+                        ],
+                      ),
                     ),
-                  ),
-                  // Task count
-                  // Text(
-                  //   '${dept.manager!.firstName}',
-                  //   style: const TextStyle(
-                  //     fontWeight: FontWeight.bold,
-                  //     fontSize: 16,
-                  //   ),
-                  // ),
-                ],
+                    // Task count
+                    // Text(
+                    //   '${dept.manager!.firstName}',
+                    //   style: const TextStyle(
+                    //     fontWeight: FontWeight.bold,
+                    //     fontSize: 16,
+                    //   ),
+                    // ),
+                  ],
+                ),
               ),
             );
           },
