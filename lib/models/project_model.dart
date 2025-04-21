@@ -1,0 +1,107 @@
+class ProjectsModel {
+  final bool success;
+  final List<Project> data;
+
+  ProjectsModel({
+    required this.success,
+    required this.data,
+  });
+
+  factory ProjectsModel.fromJson(Map<String, dynamic> json) {
+    return ProjectsModel(
+      success: json['success'],
+      data: List<Project>.from(json['data'].map((x) => Project.fromJson(x))),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'success': success,
+      'data': data.map((x) => x.toJson()).toList(),
+    };
+  }
+}
+
+class Project {
+  final String id;
+  final String name;
+  final String description;
+  final String status;
+  final String createdBy;
+  final String organizationId;
+  final String teamId;
+  final DateTime startDate;
+  final DateTime endDate;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String? deletedAt;
+  final String priority;
+  final int progress;
+  final dynamic budget;
+  final String lastModifiedBy;
+  final int memberCount;
+
+  Project({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.status,
+    required this.createdBy,
+    required this.organizationId,
+    required this.teamId,
+    required this.startDate,
+    required this.endDate,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.deletedAt,
+    required this.priority,
+    required this.progress,
+    this.budget,
+    required this.lastModifiedBy,
+    required this.memberCount,
+  });
+
+  factory Project.fromJson(Map<String, dynamic> json) {
+    return Project(
+      id: json['id'],
+      name: json['name'],
+      description: json['description'],
+      status: json['status'],
+      createdBy: json['createdBy'],
+      organizationId: json['organizationId'],
+      teamId: json['teamId'],
+      startDate: DateTime.parse(json['startDate']),
+      endDate: DateTime.parse(json['endDate']),
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
+      deletedAt: json['deletedAt'],
+      priority: json['priority'],
+      progress: json['progress'],
+      budget: json['budget'],
+      lastModifiedBy: json['lastModifiedBy'],
+      memberCount: json['memberCount'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'status': status,
+      'createdBy': createdBy,
+      'organizationId': organizationId,
+      'teamId': teamId,
+      'startDate': startDate.toIso8601String(),
+      'endDate': endDate.toIso8601String(),
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+      'deletedAt': deletedAt,
+      'priority': priority,
+      'progress': progress,
+      'budget': budget,
+      'lastModifiedBy': lastModifiedBy,
+      'memberCount': memberCount,
+    };
+  }
+}

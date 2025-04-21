@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_trial/models/teams_model.dart';
 import 'package:task_trial/utils/cache_helper.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/department/create_department_screen.dart';
+import 'package:task_trial/views/project/create_project_screen.dart';
 import 'package:task_trial/views/team/create_team_screen.dart';
 
 class CreateDialog {
-  static void showCreateDialog() {
+  static void showCreateDialog(TeamsModel teams) {
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -31,8 +33,14 @@ class CreateDialog {
               print("Create Team");
             }),
             _buildOptionTile(Icons.work, "Project", () {
-              Get.back();
-              // Navigate to your project creation screen
+              if(teams.data!.teams!.isEmpty){
+                Get.back();
+                Constants.alertSnackBar(title: 'Note', message: 'You did not create any team yet',
+                );
+              }
+              else {
+                Get.to(()=>CreateProjectScreen(teamsModel: teams));
+              }
               print("Create Project");
             }),
           ],

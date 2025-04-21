@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/models/departments_model.dart';
 import 'package:task_trial/models/organization_model.dart';
+import 'package:task_trial/models/project_model.dart';
 import 'package:task_trial/models/teams_model.dart';
 import 'package:task_trial/models/user_model.dart';
 import 'package:task_trial/utils/cache_helper.dart';
@@ -24,6 +25,7 @@ class MainViewController extends GetxController {
   OrganizationModel organizationModel = OrganizationModel();
   DepartmentsModel departmentsModel = DepartmentsModel();
   TeamsModel teamsModel = TeamsModel();
+  List<ProjectsModel> projectsModel = [];
   @override
   void onInit() async {
     super.onInit();
@@ -34,6 +36,7 @@ class MainViewController extends GetxController {
     await getOrganization();
     await getDepartments();
     await getTeams();
+    await getAllProjects();
     pages = [
       DashboardScreen(),
       ProjectScreen(),
@@ -88,7 +91,6 @@ class MainViewController extends GetxController {
         'http://192.168.1.5:3000/api/organization/$orgId',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
-
       organizationModel = OrganizationModel.fromJson(response.data);
       print(organizationModel.toJson());
       CacheHelper().saveData(key: 'orgId', value: organizationModel.id);
@@ -139,6 +141,28 @@ class MainViewController extends GetxController {
       } else {
         Constants.errorSnackBar(title: 'Error', message: e.toString());
         print(e.toString());
+      }
+    }
+  }
+  Future<void> getAllProjects() async {
+    print('Get All Projects Method');
+    final accessToken = CacheHelper().getData(key: 'accessToken');
+    final orgId = CacheHelper().getData(key: 'orgId');
+    for(int i=0;i<teamsModel.data!.teams!.length;i++){
+      try {
+        final response = await Dio().get(
+          'http://192.168.1.5:3000/api/organization/$orgId/team/${teamsModel.data!.teams![i].id}/project/all',
+          options: Options(headers: {'authorization': 'Bearer $accessToken'}),
+        );
+        projectsModel.add(ProjectsModel.fromJson(response.data));
+        print( projectsModel[i].toJson());
+        CacheHelper().saveData(key: 'orgId', value: organizationModel.id);
+      } on DioException catch (e) {
+        if (e.response?.statusCode == 401 && await _refreshToken()) {
+          return await getOrganization(); // Retry after refresh
+        } else {
+          _handleDioError(e);
+        }
       }
     }
   }

@@ -68,7 +68,6 @@ class CreateTeamScreen extends StatelessWidget {
       ),
     );
   }
-
   Widget _customTextField({
     required String label,
     required String hint,

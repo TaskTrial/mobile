@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/controllers/department_controller.dart';
+import 'package:task_trial/controllers/team_controller.dart';
 import 'package:task_trial/models/departments_model.dart';
+import 'package:task_trial/models/teams_model.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/department/edit_department_screen.dart';
+import 'package:task_trial/views/team/edit_team_screen.dart';
 
-class SingleDepartmentScreen extends StatelessWidget {
-   const SingleDepartmentScreen({super.key, required this.department});
-  final Department department ;
+class SingleTeamScreen extends StatelessWidget {
+  const SingleTeamScreen({super.key, required this.team});
+  final Team team ;
   @override
   Widget build(BuildContext context) {
-    DepartmentController controller =Get.put(DepartmentController());
+    TeamController controller =Get.put(TeamController());
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -47,7 +50,7 @@ class SingleDepartmentScreen extends StatelessWidget {
         ),
 
         Text(
-          'My Department',
+          'My Team',
           style: TextStyle(
               color: Constants.pageNameColor,
               fontFamily: Constants.primaryFont,
@@ -55,7 +58,7 @@ class SingleDepartmentScreen extends StatelessWidget {
               fontWeight: FontWeight.bold),
         ),
         IconButton(onPressed: (){
-          Get.to(()=> EditDepartmentScreen(department: department));
+         Get.to(()=> EditTeamScreen(team: team));
         }, icon:
         CircleAvatar(
             backgroundColor: Constants.primaryColor,
@@ -92,7 +95,7 @@ class SingleDepartmentScreen extends StatelessWidget {
       ),
     );
   }
-  _orgInfo(double width,DepartmentController controller){
+  _orgInfo(double width,TeamController controller){
     return Container(
       padding: const EdgeInsets.only(top: 10,left: 15,right: 15,bottom: 10),
       width: width,
@@ -102,45 +105,50 @@ class SingleDepartmentScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _picturePart(controller),
+          _picturePart(),
           const SizedBox(height: 10),
           Text(
-            department.name!,
+            team.name!,
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
             ),
           ),
-          Text(
-            department.organization!.name!,
-            style: TextStyle(color: Colors.grey),
-          ),
           const SizedBox(height: 20),
-          _infoRow("Description", department.description!),
-          _infoRow("Created at", Constants.formatDate(date: department.createdAt!)),
+          _infoRow("Description", team.description??'There is no description'),
+          _infoRow("Created at", Constants.formatDate(date: team.createdAt!)),
         ],
       ),
     );
 
   }
-  _mangerRow(Manager manager){
+  _creatorRow(Team team){
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Row(
         children: [
           _ownerPic(
+
           ),
           SizedBox(width: 10),
           Expanded(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("${manager.firstName!} ${manager.lastName}",
+                    Text("${team.creator!.firstName!} ${team.creator!.lastName}",
                       style: TextStyle(
                           color: Colors.black,
                           fontFamily: Constants.primaryFont,
                           fontSize: 18,
                           fontWeight: FontWeight.w900),
+                    ),
+                    Text(
+                      team.creator!.email!,
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontFamily: Constants.primaryFont,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500),
                     ),
                   ]
               )
@@ -160,7 +168,7 @@ class SingleDepartmentScreen extends StatelessWidget {
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text( 'Manager',
+              Text( 'Creator',
                 style: TextStyle(
                     color: Colors.black,
                     fontFamily: Constants.primaryFont,
@@ -168,24 +176,46 @@ class SingleDepartmentScreen extends StatelessWidget {
                     fontWeight: FontWeight.w900),
               ),
               SizedBox(height: 10),
-           _mangerRow(department.manager!)
+              _creatorRow(team)
             ]
         )
     );
   }
-  _picturePart(DepartmentController controller){
-      return  CircleAvatar(
-        radius: 40,
-        backgroundColor: controller.getColorForDepartment(department.name!),
-        child: Icon(controller.getIconForDepartment(department.name!), size: 50, color: Colors.white),
-      );
+  _picturePart(){
+   if( team.avatar == null || team.avatar!.isEmpty) {
+     return CircleAvatar(
+       radius: 40,
+       backgroundColor: Colors.orangeAccent.withOpacity(0.5),
+       child: Icon(Icons.people, size: 50, color: Colors.white),
+     );
+   }
+   return CircleAvatar(
+     radius: 40,
+     backgroundColor: Colors.white,
+     child: CircleAvatar(
+       radius: 38,
+       backgroundImage: NetworkImage(team.avatar!),
+     ),
+   );
+
   }
   _ownerPic(){
-   return CircleAvatar(
+    if( team.avatar != null && team.avatar!.isNotEmpty) {
+      return CircleAvatar(
         radius: 30,
-        backgroundColor: Color(0xFFFFE3C5),
-        child: Icon(Icons.person, size: 30, color: Colors.brown),
+        backgroundColor: Colors.orangeAccent.withOpacity(0.5),
+        child: Icon(Icons.people, size: 30, color: Colors.white),
       );
+    }
+    return CircleAvatar(
+      radius: 30,
+      backgroundColor: Colors.white,
+      child: CircleAvatar(
+        radius: 28,
+        backgroundImage: NetworkImage(team.creator!.profilePic!),
+      ),
+    );
+
   }
 
 

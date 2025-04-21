@@ -7,6 +7,8 @@ import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/department/create_department_screen.dart';
 import 'package:task_trial/views/department/single_department_screen.dart';
 
+import 'edit_department_screen.dart';
+
 class DepartmentsScreen extends StatelessWidget {
   const DepartmentsScreen({super.key, required this.departmentsModel});
   final DepartmentsModel departmentsModel ;
@@ -59,6 +61,17 @@ class DepartmentsScreen extends StatelessWidget {
                 print(dept);
                 Get.to(()=>SingleDepartmentScreen(department: dept));
               },
+              onLongPress: () {
+                showModalBottomSheet(
+                  context: context,
+                  backgroundColor: Colors.white,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                  ),
+                  builder: (_) => _buildBottomSheet(context, dept),
+                );
+              },
+
               child: Container(
                 margin: const EdgeInsets.only(bottom: 16),
                 padding: const EdgeInsets.all(16),
@@ -193,4 +206,118 @@ class DepartmentsScreen extends StatelessWidget {
       ),
     );
   }
+  Widget _buildBottomSheet(BuildContext context, Department dept) {
+    final controller = Get.find<DepartmentController>();
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      decoration: BoxDecoration(
+        color: Constants.backgroundColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 40,
+            height: 4,
+            margin: const EdgeInsets.only(bottom: 16),
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          _buildActionItem(
+            icon: Icons.edit,
+            label: 'Edit Department',
+            color: Constants.primaryColor,
+            onTap: () {
+              Get.back();
+              Get.to(() => EditDepartmentScreen(department: dept));
+            },
+          ),
+          const SizedBox(height: 12),
+          _buildActionItem(
+            icon: Icons.delete,
+            label: 'Delete Department',
+            color: Colors.red,
+            onTap: () {
+              Get.back();
+              _showDeleteConfirmation(context, dept.id!, controller);
+            },
+          ),
+          const SizedBox(height: 12),
+          _buildActionItem(
+            icon: Icons.close,
+            label: 'Cancel',
+            color: Colors.grey,
+            onTap: () => Get.back(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context, String deptId, DepartmentController controller) {
+    Get.defaultDialog(
+      title: "Delete Department",
+      titleStyle: TextStyle(
+        fontFamily: Constants.primaryFont,
+        fontWeight: FontWeight.bold,
+        fontSize: 20,
+      ),
+      middleText: "Are you sure you want to delete this department?",
+      middleTextStyle: TextStyle(
+        fontFamily: Constants.primaryFont,
+        fontSize: 16,
+      ),
+      textCancel: "Cancel",
+      textConfirm: "Delete",
+      confirmTextColor: Colors.white,
+      cancelTextColor: Constants.primaryColor,
+      buttonColor: Colors.red,
+      onConfirm: () {
+        Get.back();
+        controller.deleteDepartmentData(deptId: deptId);
+      },
+    );
+  }
+  Widget _buildActionItem({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundColor: color.withOpacity(0.1),
+              child: Icon(icon, color: color),
+            ),
+            const SizedBox(width: 16),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: Constants.primaryFont,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+
 }
