@@ -25,7 +25,7 @@ class MainViewController extends GetxController {
   OrganizationModel organizationModel = OrganizationModel();
   DepartmentsModel departmentsModel = DepartmentsModel();
   TeamsModel teamsModel = TeamsModel();
-  List<ProjectsModel> projectsModel = [];
+  List<ProjectModel> projectModel = [];
   @override
   void onInit() async {
     super.onInit();
@@ -39,7 +39,7 @@ class MainViewController extends GetxController {
     await getAllProjects();
     pages = [
       DashboardScreen(),
-      ProjectScreen(),
+      ProjectScreen(projects: projectModel,),
       ChatScreen(),
       TaskScreen(),
       MoreScreen(organization: organizationModel , departments: departmentsModel,teams: teamsModel,),
@@ -154,9 +154,13 @@ class MainViewController extends GetxController {
           'http://192.168.1.5:3000/api/organization/$orgId/team/${teamsModel.data!.teams![i].id}/project/all',
           options: Options(headers: {'authorization': 'Bearer $accessToken'}),
         );
-        projectsModel.add(ProjectsModel.fromJson(response.data));
-        print( projectsModel[i].toJson());
-        CacheHelper().saveData(key: 'orgId', value: organizationModel.id);
+        List<dynamic> data=response.data['data'];
+        if(data.isNotEmpty){
+          for(int j=0;j<data.length;j++){
+            projectModel.add(ProjectModel.fromJson(data[j]));
+            print( projectModel[j].toJson());
+          }
+        }
       } on DioException catch (e) {
         if (e.response?.statusCode == 401 && await _refreshToken()) {
           return await getOrganization(); // Retry after refresh

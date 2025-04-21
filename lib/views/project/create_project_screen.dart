@@ -59,13 +59,13 @@ class CreateProjectScreen extends StatelessWidget {
                   )),
                 buildTeamDropdown(controller),
                 const SizedBox(height: 16),
-
-                Text(
+                Obx(()=>Text(
                   'Progress (${controller.progress.value}%)',
                   style: const TextStyle(
                     fontFamily: Constants.primaryFont,
                     fontWeight: FontWeight.bold,
                   ),
+                ),
                 ),
                 Obx(() => Slider(
                       value: controller.progress.value.toDouble(),

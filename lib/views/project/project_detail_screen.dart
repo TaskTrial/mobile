@@ -67,7 +67,9 @@ class ProjectDetailScreen extends StatelessWidget {
                             SizedBox(
                               width: 120, // You can adjust this depending on how many avatars
                               height: 40,
-                              child: Row(
+                              child:
+                              teamImages.isNotEmpty || teamImages!= null ?
+                              Row(
                                 children: [
                                   Expanded(
                                     child: Stack(
@@ -90,7 +92,8 @@ class ProjectDetailScreen extends StatelessWidget {
                                     Text('+${teamImages.length - 4}',
                                         style: TextStyle(color: Colors.grey)),
                                 ],
-                              ),
+                              )
+                                  :const Center(child: Text("No team members found")),
                             ),
                           ],
                         ),
@@ -112,7 +115,7 @@ class ProjectDetailScreen extends StatelessWidget {
 
                     // Tasks List
                     Expanded(
-                      child: ListView.builder(
+                      child: controller.tasks.isNotEmpty?ListView.builder(
                           itemCount: controller.tasks.length,
                           itemBuilder: (context, index) {
                             Task task = controller.tasks[index];
@@ -124,7 +127,7 @@ class ProjectDetailScreen extends StatelessWidget {
                                   avatars: controller.getUserImagesByTaskId(task.id) ,
                               ),
                             );
-                          }, )
+                          }, ): const Center(child: Text("No tasks found")),
                     ),
                   ],
                 ),

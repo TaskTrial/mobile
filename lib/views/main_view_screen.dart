@@ -15,10 +15,9 @@ class MainViewScreen extends StatelessWidget {
         init: MainViewController(),
         builder: (controller) => !controller.isLoading.value?Scaffold(
               backgroundColor: Constants.backgroundColor,
-              floatingActionButton: controller.currentPageIndex.value == 0 ||
-                      controller.currentPageIndex.value == 1
-                  ? _floatingActionButton(controller)
-                  : null,
+              floatingActionButton:
+                   _floatingActionButton(controller)
+                  ,
               appBar: _appBar(controller),
               body: Container(
                 width: screenWidth,

@@ -1,28 +1,6 @@
-class ProjectsModel {
-  final bool success;
-  final List<Project> data;
 
-  ProjectsModel({
-    required this.success,
-    required this.data,
-  });
 
-  factory ProjectsModel.fromJson(Map<String, dynamic> json) {
-    return ProjectsModel(
-      success: json['success'],
-      data: List<Project>.from(json['data'].map((x) => Project.fromJson(x))),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'success': success,
-      'data': data.map((x) => x.toJson()).toList(),
-    };
-  }
-}
-
-class Project {
+class ProjectModel {
   final String id;
   final String name;
   final String description;
@@ -30,10 +8,10 @@ class Project {
   final String createdBy;
   final String organizationId;
   final String teamId;
-  final DateTime startDate;
-  final DateTime endDate;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String startDate;
+  final String endDate;
+  final String createdAt;
+  final String updatedAt;
   final String? deletedAt;
   final String priority;
   final int progress;
@@ -41,7 +19,7 @@ class Project {
   final String lastModifiedBy;
   final int memberCount;
 
-  Project({
+  ProjectModel({
     required this.id,
     required this.name,
     required this.description,
@@ -61,8 +39,8 @@ class Project {
     required this.memberCount,
   });
 
-  factory Project.fromJson(Map<String, dynamic> json) {
-    return Project(
+  factory ProjectModel.fromJson(Map<String, dynamic> json) {
+    return ProjectModel(
       id: json['id'],
       name: json['name'],
       description: json['description'],
@@ -70,10 +48,10 @@ class Project {
       createdBy: json['createdBy'],
       organizationId: json['organizationId'],
       teamId: json['teamId'],
-      startDate: DateTime.parse(json['startDate']),
-      endDate: DateTime.parse(json['endDate']),
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      startDate: json['startDate'],
+      endDate: json['endDate'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
       deletedAt: json['deletedAt'],
       priority: json['priority'],
       progress: json['progress'],
@@ -92,10 +70,10 @@ class Project {
       'createdBy': createdBy,
       'organizationId': organizationId,
       'teamId': teamId,
-      'startDate': startDate.toIso8601String(),
-      'endDate': endDate.toIso8601String(),
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      'startDate': startDate,
+      'endDate': endDate,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
       'deletedAt': deletedAt,
       'priority': priority,
       'progress': progress,

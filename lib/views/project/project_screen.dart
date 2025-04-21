@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/controllers/project/project_controller.dart';
 import 'package:task_trial/controllers/task_controller.dart';
+import 'package:task_trial/models/project_model.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/project/project_card.dart';
 
 class ProjectScreen extends StatelessWidget {
-  const ProjectScreen({super.key});
-
+  const ProjectScreen({super.key, required this.projects});
+  final List<ProjectModel> projects;
   @override
   Widget build(BuildContext context) {
-    final TaskController taskController = Get.put(TaskController());
+    final controller = Get.put(ProjectController());
+    int size = projects.length;
     return Scaffold(
       backgroundColor: Constants.backgroundColor,
       body: SizedBox(
@@ -22,12 +24,7 @@ class ProjectScreen extends StatelessWidget {
            _filter(),
             SizedBox(height: 10),
             Expanded(
-              child: GetBuilder<ProjectController>(
-                  init: ProjectController(),
-                  builder: (controller) {
-                    int size = controller.projects.length;
-                    if (size == 0) {
-                      return Center(
+              child: size==0?Center(
                         child:  Text('No Projects !'
                           ,style: TextStyle(
                             fontSize: 24,
@@ -37,24 +34,20 @@ class ProjectScreen extends StatelessWidget {
                           ),
 
                         ),
-                      );
-                    }
-                    return ListView.builder(
+                      ):
+                    ListView.builder(
                       itemCount: size,
                       itemBuilder: (context, index) {
-
                           return Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 15),
                             child: ProjectCard(
-                              project: controller.projects[index],
-                              teamImages:taskController.getUserImagesByTaskIds(
-                                  controller.projects[index].tasksIDs),
+                              project: projects[index],
+
                             ),
                           );
 
                       },
-                    );
-                  },)
+                    ),
             ),
             SizedBox(height: 10)
           ],
