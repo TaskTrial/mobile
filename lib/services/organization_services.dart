@@ -58,6 +58,7 @@ class OrganizationServices {
       }) async
   {
     try {
+      print('http://192.168.1.5:3000/api/organization/$orgId');
       final response = await Dio().put(
           'http://192.168.1.5:3000/api/organization/$orgId',
           options: Options(
@@ -111,6 +112,7 @@ class OrganizationServices {
         {
           Constants.errorSnackBar(
               title: 'Failed', message: '${e.response!.data['message']}');
+          print('${e.response!.data['message']}');
         }
         break;
       case DioExceptionType.cancel:

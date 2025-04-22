@@ -4,10 +4,10 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:task_trial/models/project_model.dart';
 
-import '../../utils/cache_helper.dart';
-import '../../utils/constants.dart';
-import '../../views/main_view_screen.dart';
-import 'main_view_controller.dart';
+import '../../../utils/cache_helper.dart';
+import '../../../utils/constants.dart';
+import '../../../views/main_view_screen.dart';
+import '../main_view_controller.dart';
 
 
 class CreateTaskController extends GetxController {

@@ -56,7 +56,6 @@ class CreateOrganizationController extends GetxController {
           'name': nameController.text,
           'industry': industryController.text,
           'sizeRange': sizeRangeController.text,
-          'contactEmail': contactEmailController.text,
         },
         options: Options(
           headers: {

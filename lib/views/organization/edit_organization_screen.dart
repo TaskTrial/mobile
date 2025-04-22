@@ -57,7 +57,7 @@ class EditOrganizationScreen extends StatelessWidget {
                                 'Industry', controller.orgIndustryController,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter your name';
+                                    return 'Please enter your Industry';
                                   }
                                   return null;
                                 }),
@@ -68,7 +68,7 @@ class EditOrganizationScreen extends StatelessWidget {
                                 controller.orgDescriptionController,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter your name';
+                                    return 'Please enter your Description';
                                   }
                                   return null;
                                 }),
@@ -77,52 +77,56 @@ class EditOrganizationScreen extends StatelessWidget {
                             ),
                             _buildInputField(
                                 'Contact Email', controller.orgEmailController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your name';
-                                  }
-                                  if (!GetUtils.isEmail(value)) {
-                                    return 'Please enter a valid email';
-                                  }
-                                  return null;
-                                }),
+                                // validator: (value) {
+                                //   if (value == null || value.isEmpty) {
+                                //     return 'Please enter your name';
+                                //   }
+                                //   if (!GetUtils.isEmail(value)) {
+                                //     return 'Please enter a valid email';
+                                //   }
+                                //   return null;
+                                // }
+                                ),
                             SizedBox(
                               height: height * 0.02,
                             ),
                             _buildInputField(
                                 'Contact Phone', controller.orgPhoneController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your name';
-                                  }
-
-                                  return null;
-                                }),
+                                // validator: (value) {
+                                //   if (value == null || value.isEmpty) {
+                                //     return 'Please enter your name';
+                                //   }
+                                //
+                                //   return null;
+                                // }
+                                ),
                             SizedBox(
                               height: height * 0.02,
                             ),
                             _buildInputField(
                                 'Address', controller.orgAddressController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your name';
-                                  }
-                                  return null;
-                                }),
+                                // validator: (value) {
+                                //   if (value == null || value.isEmpty) {
+                                //     return 'Please enter your name';
+                                //   }
+                                //   return null;
+                                // }
+                                ),
                             SizedBox(
                               height: height * 0.02,
                             ),
                             _buildInputField(
                                 'Website', controller.orgWebsiteController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your name';
-                                  }
-                                  if (!GetUtils.isURL(value)) {
-                                    return 'Please enter a valid website';
-                                  }
-                                  return null;
-                                }),
+                                // validator: (value) {
+                                //   if (value == null || value.isEmpty) {
+                                //     return 'Please enter your name';
+                                //   }
+                                //   if (!GetUtils.isURL(value)) {
+                                //     return 'Please enter a valid website';
+                                //   }
+                                //   return null;
+                                // }
+                                ),
                             // SizedBox(
                             //   height: height * 0.02,
                             // ),

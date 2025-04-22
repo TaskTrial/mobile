@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:task_trial/controllers/create_task_controller.dart';
+import 'package:task_trial/controllers/task/create_task_controller.dart';
 import 'package:task_trial/models/project_model.dart';
 import 'package:task_trial/models/teams_model.dart';
 

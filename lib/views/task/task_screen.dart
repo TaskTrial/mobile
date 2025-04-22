@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_trial/controllers/task_controller.dart';
+import 'package:task_trial/controllers/task/task_controller.dart';
 
 import '../../utils/constants.dart';
 

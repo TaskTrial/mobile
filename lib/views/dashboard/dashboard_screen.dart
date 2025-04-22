@@ -10,6 +10,8 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     double screenWidth = MediaQuery.of(context).size.width;
+     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
         backgroundColor: Constants.backgroundColor,
         body: SingleChildScrollView(
@@ -26,7 +28,7 @@ class DashboardScreen extends StatelessWidget {
                     SizedBox(
                       height: 20,
                     ),
-                    _tasksPart(),
+                    _tasksPart(screenWidth),
                     SizedBox(
                       height: 20,
                     ),
@@ -206,7 +208,7 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  _taskRow(DashboardController controller, int index) {
+  _taskRow(DashboardController controller, int index,double width) {
     return Row(
       children: [
         Checkbox(
@@ -221,7 +223,7 @@ class DashboardScreen extends StatelessWidget {
           ),
         ),
         SizedBox(
-          width: 240,
+          width: width*0.5,
           child: Text(controller.dashboardData[index]['task'],
               style: TextStyle(
                 color: Constants.pageNameColor,
@@ -269,7 +271,7 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  _tasksPart() {
+  _tasksPart(double width) {
     return Container(
       height: 200,
       width: double.infinity,
@@ -294,13 +296,14 @@ class DashboardScreen extends StatelessWidget {
           ),
           GetBuilder<DashboardController>(
             init: DashboardController(),
-            builder: (controller) => SizedBox(
+            builder: (controller) =>
+                SizedBox(
               height: 145,
               width: double.infinity,
               child: ListView.builder(
                 itemCount: controller.dashboardData.length,
                 itemBuilder: (context, index) {
-                  return _taskRow(controller, index);
+                  return _taskRow(controller, index,width);
                 },
               ),
             ),

@@ -14,8 +14,6 @@ class Constants {
   static const Color projectCardColor3 = Color(0xffe1b4b4);
   static const Color projectCardColor4 = Color(0xFFDED3FD);
 
-
-
   static  Color transparentWhite = Color(0xFFFFFFFF).withOpacity(0.34);
   static const String appName = 'TaskTrial';
   static const String primaryFont = 'NunitoSans';
@@ -107,7 +105,7 @@ class Constants {
     return Get.snackbar(title, message,
       colorText: Colors.white,
       backgroundColor: Colors.white,
-      icon: const Icon( Icons.email , color: Colors.white),
+      icon: const Icon( Icons.error , color: Colors.white),
       titleText: Text(
         title,
         style: const TextStyle(

@@ -117,7 +117,7 @@ class OrganizationScreen extends StatelessWidget {
             style: TextStyle(color: Colors.grey),
           ),
           const SizedBox(height: 20),
-          _infoRow("Contact Email", org.contactEmail!),
+          _infoRow("Contact Email", org.contactEmail??'null'),
           _infoRow("Phone", org.contactPhone.toString()),
           _infoRow("Address", org.address.toString()),
           _infoRow("Created At",

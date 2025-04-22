@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/controllers/project/project_controller.dart';
 import 'package:task_trial/controllers/project/project_detail_controller.dart';
-import 'package:task_trial/controllers/task_controller.dart';
+import 'package:task_trial/controllers/task/task_controller.dart';
 import 'package:task_trial/models/project_model.dart';
 import 'package:task_trial/utils/constants.dart';
+import 'package:task_trial/views/project/edit_project_screen.dart';
 import 'package:task_trial/views/project/task_item.dart';
 
 class ProjectDetailScreen extends StatelessWidget {
@@ -151,6 +152,7 @@ class ProjectDetailScreen extends StatelessWidget {
     return   Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
               onPressed: () {
@@ -162,8 +164,8 @@ class ProjectDetailScreen extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(50),
                   ),
-                  child: Icon(Icons.arrow_back))),
-          const SizedBox(width: 60),
+                  child: Icon(Icons.arrow_back))
+          ),
           const Text(
             "Project Detail",
             style: TextStyle(
@@ -173,6 +175,19 @@ class ProjectDetailScreen extends StatelessWidget {
               fontFamily: Constants.primaryFont,
             ),
           ),
+          IconButton(
+              onPressed: () {
+               Get.to(()=> EditProjectScreen(project: project, teamId: project.team!.id!));
+              },
+              icon: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color:Constants.primaryColor,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Icon(Icons.edit , color: Colors.white,))
+          ),
+
         ],
       ),
     );

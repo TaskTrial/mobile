@@ -65,4 +65,18 @@ class OrganizationController extends GetxController{
          sizeRangeController: orgSizeRangeController,
          logoUrlController: orgLogoUrlController);
    }
+   @override
+  void onClose() {
+    orgNameController.dispose();
+    orgDescriptionController.dispose();
+    orgPhoneController.dispose();
+    orgEmailController.dispose();
+    orgWebsiteController.dispose();
+    orgAddressController.dispose();
+    orgSizeRangeController.dispose();
+    orgIndustryController.dispose();
+    orgLogoUrlController.dispose();
+
+    super.onClose();
+  }
 }
