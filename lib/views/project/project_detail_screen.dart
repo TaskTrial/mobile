@@ -3,16 +3,16 @@ import 'package:get/get.dart';
 import 'package:task_trial/controllers/project/project_controller.dart';
 import 'package:task_trial/controllers/project/project_detail_controller.dart';
 import 'package:task_trial/controllers/task_controller.dart';
+import 'package:task_trial/models/project_model.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/project/task_item.dart';
 
 class ProjectDetailScreen extends StatelessWidget {
-  const ProjectDetailScreen({super.key,required this.project,required this.teamImages});
-  final Project project;
-  final List<String> teamImages ;
+  const ProjectDetailScreen({super.key,required this.project});
+  final ProjectModel project;
   @override
   Widget build(BuildContext context) {
-    ProjectDetailController controller = Get.put(ProjectDetailController(project: project));
+    // ProjectDetailController controller = Get.put(ProjectDetailController(project: project));
     return Scaffold(
       backgroundColor: const Color(0xFFF0E3DA), // Background beige
       body: SafeArea(
@@ -31,7 +31,7 @@ class ProjectDetailScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                      Text(
-                      project.title,
+                      project.name!,
                       style:
                           TextStyle(
                               fontSize: 25,
@@ -42,7 +42,7 @@ class ProjectDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                      Text(
-                      project.description,
+                      project.description!,
                       style: TextStyle(
                           color: Colors.grey,
                           fontSize: 18,
@@ -64,36 +64,38 @@ class ProjectDetailScreen extends StatelessWidget {
                                 style: TextStyle(fontWeight: FontWeight.w500)),
                             const SizedBox(height: 8),
                             // Inside your Column (under "Assigned to")
+
                             SizedBox(
                               width: 120, // You can adjust this depending on how many avatars
                               height: 40,
                               child:
-                              teamImages.isNotEmpty || teamImages!= null ?
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Stack(
-                                      children: List.generate(teamImages.length>4?4:teamImages.length, (index) {
-                                        return Positioned(
-                                          left: index * 22.0,
-                                          child: CircleAvatar(
-                                            backgroundColor: Colors.white,
-                                            radius: 17,
-                                            child: CircleAvatar(
-                                              radius: 15,
-                                              backgroundImage: NetworkImage(teamImages[index]),
-                                            ),
-                                          ),
-                                        );
-                                      }),
-                                    ),
-                                  ),
-                                  if (teamImages.length > 4)
-                                    Text('+${teamImages.length - 4}',
-                                        style: TextStyle(color: Colors.grey)),
-                                ],
-                              )
-                                  :const Center(child: Text("No team members found")),
+                              // teamImages.isNotEmpty || teamImages!= null ?
+                              // Row(
+                              //   children: [
+                              //     Expanded(
+                              //       child: Stack(
+                              //         children: List.generate(teamImages.length>4?4:teamImages.length, (index) {
+                              //           return Positioned(
+                              //             left: index * 22.0,
+                              //             child: CircleAvatar(
+                              //               backgroundColor: Colors.white,
+                              //               radius: 17,
+                              //               child: CircleAvatar(
+                              //                 radius: 15,
+                              //                 backgroundImage: NetworkImage(teamImages[index]),
+                              //               ),
+                              //             ),
+                              //           );
+                              //         }),
+                              //       ),
+                              //     ),
+                              //     if (teamImages.length > 4)
+                              //       Text('+${teamImages.length - 4}',
+                              //           style: TextStyle(color: Colors.grey)),
+                              //   ],
+                              // )
+                              //     :
+                              const Center(child: Text("No team members found")),
                             ),
                           ],
                         ),
@@ -112,19 +114,26 @@ class ProjectDetailScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 30),
+                    Text('Tasks',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: Constants.primaryFont,
+                        ),
+                    ),
+                    const SizedBox(height: 10),
 
                     // Tasks List
                     Expanded(
-                      child: controller.tasks.isNotEmpty?ListView.builder(
-                          itemCount: controller.tasks.length,
+                      child: project.tasks!.isNotEmpty?ListView.builder(
+                          itemCount: project.tasks!.length,
                           itemBuilder: (context, index) {
-                            Task task = controller.tasks[index];
+                            TaskModel task = project.tasks![index];
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 7),
                               child: TaskItem(
-                                  title: task.title,
-                                  hours: task.timeAgo,
-                                  avatars: controller.getUserImagesByTaskId(task.id) ,
+                                  title: task.title!,
+                                  hours: Constants.formatDate(date: task.dueDate!),
                               ),
                             );
                           }, ): const Center(child: Text("No tasks found")),

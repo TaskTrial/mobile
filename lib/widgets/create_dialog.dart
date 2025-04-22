@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_trial/controllers/create_task_controller.dart';
 import 'package:task_trial/models/teams_model.dart';
 import 'package:task_trial/utils/cache_helper.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/department/create_department_screen.dart';
 import 'package:task_trial/views/project/create_project_screen.dart';
+import 'package:task_trial/views/task/create_task_screen.dart';
 import 'package:task_trial/views/team/create_team_screen.dart';
 
+import '../models/project_model.dart';
+
 class CreateDialog {
-  static void showCreateDialog(TeamsModel teams) {
+  static void showCreateDialog(TeamsModel teams, List<ProjectModel> projects) {
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -40,6 +44,17 @@ class CreateDialog {
               }
               else {
                 Get.to(()=>CreateProjectScreen(teamsModel: teams));
+              }
+              print("Create Project");
+            }),
+            _buildOptionTile(Icons.task, "Task", () {
+              if(projects.isEmpty){
+                Get.back();
+                Constants.alertSnackBar(title: 'Note', message: 'You did not create any project yet',
+                );
+              }
+              else {
+                Get.to(()=>CreateTaskScreen(projects: projects ,));
               }
               print("Create Project");
             }),

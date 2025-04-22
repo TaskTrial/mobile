@@ -97,7 +97,7 @@ class MainViewScreen extends StatelessWidget {
   _floatingActionButton(MainViewController controller) {
     return FloatingActionButton(
       onPressed: () {
-        CreateDialog.showCreateDialog(controller.teamsModel);
+        CreateDialog.showCreateDialog(controller.teamsModel,controller.projectModel);
       },
       elevation: 10,
       shape: RoundedRectangleBorder(

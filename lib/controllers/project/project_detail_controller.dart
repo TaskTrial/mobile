@@ -5,10 +5,7 @@ import 'package:task_trial/controllers/task_controller.dart';
 class  ProjectDetailController  extends GetxController{
 
   final TaskController taskController = Get.put(TaskController());
-
   final Project project ;
-
-
   List<Task> tasks=[] ;
   @override
   void onInit() {

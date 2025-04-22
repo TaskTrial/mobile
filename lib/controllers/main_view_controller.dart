@@ -26,6 +26,7 @@ class MainViewController extends GetxController {
   DepartmentsModel departmentsModel = DepartmentsModel();
   TeamsModel teamsModel = TeamsModel();
   List<ProjectModel> projectModel = [];
+  List<TaskModel> taskModel = [];
   @override
   void onInit() async {
     super.onInit();
@@ -34,7 +35,7 @@ class MainViewController extends GetxController {
     await getOrganization();
     await getDepartments();
     await getTeams();
-    await getAllProjects();
+     await getAllProjects();
     pages = [
       DashboardScreen(),
       ProjectScreen(projects: projectModel,),
@@ -146,25 +147,28 @@ class MainViewController extends GetxController {
     print('Get All Projects Method');
     final accessToken = CacheHelper().getData(key: 'accessToken');
     final orgId = CacheHelper().getData(key: 'orgId');
-    for(int i=0;i<teamsModel.data!.teams!.length;i++){
-      try {
-        final response = await Dio().get(
-          'http://192.168.1.5:3000/api/organization/$orgId/team/${teamsModel.data!.teams![i].id}/project/all',
-          options: Options(headers: {'authorization': 'Bearer $accessToken'}),
-        );
-        List<dynamic> data=response.data['data'];
-        if(data.isNotEmpty){
-          for(int j=0;j<data.length;j++){
-            projectModel.add(ProjectModel.fromJson(data[j]));
-            print( projectModel[j].toJson());
-          }
-        }
-      } on DioException catch (e) {
-        if (e.response?.statusCode == 401 && await _refreshToken()) {
-          return await getOrganization(); // Retry after refresh
-        } else {
-          _handleDioError(e);
-        }
+    try {
+      final response = await Dio().get(
+        'http://192.168.1.5:3000/api/organization/$orgId/projects',
+        options: Options(headers: {'authorization': 'Bearer $accessToken'}),
+      );
+      List data=response.data['data']['activeProjects'];
+      for (var project in data) {
+        ProjectModel p = ProjectModel.fromJson(project);
+        projectModel.add(p);
+        taskModel.addAll(p.tasks!);
+      }
+      for(ProjectModel proj in projectModel){
+        print(proj.toJson());
+      }
+      for(TaskModel task in taskModel){
+        print(task.toJson());
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401 && await _refreshToken()) {
+        return await getOrganization(); // Retry after refresh
+      } else {
+        _handleDioError(e);
       }
     }
   }

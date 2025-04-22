@@ -36,8 +36,8 @@ class ProjectCard extends StatelessWidget {
               const Spacer(),
               GestureDetector(
                 onTap: () {
-                 // Get.to(() => ProjectDetailScreen(project:project ,teamImages: teamImages,)
-                 // );
+                 Get.to(() => ProjectDetailScreen(project:project)
+                 );
                 },
                 child: CircleAvatar(
                   radius: 23,
@@ -56,7 +56,7 @@ class ProjectCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            project.name,
+            project.name!,
             style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold,
                 fontFamily: Constants.primaryFont),
           ),
@@ -69,7 +69,7 @@ class ProjectCard extends StatelessWidget {
 
               const Icon(Icons.calendar_today, size: 16),
               const SizedBox(width: 5),
-              Text(Constants.formatDate(date: project.startDate),
+              Text(Constants.formatDate(date: project.startDate!),
                   style: const TextStyle(
                       fontSize: 14, fontWeight: FontWeight.w500,fontFamily: Constants.primaryFont)),
             ],
@@ -83,14 +83,14 @@ class ProjectCard extends StatelessWidget {
 
               const Icon(Icons.calendar_today, size: 16),
               const SizedBox(width: 5),
-              Text(Constants.formatDate(date: project.endDate),
+              Text(Constants.formatDate(date: project.endDate!),
                   style: const TextStyle(
                       fontSize: 14, fontWeight: FontWeight.w500,fontFamily: Constants.primaryFont)),
             ],
           ),
           const SizedBox(height: 12),
           Text(
-            project.description,
+            project.description!,
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600,fontFamily: Constants.primaryFont),
           ),
           const SizedBox(height: 20),
@@ -140,7 +140,7 @@ class ProjectCard extends StatelessWidget {
                   SizedBox(
                     width: 90, // or use MediaQuery or make it responsive
                     child: LinearProgressIndicator(
-                      value: project.progress/ 100,
+                      value: project.progress!/ 100,
                       minHeight: 5,
                       backgroundColor: Colors.grey[300],
                       color: Colors.black,
