@@ -26,6 +26,8 @@ class CreateOrganizationController extends GetxController {
   var initialize = false.obs;
   void _initialize() async {
     getLoading.value = true;
+    bool ref = await _refreshToken();
+    print(ref);
     await getUser();
     getLoading.value = false;
     if (userModel.user?.organization != null) {
@@ -93,7 +95,6 @@ class CreateOrganizationController extends GetxController {
         print("Access token expired. Trying to refresh...");
         final refreshed = await _refreshToken();
         if (refreshed) {
-          // Retry original request
           return await getUser();
         } else {
           // If refresh failed, logout

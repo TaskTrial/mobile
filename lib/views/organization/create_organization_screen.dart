@@ -12,12 +12,22 @@ class CreateOrganizationScreen extends StatelessWidget {
     return Obx(() {
       if (!controller.initialize.value) {
         return const Scaffold(
-          backgroundColor: Constants.backgroundColor,
-          body: Center(
-            child: CircularProgressIndicator(
-              color: Constants.primaryColor,
-            ),
-          ),
+            backgroundColor: Colors.white,
+            body: Center(
+                child:  Text('TaskTrial' , style: TextStyle(
+                  fontFamily: Constants.primaryFont,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                  color: Constants.pageNameColor,
+                  letterSpacing: 3,
+                  wordSpacing: 5,
+                  height: 3,
+                  decoration: TextDecoration.none,
+                  decorationColor: Constants.pageNameColor,
+                  decorationStyle: TextDecorationStyle.solid,
+                  decorationThickness: 1.5,
+                ))
+            )
         );
       }
       return Scaffold(

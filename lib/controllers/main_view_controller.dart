@@ -30,8 +30,6 @@ class MainViewController extends GetxController {
   void onInit() async {
     super.onInit();
     isLoading.value = true;
-    bool ref = await _refreshToken();
-    print('------------------------- $ref -------------------------');
     await getUser();
     await getOrganization();
     await getDepartments();
@@ -177,6 +175,9 @@ class MainViewController extends GetxController {
     try {
       final response = await Dio().post(
         'http://192.168.1.5:3000/api/auth/refreshAccessToken',
+        data: {
+          'refreshToken': refreshToken,
+        }
       );
       CacheHelper().saveData(key: 'accessToken', value: response.data['accessToken']);
       print(response.data);

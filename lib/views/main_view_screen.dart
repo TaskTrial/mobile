@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:task_trial/controllers/main_view_controller.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/profile/profile_screen.dart';
@@ -32,9 +33,11 @@ class MainViewScreen extends StatelessWidget {
             ): Scaffold(
               backgroundColor: Constants.backgroundColor,
               body: Center(
-                child: CircularProgressIndicator(
-                  color: Constants.primaryColor,
-                ),
+                child: SizedBox(
+                  height: 150,
+                  width: 150,
+                  child: Lottie.asset('assets/images/loading.json')
+                )
               ),
         )
     );
