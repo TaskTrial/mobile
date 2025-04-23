@@ -15,6 +15,8 @@ import 'package:task_trial/views/more/more_screen.dart';
 import 'package:task_trial/views/project/project_screen.dart';
 import 'package:task_trial/views/task/task_screen.dart';
 
+import '../models/task_model.dart';
+
 class MainViewController extends GetxController {
   final currentPageIndex = 0.obs;
   final isLoading = false.obs;
@@ -26,7 +28,7 @@ class MainViewController extends GetxController {
   DepartmentsModel departmentsModel = DepartmentsModel();
   TeamsModel teamsModel = TeamsModel();
   List<ProjectModel> projectModel = [];
-  List<TaskModel> taskModel = [];
+  List<TaskModel> tasks = [];
   @override
   void onInit() async {
     super.onInit();
@@ -36,11 +38,12 @@ class MainViewController extends GetxController {
     await getDepartments();
     await getTeams();
      await getAllProjects();
+     await getAllTasks();
     pages = [
       DashboardScreen(),
       ProjectScreen(projects: projectModel,),
       ChatScreen(),
-      TaskScreen(),
+      TaskScreen(tasks: tasks,projects: projectModel,),
       MoreScreen(organization: organizationModel , departments: departmentsModel,teams: teamsModel,),
     ];
     pageController.addListener(() {
@@ -156,17 +159,37 @@ class MainViewController extends GetxController {
       for (var project in data) {
         ProjectModel p = ProjectModel.fromJson(project);
         projectModel.add(p);
-        taskModel.addAll(p.tasks!);
       }
       for(ProjectModel proj in projectModel){
         print(proj.toJson());
       }
-      for(TaskModel task in taskModel){
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401 && await _refreshToken()) {
+        return await getAllProjects(); // Retry after refresh
+      } else {
+        _handleDioError(e);
+      }
+    }
+  }
+  Future<void> getAllTasks() async {
+    print('Get All Tasks Method');
+    final accessToken = CacheHelper().getData(key: 'accessToken');
+    final orgId = CacheHelper().getData(key: 'orgId');
+    try {
+      final response = await Dio().get(
+        'http://192.168.1.5:3000/api/organization/$orgId/tasks',
+        options: Options(headers: {'authorization': 'Bearer $accessToken'}),
+      );
+      List data=response.data['data']['tasks'];
+      for (var task in data) {
+        tasks.add(TaskModel.fromJson(task));
+      }
+      for(TaskModel task in tasks){
         print(task.toJson());
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 401 && await _refreshToken()) {
-        return await getOrganization(); // Retry after refresh
+        return await getAllTasks(); // Retry after refresh
       } else {
         _handleDioError(e);
       }

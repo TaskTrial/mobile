@@ -32,7 +32,7 @@ class DashboardScreen extends StatelessWidget {
                     SizedBox(
                       height: 20,
                     ),
-                    _projectsPart(),
+                    _projectsPart(width: screenWidth),
                   ],
                 ),
               )),
@@ -233,12 +233,10 @@ class DashboardScreen extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               )),
         ),
-        SizedBox(
-          width: 10,
-        ),
+        Spacer(),
         Container(
           alignment: Alignment.center,
-          width: 70,
+          width: width*0.18,
           height: 30,
           decoration: controller.dashboardData[index]['status'] == 'Approved'
               ? BoxDecoration(
@@ -266,7 +264,8 @@ class DashboardScreen extends StatelessWidget {
                 fontWeight: FontWeight.w700,
                 overflow: TextOverflow.ellipsis,
               )),
-        )
+        ),
+        SizedBox(width: width*0.03,)
       ],
     );
   }
@@ -313,13 +312,13 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  _projectRow({required DashboardController controller, required int index}) {
+  _projectRow({required DashboardController controller, required int index ,required double width}) {
     return Container(
       padding: const EdgeInsets.only(left: 0, right: 0, top: 5, bottom: 5),
       child: Row(
         children: [
           SizedBox(
-            width: 190,
+            width: width*0.47,
             child: Text(controller.dashboardProjectsData[index]['name'],
                 style: TextStyle(
                   color: Colors.black,
@@ -329,11 +328,9 @@ class DashboardScreen extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 )),
           ),
-          SizedBox(
-            width: 10,
-          ),
+
           Container(
-            width: 80,
+            width: width*0.2,
             height: 30,
             alignment: Alignment.center,
             decoration: BoxDecoration(
@@ -369,10 +366,10 @@ class DashboardScreen extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 )),
           ),
-          SizedBox(
-            width: 20,
-          ),
+      Spacer(),
           Container(
+
+            width: width*0.19,
             alignment: Alignment.center,
             child: CircularPercentIndicator(
               radius: 22.0,
@@ -400,11 +397,11 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  _projectHeadRow() {
+  _projectHeadRow({required double width}) {
     return Row(
       children: [
         Container(
-          width: 180,
+          width: width*0.5,
           child: Text('Name',
               style: TextStyle(
                 color: Colors.black,
@@ -415,11 +412,8 @@ class DashboardScreen extends StatelessWidget {
               )),
         ),
         SizedBox(
-          width: 10,
-        ),
-        Container(
-          width: 80,
-          child: Text('      Status',
+          width: width*0.2,
+          child: Text('Status',
               style: TextStyle(
                 color: Colors.black,
                 fontFamily: Constants.primaryFont,
@@ -428,11 +422,8 @@ class DashboardScreen extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               )),
         ),
-        SizedBox(
-          width: 10,
-        ),
         Container(
-          width: 70,
+          width: width*0.16,
           child: Text(' Progress',
               style: TextStyle(
                 color: Colors.black,
@@ -446,10 +437,10 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  _projectsPart(){
+  _projectsPart({required double width }){
     return Container(
       height: 230,
-      width: double.infinity,
+      width: width,
       padding: const EdgeInsets.only(
           left: 10, right: 5, top: 10, bottom: 10),
       decoration: BoxDecoration(
@@ -470,7 +461,7 @@ class DashboardScreen extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          _projectHeadRow(),
+          _projectHeadRow(width: width),
           SizedBox(
             height: 10,
           ),
@@ -482,7 +473,8 @@ class DashboardScreen extends StatelessWidget {
                 return ListView.builder(
                     itemBuilder: (context, index) {
                       return _projectRow(
-                          controller: controller, index: index);
+                          controller: controller, index: index, width: width
+                      );
                     },
                     itemCount: 4);
               },

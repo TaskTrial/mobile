@@ -1,38 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_trial/controllers/task/edit_task_controller.dart';
+import 'package:task_trial/models/task_model.dart';
 
 import '../../controllers/project/project_controller.dart';
 import '../../models/project_model.dart';
 import '../../utils/constants.dart';
-
-class EditProjectScreen extends StatelessWidget {
-  final ProjectModel project;
+class EditTaskScreen extends StatelessWidget {
   final String teamId;
-
-  EditProjectScreen({super.key, required this.project, required this.teamId});
-
+  final TaskModel task;
+  EditTaskScreen({super.key,  required this.teamId, required this.task});
   final formKey = GlobalKey<FormState>();
-
+  final Map<String,Widget> icons={
+    "LOW":const Icon(Icons.arrow_downward,color: Colors.greenAccent,),
+    "MEDIUM":const Icon(Icons.arrow_forward,color: Colors.yellow),
+    "HIGH":const Icon(Icons.arrow_upward, color: Colors.redAccent),
+    "DONE":const Icon(Icons.check , color: Colors.greenAccent),
+    "IN_PROGRESS":const Icon(Icons.hourglass_empty, color: Colors.blueAccent),
+    "REVIEW":const Icon(Icons.lock_clock, color: Colors.blueGrey),
+    "TODO":const Icon(Icons.assignment_late, color: Colors.redAccent),
+  };
   @override
   @override
   Widget build(BuildContext context) {
-    final nameController = TextEditingController(text: project.name);
-    final descriptionController = TextEditingController(text: project.description);
-    final budgetController =
-    TextEditingController(text: project.budget?.toString() ?? '0');
-    final RxString priority = (project.priority ?? "LOW").obs;
-    final RxString status = (project.status ?? "PLANNING").obs;
-    final Rx<DateTime> startDate = DateTime.parse(project.startDate ?? DateTime.now().toIso8601String()).obs;
-    final Rx<DateTime> endDate = DateTime.parse(project.endDate ?? DateTime.now().toIso8601String()).obs;
-    final progress = project.progress!.toDouble().obs;
-    final controller = Get.put(ProjectController());
+    final RxList<String> labels = (task.labels ?? []).obs;
+    final TextEditingController labelController = TextEditingController();
+    final titleController = TextEditingController(text: task.title);
+    final descriptionController = TextEditingController(text: task.description);
+    final RxString priority = (task.priority ?? "LOW").obs;
+    final RxString status = (task.status ?? "TODO").obs;
+    final Rx<DateTime> dueDate = DateTime.parse(task.dueDate ?? DateTime.now().toIso8601String()).obs;
+    final controller = Get.put(EditTaskController());
     return Scaffold(
       backgroundColor: Constants.backgroundColor,
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.transparent,
         title: const Text(
-          'Edit Project',
+          'Edit Task',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -48,20 +53,18 @@ class EditProjectScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                _buildInputField("Name", nameController),
+                _buildInputField("Title", titleController),
                 const SizedBox(height: 16),
                 _buildInputField("Description", descriptionController,
                     maxLines: 3, maxLength: 200),
                 const SizedBox(height: 16),
-                Obx(() => _buildDropdown("Priority", priority, ["LOW", "MEDIUM", "HIGH","ARGENT"])),
+                Obx(() => _buildDropdown("Priority", priority, [  "HIGH","MEDIUM","LOW"])),
                 const SizedBox(height: 16),
-                Obx(() => _buildDropdown("Status", status, ["PLANNING", "ACTIVE", "ON_HOLD","COMPLETED", "CANCELLED"])),
+                Obx(() => _buildDropdown("Status", status, ["TODO", "IN_PROGRESS", "REVIEW","DONE"])),
                 const SizedBox(height: 16),
-                Obx(() => _buildDatePicker("Start Date", startDate, context)),
+                Obx(() => _buildDatePicker("Due Date", dueDate, context)),
                 const SizedBox(height: 16),
-                Obx(() => _buildDatePicker("End Date", endDate, context)),
-                const SizedBox(height: 16),
-                Obx(() => _buildProgressSlider(progress)),
+                _buildLabelsField(labels, labelController),
                 const SizedBox(height: 24),
                 Obx(() => controller.isLoading.value
                     ? const CircularProgressIndicator(
@@ -69,14 +72,12 @@ class EditProjectScreen extends StatelessWidget {
                 )
                     : _buildSaveButton(
                   controller,
-                  nameController,
+                  titleController,
                   descriptionController,
                   priority.value,
                   status.value,
-                  startDate.value,
-                  endDate.value,
-                  double.tryParse(budgetController.text) ?? 0,
-                  progress.value.toInt(),
+                  dueDate.value,
+                  labels.toList(),
                 )),
               ],
             ),
@@ -85,7 +86,6 @@ class EditProjectScreen extends StatelessWidget {
       ),
     );
   }
-
 
   Widget _buildInputField(String label, TextEditingController controller,
       {int maxLines = 1, int? maxLength}) {
@@ -119,7 +119,6 @@ class EditProjectScreen extends StatelessWidget {
       ],
     );
   }
-
   Widget _buildDropdown(String label, RxString value, List<String> items) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,6 +133,13 @@ class EditProjectScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
           ),
           child: DropdownButton<String>(
+            dropdownColor: Colors.white,
+            style:  TextStyle(
+                fontFamily: Constants.primaryFont,
+                fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+            borderRadius: BorderRadius.circular(16),
             isExpanded: true,
             value: value.value,
             underline: const SizedBox(),
@@ -143,11 +149,17 @@ class EditProjectScreen extends StatelessWidget {
             items: items.map((item) {
               return DropdownMenuItem<String>(
                 value: item,
-                child: Text(item,
-                    style: const TextStyle(
-                      fontFamily: Constants.primaryFont,
-                      fontWeight: FontWeight.bold,
-                    )),
+                child: Row(
+                  children: [
+                    icons[item]!,
+                    SizedBox(width: 8),
+                    Text(item,
+                        style: const TextStyle(
+                          fontFamily: Constants.primaryFont,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ],
+                ),
               );
             }).toList(),
           ),
@@ -193,60 +205,29 @@ class EditProjectScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressSlider(RxDouble progress) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Progress",
-            style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: Constants.primaryFont)),
-        const SizedBox(height: 6),
-        Row(
-          children: [
-            Expanded(
-              child: Slider(
-                value: progress.value,
-                min: 0,
-                max: 100,
-                divisions: 100,
-                label: '${progress.value.toInt()}%',
-                onChanged: (value) => progress.value = value,
-                activeColor:Constants.primaryColor,
-                inactiveColor: Colors.grey,
-              ),
-            ),
-            Text('${progress.value.toInt()}%'),
-          ],
-        ),
-      ],
-    );
-  }
-
   Widget _buildSaveButton(
-      ProjectController controller,
-      TextEditingController nameController,
+      EditTaskController controller,
+      TextEditingController titleController,
       TextEditingController descriptionController,
       String priority,
       String status,
-      DateTime startDate,
-      DateTime endDate,
-      double budget,
-      int progress,
+      DateTime dueDate,
+      List<String> labels,
       ) {
     return ElevatedButton(
       onPressed: () {
         if (formKey.currentState!.validate()) {
-          controller.updateProjectData(
-            teamId: teamId,
-            projectId: project.id!,
+          controller.updateTaskData(
+            taskId: task.id!,
+            teamId:teamId,
+            projectId: task.project!.id!,
             data: {
-              "name": nameController.text.trim(),
+              "title": titleController.text.trim(),
               "description": descriptionController.text.trim(),
               "priority": priority,
-              "status": status,
-              "startDate": startDate.toIso8601String(),
-              "endDate": endDate.toIso8601String(),
-              "budget": budget,
-              "progress": progress,
+              "dueDate": dueDate.toIso8601String(),
+              "labels": labels,
+
             },
           );
         }
@@ -257,7 +238,7 @@ class EditProjectScreen extends StatelessWidget {
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16
 
-        )),
+            )),
       ),
       child: const Text(
         "Save Changes",
@@ -270,5 +251,64 @@ class EditProjectScreen extends StatelessWidget {
       ),
     );
   }
+  Widget _buildLabelsField(RxList<String> labels, TextEditingController controller) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Labels", style: TextStyle(fontWeight: FontWeight.bold, fontFamily: Constants.primaryFont)),
+        const SizedBox(height: 6),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: controller,
+                decoration: InputDecoration(
+                  hintText: "Enter label",
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: () {
+                final text = controller.text.trim();
+                if (text.isNotEmpty && !labels.contains(text)) {
+                  labels.add(text);
+                  controller.clear();
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Constants.primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              child: const Text("Add",style: TextStyle(fontFamily: Constants.primaryFont,fontWeight: FontWeight.bold,color: Colors.white),),
+            )
+          ],
+        ),
+        const SizedBox(height: 8),
+        Obx(() => Wrap(
+          spacing: 8,
+          children: labels.map((label) {
+            return Chip(
+              side: BorderSide.none,
+              backgroundColor:  Constants.primaryColor.withOpacity(0.8),
+              deleteIcon: const Icon(Icons.close,color: Colors.white,),
+              label: Text(label,style: const TextStyle(fontFamily: Constants.primaryFont,fontWeight: FontWeight.bold,color: Colors.white),),
+              onDeleted: () => labels.remove(label),
+            );
+          }).toList(),
+        )),
+      ],
+    );
+  }
+
 
 }

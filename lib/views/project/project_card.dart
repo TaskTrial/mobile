@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_trial/controllers/project/project_controller.dart';
 import 'package:task_trial/models/project_model.dart';
 import 'package:task_trial/views/project/project_detail_screen.dart';
 

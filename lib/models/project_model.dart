@@ -16,7 +16,7 @@ class ProjectModel {
   bool? hasMoreMembers;
   String? userRole;
   TaskStatsModel? taskStats;
-  List<TaskModel>? tasks;
+  List<Task>? tasks;
   bool? hasMoreTasks;
 
   ProjectModel({
@@ -65,7 +65,7 @@ class ProjectModel {
           ? TaskStatsModel.fromJson(json['taskStats'])
           : null,
       tasks: (json['tasks'] as List<dynamic>?)
-          ?.map((e) => TaskModel.fromJson(e))
+          ?.map((e) => Task.fromJson(e))
           .toList(),
       hasMoreTasks: json['hasMoreTasks'],
     );
@@ -189,7 +189,7 @@ class TaskStatsModel {
   }
 }
 
-class TaskModel {
+class Task {
   String? id;
   String? title;
   String? description;
@@ -204,8 +204,7 @@ class TaskModel {
   int? attachmentCount;
   dynamic assignee;
   bool? isOverdue;
-
-  TaskModel({
+  Task({
     this.id,
     this.title,
     this.description,
@@ -222,8 +221,8 @@ class TaskModel {
     this.isOverdue,
   });
 
-  factory TaskModel.fromJson(Map<String, dynamic> json) {
-    return TaskModel(
+  factory Task.fromJson(Map<String, dynamic> json) {
+    return Task(
       id: json['id'],
       title: json['title'],
       description: json['description'],

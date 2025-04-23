@@ -1,81 +1,100 @@
-import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-
+import '../../utils/cache_helper.dart';
 import '../../utils/constants.dart';
-class ProjectController extends GetxController{
-  final projectNameController = TextEditingController();
-  final projectDescriptionController = TextEditingController();
-  final projectStartDateController = TextEditingController();
-  final projectEndDateController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
-  List<Project> projects = [
-    Project(
-      id: "1",
-      title: "Fintech Mobile App UI",
-      date: "20 July",
-      description: "Fintech app development provides more freedom to banking and other financial institutions.",
-      progressHours: 70,
-      tasksIDs: ["1", "2" ,'3'],
-      backgroundColor: Constants.projectCardColor1,
-    ),
-    Project(
-      id: "2",
-      title: "Chrome Heart",
-      date:  "20 July",
-      description: "GreenSky DG focuses on evaluating and developing solar opportunities for landholders",
-      progressHours: 20,
-      tasksIDs: [ "4" , '5' , '6'],
-      backgroundColor:Constants.projectCardColor2,
-    ),
-    Project(
-      id: "3",
-      title: "Unsaid Events",
-      date: "2023-10-02",
-      description: "Fintech app development provides more freedom to banking and other financial institutions.",
-      progressHours: 90,
-      tasksIDs: ["7", "8" , '9'],
-      backgroundColor:Constants.projectCardColor3,
-    ),
-    Project(
-      id: "4",
-      title: "Fintech app development",
-      date: "2023-10-02",
-      description: "Fintech app development provides more freedom to banking and other financial institutions.",
-      progressHours: 15,
-      tasksIDs: ["7", "8" ,'9'],
-      backgroundColor:Constants.projectCardColor4,
-    ),
-  ];
-  @override
-  void onInit() {
-    super.onInit();
+import '../../views/main_view_screen.dart';
+import '../main_view_controller.dart';
+
+class ProjectController extends GetxController {
+  var isLoading = false.obs;
+  Future<void> updateProjectData({
+    required String teamId,
+    required String projectId,
+    required Map<String, dynamic> data,
+  }) async {
+    isLoading.value = true;
+    final orgId = CacheHelper().getData(key: 'orgId');
+    try {
+      final response = await Dio().put(
+        'http://192.168.1.5:3000/api/organization/$orgId/team/$teamId/project/$projectId',
+        options: Options(
+          headers: {
+            'authorization':
+            'Bearer ${CacheHelper().getData(key: 'accessToken')}',
+          },
+        ),
+        data: data,
+      );
+
+      Constants.successSnackBar(
+        title: 'Success',
+        message: 'Project Updated Successfully!',
+      );
+      Get.delete<MainViewController>();
+      Get.offAll(() => MainViewScreen());
+    } on DioException catch (e) {
+      _handleError(e);
+    } finally {
+      isLoading.value = false;
+    }
   }
-  @override
-  void onClose() {
-    projectNameController.dispose();
-    projectDescriptionController.dispose();
-    projectStartDateController.dispose();
-    projectEndDateController.dispose();
-    super.onClose();
+  Future<void> deleteProjectData({required String teamId,
+    required String projectId,})async{
+    String orgId = CacheHelper().getData(key: 'orgId');
+    try {
+      final response = await Dio().delete(
+        'http://192.168.1.5:3000/api/organization/$orgId/team/$teamId/project/$projectId/delete',
+        options: Options(
+          headers: {
+            'authorization':
+            'Bearer ${CacheHelper().getData(key: 'accessToken')}',
+          },
+        ),
+      );
+      Constants.successSnackBar(
+          title: 'Success', message: 'Project Deleted Successfully !');
+      Get.delete<MainViewController>();
+      Get.offAll(
+            () => MainViewScreen(),
+        transition: Transition.fade,
+        duration: const Duration(milliseconds: 300),
+      );
+    } on DioException catch (e)
+    {
+      _handleError(e);
+    }
   }
 
 
-}
-class Project {
-  final String id;
-  final String title;
-  final String date;
-  final String description;
-  final int progressHours;
-  final List<String> tasksIDs;
-  final Color backgroundColor;
-  Project({
-    required this.id,
-    required this.title,
-    required this.date,
-    required this.description,
-    required this.progressHours,
-    required this.tasksIDs,
-    required this.backgroundColor,
-  });
+  void _handleError(DioException e) {
+    switch (e.type) {
+      case DioExceptionType.connectionTimeout:
+        Constants.errorSnackBar(
+            title: 'Failed', message: 'Connection timeout');
+        break;
+      case DioExceptionType.receiveTimeout:
+        Constants.errorSnackBar(title: 'Failed', message: 'Receive timeout');
+        break;
+      case DioExceptionType.sendTimeout:
+        Constants.errorSnackBar(title: 'Failed', message: 'Send timeout');
+        break;
+      case DioExceptionType.badResponse:
+        Constants.errorSnackBar(
+            title: 'Failed', message: '${e.response?.data['message']}');
+        break;
+      case DioExceptionType.cancel:
+        Constants.errorSnackBar(title: 'Failed', message: 'Request cancelled');
+        break;
+      case DioExceptionType.unknown:
+        Constants.errorSnackBar(
+            title: 'Error', message: 'Unexpected error: ${e.message}');
+        break;
+      case DioExceptionType.badCertificate:
+        Constants.errorSnackBar(title: 'Failed', message: 'Bad certificate');
+        break;
+      case DioExceptionType.connectionError:
+        Constants.errorSnackBar(title: 'Failed', message: 'Connection error');
+        break;
+    }
+  }
 }

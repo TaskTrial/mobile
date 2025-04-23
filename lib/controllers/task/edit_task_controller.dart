@@ -5,19 +5,20 @@ import '../../utils/constants.dart';
 import '../../views/main_view_screen.dart';
 import '../main_view_controller.dart';
 
-class EditProjectController extends GetxController {
+class EditTaskController extends GetxController {
   var isLoading = false.obs;
 
-  Future<void> updateProjectData({
+  Future<void> updateTaskData({
     required String teamId,
     required String projectId,
+    required String taskId,
     required Map<String, dynamic> data,
   }) async {
     isLoading.value = true;
     final orgId = CacheHelper().getData(key: 'orgId');
     try {
       final response = await Dio().put(
-        'http://192.168.1.5:3000/api/organization/$orgId/team/$teamId/project/$projectId',
+        'http://192.168.1.5:3000/api/organization/$orgId/team/$teamId/project/$projectId/task/$taskId',
         options: Options(
           headers: {
             'authorization':
@@ -26,10 +27,9 @@ class EditProjectController extends GetxController {
         ),
         data: data,
       );
-
       Constants.successSnackBar(
         title: 'Success',
-        message: 'Project Updated Successfully!',
+        message: 'Task Updated Successfully!',
       );
       Get.delete<MainViewController>();
       Get.offAll(() => MainViewScreen());
