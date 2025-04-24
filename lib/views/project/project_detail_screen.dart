@@ -113,6 +113,10 @@ class ProjectDetailScreen extends StatelessWidget {
                         ),
                       ],
                     ),
+                    SizedBox(height: 20),
+                    _priority(),
+                     const SizedBox(height: 20),
+                    _status(),
                     const SizedBox(height: 30),
                     Text('Tasks',
                         style: TextStyle(
@@ -144,6 +148,86 @@ class ProjectDetailScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+  _priority(){
+    return Container(
+      padding: const EdgeInsets.only(top: 15,bottom: 15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey.withOpacity(0.1),width: 2),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.priority_high, color:
+          project.priority == "HIGH"
+              ? Colors.redAccent
+              : project.priority == "MEDIUM"
+              ? Colors.orangeAccent
+              :
+          Colors.green,),
+          const SizedBox(width: 5,),
+          Text("Task Priority    ",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: Constants.primaryFont,
+                  fontWeight: FontWeight.bold)),
+          Text(project.priority!,
+              style: TextStyle(
+                  color:
+                  project.priority == "HIGH"
+                      ? Colors.redAccent
+                      : project.priority == "MEDIUM"
+                      ? Colors.orangeAccent
+                      :
+                  Colors.green
+                  ,
+                  fontFamily: Constants.primaryFont,
+                  fontWeight: FontWeight.bold)),
+        ],
+      ),
+    );
+  }
+  _status(){
+    return Container(
+      padding: const EdgeInsets.only(top: 15,bottom: 15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey.withOpacity(0.1),width: 2),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.check_circle, color:
+          project.status == "ACTIVE"
+              ? Colors.blue
+              : project.status == "PLANNING"
+              ? Colors.orangeAccent
+              : project.status == "ON_HOLD"? Colors.purpleAccent:
+               project.status == "COMPLETED"? Colors.blueAccent:
+          Colors.redAccent,
+          ),
+          const SizedBox(width: 5,),
+          Text("Task Status    ",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: Constants.primaryFont,
+                  fontWeight: FontWeight.bold)),
+          Text(project.status!,
+              style: TextStyle(
+                  color:
+                  project.status == "ACTIVE"
+                      ? Colors.blue
+                      : project.status == "PLANNING"
+                      ? Colors.orangeAccent
+                      : project.status == "ON_HOLD"? Colors.purpleAccent:
+                  project.status == "COMPLETED"? Colors.blueAccent:
+                  Colors.redAccent,
+                  fontFamily: Constants.primaryFont,
+                  fontWeight: FontWeight.bold)),
+        ],
       ),
     );
   }

@@ -106,7 +106,7 @@ class TaskScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(30),
         ),
         child: Text(
-          "$label $count",
+          "$label",
           style: TextStyle(
             color: isSelected ? Colors.white : Constants.pageNameColor,
             fontSize: 14,
@@ -127,6 +127,7 @@ class TaskScreen extends StatelessWidget {
       Color(0xffB404FF),
       Color(0xffFFC239),
       Color(0xff31EA10),
+      Color(0xffce9696),
     ];
     return GestureDetector(
       onLongPress: () {
@@ -163,7 +164,7 @@ class TaskScreen extends StatelessWidget {
                     : task.status == 'IN_PROGRESS'
                         ? colors[2]
                         : task.status == 'DONE'
-                            ? colors[3]
+                            ? colors[3] : task.status == 'REVIEW'? colors[4]
                             : colors[0]),
             const SizedBox(height: 8),
             Padding(

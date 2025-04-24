@@ -18,7 +18,7 @@ class EditTaskScreen extends StatelessWidget {
     "DONE":const Icon(Icons.check , color: Colors.greenAccent),
     "IN_PROGRESS":const Icon(Icons.hourglass_empty, color: Colors.blueAccent),
     "REVIEW":const Icon(Icons.lock_clock, color: Colors.blueGrey),
-    "TODO":const Icon(Icons.assignment_late, color: Colors.redAccent),
+    "TODO":const Icon(Icons.priority_high_sharp, color: Colors.redAccent),
   };
   @override
   @override

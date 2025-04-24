@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/controllers/dashboard_controller.dart';
+import 'package:task_trial/models/project_model.dart';
+import 'package:task_trial/models/task_model.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/widgets/custom_drop_down_menu.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+  const DashboardScreen({super.key, required this.tasks, required this.projects});
+  final List<TaskModel> tasks ;
+  final List<ProjectModel> projects ;
 
   @override
   Widget build(BuildContext context) {
@@ -208,65 +212,72 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  _taskRow(DashboardController controller, int index,double width) {
-    return Row(
-      children: [
-        Checkbox(
-          value: controller.dashboardData[index]['check'],
-          onChanged: (value) {
-            controller.toggleCheck(index);
-            value = controller.dashboardData[index]['check'];
-          },
-          activeColor: Constants.primaryColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50),
+  _taskRow(DashboardController controller, int index,TaskModel task,double width) {
+    return Padding(
+      padding:  EdgeInsets.symmetric(horizontal: width*0.03,vertical: width*0.015),
+      child: Row(
+        children: [
+          // Checkbox(
+          //   value: controller.dashboardData[index]['check'],
+          //   onChanged: (value) {
+          //     controller.toggleCheck(index);
+          //     value = controller.dashboardData[index]['check'];
+          //   },
+          //   activeColor: Constants.primaryColor,
+          //   shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.circular(50),
+          //   ),
+          // ),
+          SizedBox(
+            width: width*0.5,
+            child: Text(task.title!,
+                style: TextStyle(
+                  color: Constants.pageNameColor,
+                  fontFamily: Constants.primaryFont,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  overflow: TextOverflow.ellipsis,
+                )),
           ),
-        ),
-        SizedBox(
-          width: width*0.5,
-          child: Text(controller.dashboardData[index]['task'],
-              style: TextStyle(
-                color: Constants.pageNameColor,
-                fontFamily: Constants.primaryFont,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                overflow: TextOverflow.ellipsis,
-              )),
-        ),
-        Spacer(),
-        Container(
-          alignment: Alignment.center,
-          width: width*0.18,
-          height: 30,
-          decoration: controller.dashboardData[index]['status'] == 'Approved'
-              ? BoxDecoration(
-                  color: Colors.green.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(30),
-                )
-              : controller.dashboardData[index]['status'] == 'In review'
-                  ? BoxDecoration(
-                      color: Colors.red.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(30),
-                    )
-                  : BoxDecoration(
-                      color: Colors.orange.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-          child: Text(controller.dashboardData[index]['status'],
-              style: TextStyle(
-                color: controller.dashboardData[index]['status'] == 'Approved'
-                    ? Colors.green
-                    : controller.dashboardData[index]['status'] == 'In review'
-                        ? Colors.red
-                        : Colors.orange,
-                fontFamily: Constants.primaryFont,
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                overflow: TextOverflow.ellipsis,
-              )),
-        ),
-        SizedBox(width: width*0.03,)
-      ],
+          Spacer(),
+          Container(
+            alignment: Alignment.center,
+            width: width*0.25,
+            height: 30,
+            decoration:task.status == 'DONE'
+                ? BoxDecoration(
+                    color: Colors.green.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(30),
+                  )
+                : task.status == 'TODO'
+                    ? BoxDecoration(
+                        color: Colors.red.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(30),
+                      )
+                : task.status == 'REVIEW'
+                ? BoxDecoration(
+              color: Colors.purpleAccent.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(30),
+            )
+                : BoxDecoration(
+              color: Colors.orange.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(30),
+                      ),
+            child: Text(task.status!,
+                style: TextStyle(
+                  color: task.status == 'DONE'
+                      ? Colors.green
+                      : task.status == 'TODO'
+                          ? Colors.red
+                          : task.status=='REVIEW'?Colors.purpleAccent:Colors.orange,
+                  fontFamily: Constants.primaryFont,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  overflow: TextOverflow.ellipsis,
+                )),
+          ),
+        ],
+      ),
     );
   }
 
@@ -283,7 +294,7 @@ class DashboardScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '    Today Tasks',
+            '    Tasks Summary',
             style: TextStyle(
                 color: Constants.pageNameColor,
                 fontFamily: Constants.primaryFont,
@@ -300,9 +311,9 @@ class DashboardScreen extends StatelessWidget {
               height: 145,
               width: double.infinity,
               child: ListView.builder(
-                itemCount: controller.dashboardData.length,
+                itemCount: tasks.length,
                 itemBuilder: (context, index) {
-                  return _taskRow(controller, index,width);
+                  return _taskRow(controller,index,tasks[index],width);
                 },
               ),
             ),
@@ -312,14 +323,14 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  _projectRow({required DashboardController controller, required int index ,required double width}) {
+  _projectRow({required DashboardController controller, required int index ,required double width ,required ProjectModel project}) {
     return Container(
       padding: const EdgeInsets.only(left: 0, right: 0, top: 5, bottom: 5),
       child: Row(
         children: [
           SizedBox(
             width: width*0.47,
-            child: Text(controller.dashboardProjectsData[index]['name'],
+            child: Text(project.name!,
                 style: TextStyle(
                   color: Colors.black,
                   fontFamily: Constants.primaryFont,
@@ -334,32 +345,36 @@ class DashboardScreen extends StatelessWidget {
             height: 30,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color:  controller.dashboardProjectsData[index]
-              ['status'] ==
-                  'Completed'
+              color:  project.status ==
+                  'COMPLETED'
                   ? Colors.green.withOpacity(0.3)
-                  : controller.dashboardProjectsData[index]['status'] ==
-                  'At risk'
+                  : project.status ==
+                  'CANCELLED'
                   ? Colors.red.withOpacity(0.3)
-                  : controller.dashboardProjectsData[index]['status'] ==
-                  'Delayed'
-                  ? Colors.yellow.shade600.withOpacity(0.3)
-                  : Colors.orange.withOpacity(0.3),
+                  :  project.status==
+                  'PLANNING'
+                  ? Colors.orange.shade600.withOpacity(0.3):
+                   project.status ==
+                  'ACTIVE'
+                  ? Colors.blue.shade600.withOpacity(0.3)
+                  : Colors.purple.withOpacity(0.3),
               borderRadius: BorderRadius.circular(30),
             ),
-            child: Text(controller.dashboardProjectsData[index]['status'],
+            child: Text(project.status!,
                 style: TextStyle(
-                  color: controller.dashboardProjectsData[index]
-                  ['status'] ==
-                      'Completed'
+                  color: project.status ==
+                      'COMPLETED'
                       ? Colors.green
-                      : controller.dashboardProjectsData[index]['status'] ==
-                      'At risk'
+                      : project.status ==
+                      'CANCELLED'
                       ? Colors.red
-                      : controller.dashboardProjectsData[index]['status'] ==
-                      'Delayed'
-                      ? Colors.yellow.shade700
-                      : Colors.orange,
+                      :  project.status==
+                      'PLANNING'
+                      ? Colors.orange:
+                  project.status ==
+                      'ACTIVE'
+                      ? Colors.blue
+                      : Colors.purple,
                   fontFamily: Constants.primaryFont,
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -374,22 +389,22 @@ class DashboardScreen extends StatelessWidget {
             child: CircularPercentIndicator(
               radius: 22.0,
               lineWidth: 5.0,
-              percent: double.parse(controller.dashboardProjectsData[index]
-                      ['percentage']
-                  .toString()),
+              percent: project.progress!.toDouble()/100,
               center: Text(
-                  "${double.parse((controller.dashboardProjectsData[index]['percentage'] * 100).toString()).toInt()}%"),
-              progressColor: controller.dashboardProjectsData[index]
-                          ['status'] ==
-                      'Completed'
+                  "${project.progress}%"),
+              progressColor:project.status ==
+                  'COMPLETED'
                   ? Colors.green
-                  : controller.dashboardProjectsData[index]['status'] ==
-                          'At risk'
-                      ? Colors.red
-                      : controller.dashboardProjectsData[index]['status'] ==
-                              'Delayed'
-                          ? Colors.yellow.shade600
-                          : Colors.orange,
+                  : project.status ==
+                  'CANCELLED'
+                  ? Colors.red
+                  :  project.status==
+                  'PLANNING'
+                  ? Colors.orange:
+              project.status ==
+                  'ACTIVE'
+                  ? Colors.blue
+                  : Colors.purple,
             ),
           )
         ],
@@ -473,10 +488,10 @@ class DashboardScreen extends StatelessWidget {
                 return ListView.builder(
                     itemBuilder: (context, index) {
                       return _projectRow(
-                          controller: controller, index: index, width: width
+                          controller: controller, index: index, width: width,project: projects[index]
                       );
                     },
-                    itemCount: 4);
+                    itemCount: projects.length);
               },
             ),
           )

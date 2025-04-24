@@ -40,7 +40,10 @@ class MainViewController extends GetxController {
      await getAllProjects();
      await getAllTasks();
     pages = [
-      DashboardScreen(),
+      DashboardScreen(
+        projects: projectModel,
+        tasks: tasks,
+      ),
       ProjectScreen(projects: projectModel,),
       ChatScreen(),
       TaskScreen(tasks: tasks,projects: projectModel,),
