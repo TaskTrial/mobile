@@ -20,6 +20,7 @@ class TaskScreen extends StatelessWidget {
       Color(0xffB404FF).withOpacity(0.2),
       Color(0xffFFC239).withOpacity(0.3),
       Color(0xff31EA10).withOpacity(0.3),
+      Color(0xffce9696).withOpacity(0.2),
     ];
     final TaskController controller = Get.put(TaskController());
     controller.setTasks(tasks);
@@ -53,8 +54,12 @@ class TaskScreen extends StatelessWidget {
                               controller,
                               colors[2]),
                           const SizedBox(width: 8),
+                          _buildFilter("In Review", controller.inReviewCount,
+                              4, controller, colors[4]),
+                          const SizedBox(width: 8),
                           _buildFilter("Completed", controller.completedCount,
                               3, controller, colors[3]),
+
                         ],
                       ),
                     ),
@@ -90,6 +95,7 @@ class TaskScreen extends StatelessWidget {
       Color(0xffB404FF).withOpacity(0.5),
       Color(0xffFFC239).withOpacity(0.7),
       Color(0xff31EA10).withOpacity(0.6),
+      Color(0xffce9696).withOpacity(0.6),
     ];
     return GestureDetector(
       onTap: () => controller.changeFilter(index),

@@ -144,6 +144,7 @@ class EditTaskScreen extends StatelessWidget {
             value: value.value,
             underline: const SizedBox(),
             onChanged: (newValue) {
+              print(newValue);
               if (newValue != null) value.value = newValue;
             },
             items: items.map((item) {
@@ -216,6 +217,7 @@ class EditTaskScreen extends StatelessWidget {
       ) {
     return ElevatedButton(
       onPressed: () {
+        print(status);
         if (formKey.currentState!.validate()) {
           controller.updateTaskData(
             taskId: task.id!,
@@ -225,9 +227,9 @@ class EditTaskScreen extends StatelessWidget {
               "title": titleController.text.trim(),
               "description": descriptionController.text.trim(),
               "priority": priority,
+                "status": status,
               "dueDate": dueDate.toIso8601String(),
               "labels": labels,
-
             },
           );
         }

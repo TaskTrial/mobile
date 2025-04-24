@@ -17,6 +17,8 @@ class TaskController extends GetxController {
   int get todoCount => tasks.where((t) => t.status == 'TODO').length;
   int get inProgressCount => tasks.where((t) => t.status == 'IN_PROGRESS').length;
   int get completedCount => tasks.where((t) => t.status == 'DONE').length;
+int get inReviewCount => tasks.where((t) => t.status == 'REVIEW').length;
+
 
  String getTeamId(String projectId){
    for(var project in projects){
@@ -43,13 +45,16 @@ class TaskController extends GetxController {
   void filterTasks() {
     switch (selectedFilterIndex.value) {
       case 1:
-        filteredTasks.value = tasks.where((t) => t.status == 'todo').toList();
+        filteredTasks.value = tasks.where((t) => t.status == 'TODO').toList();
         break;
       case 2:
-        filteredTasks.value = tasks.where((t) => t.status == 'inProgress').toList();
+        filteredTasks.value = tasks.where((t) => t.status == 'IN_PROGRESS').toList();
         break;
       case 3:
-        filteredTasks.value = tasks.where((t) => t.status == 'completed').toList();
+        filteredTasks.value = tasks.where((t) => t.status == 'DONE').toList();
+        break;
+      case 4:
+        filteredTasks.value = tasks.where((t) => t.status == 'REVIEW').toList();
         break;
       default:
         filteredTasks.value = tasks;
