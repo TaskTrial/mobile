@@ -263,7 +263,7 @@ class DashboardScreen extends StatelessWidget {
               color: Colors.orange.withOpacity(0.2),
               borderRadius: BorderRadius.circular(30),
                       ),
-            child: Text(task.status!,
+            child: Text(task.status=='IN_PROGRESS'?'IN PROGRESS':task.status!,
                 style: TextStyle(
                   color: task.status == 'DONE'
                       ? Colors.green
@@ -329,7 +329,7 @@ class DashboardScreen extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
-            width: width*0.47,
+            width: width*0.44,
             child: Text(project.name!,
                 style: TextStyle(
                   color: Colors.black,
@@ -339,9 +339,8 @@ class DashboardScreen extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 )),
           ),
-
           Container(
-            width: width*0.2,
+            width: width*0.25,
             height: 30,
             alignment: Alignment.center,
             decoration: BoxDecoration(
@@ -349,7 +348,7 @@ class DashboardScreen extends StatelessWidget {
                   'COMPLETED'
                   ? Colors.green.withOpacity(0.3)
                   : project.status ==
-                  'CANCELLED'
+                  'CANCELED'
                   ? Colors.red.withOpacity(0.3)
                   :  project.status==
                   'PLANNING'
@@ -360,13 +359,13 @@ class DashboardScreen extends StatelessWidget {
                   : Colors.purple.withOpacity(0.3),
               borderRadius: BorderRadius.circular(30),
             ),
-            child: Text(project.status!,
+            child: Text(project.status=='ON_HOLD'?'ON HOLD':project.status!,
                 style: TextStyle(
                   color: project.status ==
                       'COMPLETED'
                       ? Colors.green
                       : project.status ==
-                      'CANCELLED'
+                      'CANCELED'
                       ? Colors.red
                       :  project.status==
                       'PLANNING'
@@ -383,7 +382,6 @@ class DashboardScreen extends StatelessWidget {
           ),
       Spacer(),
           Container(
-
             width: width*0.19,
             alignment: Alignment.center,
             child: CircularPercentIndicator(
@@ -396,7 +394,7 @@ class DashboardScreen extends StatelessWidget {
                   'COMPLETED'
                   ? Colors.green
                   : project.status ==
-                  'CANCELLED'
+                  'CANCELED'
                   ? Colors.red
                   :  project.status==
                   'PLANNING'
@@ -411,7 +409,6 @@ class DashboardScreen extends StatelessWidget {
       ),
     );
   }
-
   _projectHeadRow({required double width}) {
     return Row(
       children: [

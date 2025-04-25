@@ -55,7 +55,7 @@ class EditProjectScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 Obx(() => _buildDropdown("Priority", priority, ["LOW", "MEDIUM", "HIGH","ARGENT"])),
                 const SizedBox(height: 16),
-                Obx(() => _buildDropdown("Status", status, ["PLANNING", "ACTIVE", "ON_HOLD","COMPLETED", "CANCELLED"])),
+                Obx(() => _buildDropdown("Status", status, ["PLANNING", "ACTIVE", "ON_HOLD","COMPLETED", "CANCELED"])),
                 const SizedBox(height: 16),
                 Obx(() => _buildDatePicker("Start Date", startDate, context)),
                 const SizedBox(height: 16),

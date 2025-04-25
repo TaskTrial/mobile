@@ -1,78 +1,97 @@
-import 'package:get/get.dart';
-import 'package:dio/dio.dart';
-import 'package:task_trial/models/user_model.dart';
+import 'dart:io';
 
+import 'package:dio/dio.dart' as dio;
+import 'package:dio/dio.dart';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../controllers/main_view_controller.dart';
 import '../utils/cache_helper.dart';
 import '../utils/constants.dart';
-import '../views/auth/login_screen.dart';
+import '../views/main_view_screen.dart';
 
 class UserServices {
-  static Future<void> getUser({required UserModel userModel, required RxBool isLoading}) async {
-    print('on init');
+  static Future<void> updateProfileImage(File imageFile) async {
     try {
-      isLoading.value = true;
-      print(isLoading.value);
-      final response = await Dio().get(
-        'http://192.168.1.5:3000/api/users/${CacheHelper().getData(key: 'id')}',
+      dio.FormData formData = dio.FormData.fromMap({
+        'image': await dio.MultipartFile.fromFile(
+          imageFile.path,
+          filename: imageFile.path.split('/').last,
+        ),
+      });
+      var response = await Dio().post(
+        'http://192.168.1.5:3000/api/users/${CacheHelper().getData(key: 'id')}/profile-picture',
+        data: formData,
         options: Options(
           headers: {
-            'authorization': 'Bearer ${CacheHelper().getData(key: 'accessToken')}',
+            'accept': 'application/json',
+            'Authorization':
+            'Bearer ${CacheHelper().getData(key: 'accessToken')}',
+            'Content-Type': 'multipart/form-data',
           },
         ),
       );
-      userModel = UserModel.fromJson(response.data);
-      print(userModel.user!.toJson());
-      isLoading.value = false;
-      print(isLoading.value);
-
+      print(response.data);
+      Constants.successSnackBar(
+          title: ' Success', message: ' Profile Image Updated Successfully !');
+      Get.delete<MainViewController>();
+      Get.offAll(
+            () => MainViewScreen(),
+        transition: Transition.fade,
+        duration: const Duration(milliseconds: 300),
+      );
     } on DioException catch (e) {
-      // If token is expired
-      if (e.response?.statusCode == 401) {
-        print("Access token expired. Trying to refresh...");
-        final refreshed = await _refreshToken();
-
-        if (refreshed) {
-          // Retry original request
-          return await getUser(isLoading: isLoading, userModel: userModel);
-        } else {
-          // If refresh failed, logout
-          _handleLogout();
-          return;
-        }
-      }
-      isLoading.value = false;
-      print(isLoading.value);
-      // Other Dio exceptions
       _handleError(e);
     }
   }
- static Future<bool> _refreshToken() async {
+
+  static Future<void> updateProfileData(
+      {required TextEditingController firstNameController,
+        required TextEditingController lastNameController,
+        required TextEditingController phoneNumberController,
+        required TextEditingController jobTitleController,
+        required TextEditingController bioController,
+        required String timeZone}) async
+  {
     try {
-      final refreshToken = CacheHelper().getData(key: 'refreshToken');
-      final response = await Dio().post(
-        'http://192.168.1.5:3000/api/auth/refreshAccessToken',
-        data: {
-          'refreshToken': refreshToken,
-        },
+      final response = await Dio().put(
+          'http://192.168.1.5:3000/api/users/${CacheHelper().getData(key: 'id')}',
+          options: Options(
+            headers: {
+              'authorization':
+              'Bearer ${CacheHelper().getData(key: 'accessToken')}',
+            },
+          ),
+          data: {
+            "firstName": firstNameController.text,
+            "lastName": lastNameController.text,
+            "phoneNumber": phoneNumberController.text,
+            "jobTitle": jobTitleController.text,
+            "timezone": timeZone,
+            "bio": bioController.text,
+            "role": "MEMBER",
+            "departmentId": "",
+            "organizationId": ""
+          });
+      Constants.successSnackBar(
+          title: 'Success', message: 'Profile Updated Successfully !');
+      Get.delete<MainViewController>();
+      Get.offAll(
+            () => MainViewScreen(),
+        transition: Transition.fade,
+        duration: const Duration(milliseconds: 300),
       );
-      CacheHelper().saveData(key: 'accessToken', value: response.data['accessToken']);
-      if (response.data['refreshToken'] != null) {
-        CacheHelper().saveData(key: 'refreshToken', value: response.data['refreshToken']);
-      }
-      print("Token refreshed successfully.");
-      return true;
-    } on DioException catch (e) {
-      print("Token refresh failed: ${e.message}");
-      return false;
+    } on DioException catch (e)
+    {
+      _handleError(e);
     }
   }
 
- static void _handleLogout() {
-    CacheHelper().removeData(key: 'id');
-    CacheHelper().removeData(key: 'accessToken');
-    CacheHelper().removeData(key: 'refreshToken');
-    Get.offAll(() => LoginScreen());
-  }
+
+
+
+
   static void _handleError(DioException e){
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
@@ -89,7 +108,6 @@ class UserServices {
         {
           Constants.errorSnackBar(
               title: 'Failed', message: '${e.response!.data['message']}');
-          _handleLogout();
         }
         break;
       case DioExceptionType.cancel:
@@ -108,7 +126,4 @@ class UserServices {
         break;
     }
   }
-
-
 }
-

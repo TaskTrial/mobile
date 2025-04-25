@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_trial/controllers/project/project_detail_controller.dart';
 import 'package:task_trial/controllers/task/task_controller.dart';
 import 'package:task_trial/models/project_model.dart';
 import 'package:task_trial/utils/constants.dart';
@@ -253,12 +252,12 @@ class TaskDetailScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.check_circle, color:
+          Icon(Icons.stacked_line_chart_sharp, color:
           task.status == "DONE"
               ? Colors.green
               : task.status == "IN_PROGRESS"
               ? Colors.orangeAccent
-              : task.status == "TODO"? Colors.redAccent:
+              : task.status == "TODO"? Colors.purple:
                Colors.black,
           ),
           const SizedBox(width: 5,),
@@ -267,14 +266,14 @@ class TaskDetailScreen extends StatelessWidget {
                   color: Colors.black,
                   fontFamily: Constants.primaryFont,
                   fontWeight: FontWeight.bold)),
-          Text(task.status!,
+          Text(task.status=='IN_PROGRESS'?'IN PROGRESS':task.status!,
               style: TextStyle(
                   color:
                   task.status == "DONE"
                       ? Colors.green
                       : task.status == "IN_PROGRESS"
                       ? Colors.orangeAccent
-                      : task.status == "TODO"? Colors.redAccent:
+                      : task.status == "TODO"? Colors.purple:
                   Colors.black,
                   fontFamily: Constants.primaryFont,
                   fontWeight: FontWeight.bold)),
