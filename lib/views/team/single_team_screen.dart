@@ -203,18 +203,20 @@ class SingleTeamScreen extends StatelessWidget {
     if( team.avatar != null && team.avatar!.isNotEmpty) {
       return CircleAvatar(
         radius: 30,
-        backgroundColor: Colors.orangeAccent.withOpacity(0.5),
-        child: Icon(Icons.people, size: 30, color: Colors.white),
+        backgroundColor: Colors.white,
+        child: CircleAvatar(
+          radius: 28,
+          backgroundImage: NetworkImage(team.creator!.profilePic!),
+        ),
       );
+
     }
     return CircleAvatar(
       radius: 30,
-      backgroundColor: Colors.white,
-      child: CircleAvatar(
-        radius: 28,
-        backgroundImage: NetworkImage(team.creator!.profilePic!),
-      ),
+      backgroundColor: Colors.orangeAccent.withOpacity(0.5),
+      child: Icon(Icons.people, size: 30, color: Colors.white),
     );
+
 
   }
 

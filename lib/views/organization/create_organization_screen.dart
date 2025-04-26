@@ -133,6 +133,86 @@ class CreateOrganizationScreen extends StatelessWidget {
                     child: const Text("Create Organization", style: TextStyle(fontSize: 16)),
                   );
                 }),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                    onPressed: () {
+                      Get.dialog(
+                        AlertDialog(
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          title: const Text(
+                            "Join Organization",
+                            style: TextStyle(
+                              fontFamily: Constants.primaryFont,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Constants.pageNameColor,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              MyTextField(
+                                title: "Join Code",
+                                controller: controller.joinCodeController,
+                                hintText: 'Enter Join Code',
+                                radius: 15,
+                              ),
+                              const SizedBox(height: 20),
+                              Obx(() {
+                                return controller.joinLoading.value
+                                    ? const CircularProgressIndicator(
+                                  color: Constants.primaryColor,
+                                )
+                                    : ElevatedButton(
+                                  onPressed: () {
+                                    if (controller.joinCodeController.text.isNotEmpty) {
+                                      controller.joinOrganization();
+                                    } else {
+                                      Constants.errorSnackBar(
+                                        title: 'Error',
+                                        message: 'Please enter a join code',
+                                      );
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Constants.primaryColor,
+                                    foregroundColor: Colors.white,
+                                    minimumSize: const Size(double.infinity, 50),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'Join',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                );
+                              }),
+                            ],
+                          ),
+                        ),
+                        barrierDismissible: true, // user can tap outside to close
+                      );
+                    },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Constants.primaryColor,
+                    minimumSize: const Size(double.infinity, 55),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18),
+                      side: BorderSide(
+                        color: Constants.primaryColor,
+                        width: 2
+                      ),
+                    ),
+                  ),
+                  child: const Text("Join Organization", style: TextStyle(fontSize: 16)),
+                )
+
               ],
             ),
           ),

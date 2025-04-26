@@ -112,13 +112,17 @@ class MainViewController extends GetxController {
     print('Get Organization Method');
     final accessToken = CacheHelper().getData(key: 'accessToken');
     final orgId = userModel.user?.organization['id'];
+    print(orgId);
     try {
       final response = await Dio().get(
         'http://192.168.1.5:3000/api/organization/$orgId',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
-      organizationModel = OrganizationModel.fromJson(response.data);
-      print(organizationModel.toJson());
+      print(response);
+      organizationModel = OrganizationModel.fromJson(response.data['data']);
+      for(var i = 0; i < organizationModel.users!.length; i++){
+        print(organizationModel.users![i].toJson());
+      }
       CacheHelper().saveData(key: 'orgId', value: organizationModel.id);
     } on DioException catch (e) {
       if (e.response?.statusCode == 401 && await _refreshToken()) {

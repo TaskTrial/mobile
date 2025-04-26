@@ -51,7 +51,7 @@ class DepartmentsScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 25,bottom: 10),
-        child: departmentsModel.departments!.isNotEmpty?ListView.builder(
+        child: departmentsModel.departments!.isNotEmpty ?ListView.builder(
           padding: const EdgeInsets.all(16),
           itemCount: departmentsModel.departments!.length,
           itemBuilder: (context, index) {

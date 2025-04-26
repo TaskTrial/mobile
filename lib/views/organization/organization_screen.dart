@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:task_trial/models/organization_model.dart';
@@ -15,19 +16,27 @@ class OrganizationScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Constants.backgroundColor,
       body: Container(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 40),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _appBar(org),
-              SizedBox(
-                height: height * 0.05,
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 40 ,bottom: 20),
+        child: Column(
+          children: [
+            _appBar(org),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: height * 0.04,
+                    ),
+                    _orgInfo(width,org: org),
+                    SizedBox( height:  height * 0.02,),
+                    _joinCodeSection(width, org.joinCode),
+                    SizedBox( height:  height * 0.02,),
+                    _ownersInfo(width, org.owners!),
+                  ],
+                ),
               ),
-              _orgInfo(width,org: org),
-              SizedBox( height:  height * 0.02,),
-              _ownersInfo(width, org.owners!),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -224,6 +233,66 @@ class OrganizationScreen extends StatelessWidget {
       );
     }
   }
+  Widget _joinCodeSection(double width, String? joinCode) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+      width: width,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Join Code',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              fontFamily: Constants.primaryFont,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: Text(
+                    joinCode ?? 'No Code Available',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontFamily: Constants.primaryFont,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              IconButton(
+                onPressed: () {
+                  if (joinCode != null) {
+                    Clipboard.setData(ClipboardData(text: joinCode));
+                    Get.snackbar('Copied', 'Join code copied to clipboard!',
+                        backgroundColor: Colors.green,
+                        colorText: Colors.white,
+                        snackPosition: SnackPosition.BOTTOM);
+                  }
+                },
+                icon: const Icon(Icons.copy, color: Colors.black),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
 
 
 

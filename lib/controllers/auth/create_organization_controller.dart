@@ -10,10 +10,14 @@ import '../../views/auth/login_screen.dart';
 class CreateOrganizationController extends GetxController {
   var isLoading = false.obs;
   var getLoading = false.obs;
+  var joinLoading = false.obs;
   final nameController = TextEditingController();
   final industryController = TextEditingController();
   final sizeRangeController = TextEditingController();
   final contactEmailController = TextEditingController();
+  final joinCodeController = TextEditingController();
+
+   var hasOrganization =true.obs;
  UserModel userModel = UserModel();
   final formKey = GlobalKey<FormState>();
   @override
@@ -28,9 +32,9 @@ class CreateOrganizationController extends GetxController {
     getLoading.value = true;
     bool ref = await _refreshToken();
     print(ref);
-    await getUser();
+    await orgStatus();
     getLoading.value = false;
-    if (userModel.user?.organization != null) {
+    if (hasOrganization.value==true) {
       Get.offAll(() => MainViewScreen());
     } else {
       initialize.value = true;
@@ -75,28 +79,25 @@ class CreateOrganizationController extends GetxController {
       isLoading.value = false;
     }
   }
-  getUser() async {
-    print('On init');
+  Future<void> orgStatus()async{
+    print('check org status');
     try {
       final response = await Dio().get(
-        'http://192.168.1.5:3000/api/users/${CacheHelper().getData(key: 'id')}',
+        'http://192.168.1.5:3000/api/organization/status',
         options: Options(
           headers: {
             'authorization': 'Bearer ${CacheHelper().getData(key: 'accessToken')}',
           },
         ),
       );
-      userModel = UserModel.fromJson(response.data);
-      print(userModel.user!.toJson());
+      hasOrganization.value=response.data['hasOrganization'];
     } on DioException catch (e) {
-      // If token is expired
       if (e.response?.statusCode == 401) {
         print("Access token expired. Trying to refresh...");
         final refreshed = await _refreshToken();
         if (refreshed) {
-          return await getUser();
+          return await orgStatus();
         } else {
-          // If refresh failed, logout
           _handleLogout();
           return;
         }
@@ -131,6 +132,36 @@ class CreateOrganizationController extends GetxController {
           break;
       }
     }
+
+  }
+  Future<void> joinOrganization() async {
+    joinLoading.value = true;
+    try {
+      final dio = Dio();
+      final token = CacheHelper().getData(key: 'accessToken');
+      final response = await dio.post(
+        'http://192.168.1.5:3000/api/organization/join',
+        data: {
+          "joinCode": joinCodeController.text
+        },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Constants.successSnackBar( title: "Success",message:  "Organization joined successfully");
+        Get.offAll(()=> MainViewScreen());
+      } else {
+        Constants.errorSnackBar(title: "Error",message: "Failed to join organization");
+      }
+    } catch (e) {
+      Constants.errorSnackBar(title: "Error",message:  e.toString());
+    } finally {
+      joinLoading.value = false;
+    }
+
   }
   Future<bool> _refreshToken() async {
     try {
