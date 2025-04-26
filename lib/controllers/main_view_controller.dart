@@ -68,7 +68,6 @@ class MainViewController extends GetxController {
   }
   Future<void> getUser() async {
     print('Get User Method');
-    final refreshToken = CacheHelper().getData(key: 'refreshToken');
     final accessToken = CacheHelper().getData(key: 'accessToken');
     print(accessToken);
     final userId = CacheHelper().getData(key: 'id');
@@ -80,10 +79,32 @@ class MainViewController extends GetxController {
       userModel = UserModel.fromJson(response.data);
       print(userModel.toJson());
     } on DioException catch (e) {
+      isLoading.value = false;
       if (e.response?.statusCode == 401 && await _refreshToken()) {
         return await getUser(); // Retry after refresh
       } else {
-        _handleDioError(e);
+        final message = e.response?.data['message'] ?? e.message;
+        switch (e.type) {
+          case DioExceptionType.connectionTimeout:
+          case DioExceptionType.receiveTimeout:
+          case DioExceptionType.sendTimeout:
+            Constants.errorSnackBar(title: 'Timeout', message: 'Please try again later.');
+            break;
+          case DioExceptionType.badResponse:
+            Constants.errorSnackBar(title: 'Error', message: message);
+            _handleLogout();
+            break;
+          case DioExceptionType.unknown:
+          case DioExceptionType.connectionError:
+            Constants.errorSnackBar(title: 'Error', message: 'Network error: $message');
+            break;
+          case DioExceptionType.cancel:
+            Constants.errorSnackBar(title: 'Cancelled', message: 'Request was cancelled.');
+            break;
+          case DioExceptionType.badCertificate:
+            Constants.errorSnackBar(title: 'Security', message: 'Bad SSL certificate.');
+            break;
+        }
       }
     }
   }
@@ -237,7 +258,6 @@ class MainViewController extends GetxController {
         break;
       case DioExceptionType.badResponse:
         Constants.errorSnackBar(title: 'Error', message: message);
-        _handleLogout();
         break;
       case DioExceptionType.unknown:
       case DioExceptionType.connectionError:

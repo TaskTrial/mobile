@@ -169,7 +169,7 @@ class ProfileScreen extends StatelessWidget {
       return const CircleAvatar(
         radius: 40,
         backgroundColor: Color(0xFFFFE3C5),
-        child: Icon(Icons.person, size: 50, color: Colors.brown),
+        child: Icon(Icons.person, size: 50, color: Colors.white),
       );
     }
   }

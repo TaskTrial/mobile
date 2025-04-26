@@ -102,7 +102,7 @@ class EditProfileScreen extends StatelessWidget {
           ? CircleAvatar(
               radius: 50,
               backgroundColor: Color(0xFFFFE3C5),
-              child: Icon(Icons.person, size: 50, color: Colors.brown),
+              child: Icon(Icons.person, size: 50, color: Colors.white),
             )
           : controller.profileImage == null &&
                   controller.userModel.user!.profilePic != null

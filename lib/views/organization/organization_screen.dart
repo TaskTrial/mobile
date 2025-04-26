@@ -202,7 +202,7 @@ class OrganizationScreen extends StatelessWidget {
       return const CircleAvatar(
         radius: 40,
         backgroundColor: Color(0xFFFFE3C5),
-        child: Icon(Icons.account_balance_rounded, size: 50, color: Colors.brown),
+        child: Icon(Icons.account_balance_rounded, size: 50, color: Colors.white),
       );
     }
   }
@@ -220,7 +220,7 @@ class OrganizationScreen extends StatelessWidget {
       return const CircleAvatar(
         radius: 30,
         backgroundColor: Color(0xFFFFE3C5),
-        child: Icon(Icons.person, size: 30, color: Colors.brown),
+        child: Icon(Icons.person, size: 30, color: Colors.white),
       );
     }
   }

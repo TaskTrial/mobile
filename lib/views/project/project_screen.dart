@@ -25,7 +25,7 @@ class ProjectScreen extends StatelessWidget {
             SizedBox(height: 10),
             Expanded(
               child: size==0?Center(
-                        child:  Text('No Projects !'
+                        child:  Text('No Projects Found !'
                           ,style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w700,

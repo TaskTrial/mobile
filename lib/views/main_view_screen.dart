@@ -185,7 +185,7 @@ class MainViewScreen extends StatelessWidget {
            child: const CircleAvatar(
              radius: 40,
              backgroundColor: Color(0xFFFFE3C5),
-             child: Icon(Icons.person, size: 25, color: Colors.brown),
+             child: Icon(Icons.person, size: 25, color: Colors.white),
            ),
          ),
        );

@@ -310,7 +310,9 @@ class DashboardScreen extends StatelessWidget {
                 SizedBox(
               height: 145,
               width: double.infinity,
-              child: ListView.builder(
+              child: tasks.isEmpty?Center(
+                child: Text( 'No Tasks Found',style: TextStyle(color: Colors.black)),
+              ): ListView.builder(
                 itemCount: tasks.length,
                 itemBuilder: (context, index) {
                   return _taskRow(controller,index,tasks[index],width);
@@ -482,7 +484,12 @@ class DashboardScreen extends StatelessWidget {
             height: 145,
             child: GetBuilder<DashboardController>(
               builder: (controller) {
-                return ListView.builder(
+                if(projects.isEmpty) {
+                  return Center(
+                  child: Text( 'No Projects Found'),
+                );
+                }
+                return  ListView.builder(
                     itemBuilder: (context, index) {
                       return _projectRow(
                           controller: controller, index: index, width: width,project: projects[index]
