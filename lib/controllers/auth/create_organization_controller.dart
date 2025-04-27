@@ -79,6 +79,21 @@ class CreateOrganizationController extends GetxController {
       isLoading.value = false;
     }
   }
+  logout() {
+    CacheHelper().removeData(key: 'id');
+    CacheHelper().removeData(key: 'refreshToken');
+    CacheHelper().removeData(key: 'accessToken').then(
+          (value) {
+        if (value) {
+          Get.offAll(
+                () => LoginScreen(),
+            transition: Transition.fadeIn,
+            duration: const Duration(milliseconds: 500),
+          );
+        }
+      },
+    );
+  }
   Future<void> orgStatus()async{
     print('check org status');
     try {

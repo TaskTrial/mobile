@@ -1,10 +1,8 @@
-import 'package:dio/dio.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/services/auth_service.dart';
-import 'package:task_trial/views/auth/verify_screen.dart';
 
-import '../../utils/constants.dart';
 
 class SignUpController extends GetxController {
   final userNameController = TextEditingController();

@@ -211,7 +211,12 @@ class CreateOrganizationScreen extends StatelessWidget {
                     ),
                   ),
                   child: const Text("Join Organization", style: TextStyle(fontSize: 16)),
-                )
+                ),
+                const SizedBox(height: 20),
+                TextButton(onPressed: (){
+                  controller.logout();
+                },
+                    child: Text('Logout' , style:  TextStyle(color: Constants.primaryColor),))
 
               ],
             ),

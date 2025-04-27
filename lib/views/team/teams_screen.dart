@@ -53,7 +53,7 @@ class TeamsScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 25,bottom: 10),
-        child: teamsModel.data!.teams!.isNotEmpty?ListView.builder(
+        child: (teamsModel.data != null && teamsModel.data!.teams!.isNotEmpty)?ListView.builder(
           padding: const EdgeInsets.all(16),
           itemCount: teamsModel.data!.teams!.length,
           itemBuilder: (context, index) {

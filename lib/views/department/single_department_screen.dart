@@ -8,6 +8,7 @@ import 'package:task_trial/views/department/edit_department_screen.dart';
 class SingleDepartmentScreen extends StatelessWidget {
    const SingleDepartmentScreen({super.key, required this.department});
   final Department department ;
+
   @override
   Widget build(BuildContext context) {
     DepartmentController controller =Get.put(DepartmentController());
@@ -27,6 +28,7 @@ class SingleDepartmentScreen extends StatelessWidget {
               _orgInfo(width, controller),
               SizedBox( height:  height * 0.02,),
               _ownersInfo(width),
+
             ],
           ),
         ),
@@ -118,6 +120,7 @@ class SingleDepartmentScreen extends StatelessWidget {
           const SizedBox(height: 20),
           _infoRow("Description", department.description!),
           _infoRow("Created at", Constants.formatDate(date: department.createdAt!)),
+          _infoRow("Updated at", Constants.formatDate(date: department.updatedAt!)),
         ],
       ),
     );
@@ -184,7 +187,7 @@ class SingleDepartmentScreen extends StatelessWidget {
    return CircleAvatar(
         radius: 30,
         backgroundColor: Color(0xFFFFE3C5),
-        child: Icon(Icons.person, size: 30, color: Colors.brown),
+        child: Icon(Icons.person, size: 30, color: Colors.white),
       );
   }
 

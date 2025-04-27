@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_trial/controllers/department_controller.dart';
 import 'package:task_trial/controllers/team_controller.dart';
-import 'package:task_trial/models/departments_model.dart';
 import 'package:task_trial/models/teams_model.dart';
 import 'package:task_trial/utils/constants.dart';
-import 'package:task_trial/views/department/edit_department_screen.dart';
 import 'package:task_trial/views/team/edit_team_screen.dart';
 
 class SingleTeamScreen extends StatelessWidget {

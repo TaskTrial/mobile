@@ -1,18 +1,13 @@
 import 'dart:io';
-import 'package:dio/dio.dart';
-import 'package:dio/dio.dart' as dio;
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:task_trial/models/organization_model.dart';
 import 'package:task_trial/models/user_model.dart';
 import 'package:task_trial/utils/cache_helper.dart';
-import 'package:task_trial/utils/constants.dart';
-import 'package:task_trial/views/main_view_screen.dart';
-
 import '../../services/user_services.dart';
 import '../../views/auth/login_screen.dart';
-import '../main_view_controller.dart';
 
 class ProfileController extends GetxController {
   UserModel userModel = Get.arguments['user'];

@@ -1,9 +1,6 @@
 import 'dart:math';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 class Constants {
   static const Color primaryColor = Color(0xFFE65F2B);

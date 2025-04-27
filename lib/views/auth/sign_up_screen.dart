@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_trial/controllers/auth/login_controller.dart';
 import 'package:task_trial/utils/constants.dart';
-import 'package:task_trial/views/main_view_screen.dart';
 import 'package:task_trial/widgets/auth_button.dart';
 import 'package:task_trial/widgets/my_text_field.dart';
 import 'package:task_trial/controllers/auth/sign_up_controller.dart';
 
 import '../../widgets/google_sign_in_ui.dart';
-import '../dashboard/dashboard_screen.dart';
 import 'login_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -130,17 +127,6 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  Widget _welcome() {
-    return Text(
-      'Hello ,',
-      style: TextStyle(
-        color: Constants.pageNameColor,
-        fontSize: 50,
-        fontWeight: FontWeight.w900,
-        fontFamily: Constants.primaryFont,
-      ),
-    );
-  }
   _loginMessage() {
     return Text(
       'Sign Up ',
@@ -214,31 +200,6 @@ class SignUpScreen extends StatelessWidget {
       },
       onPressed: () {
         controller.togglePasswordVisibility();
-      },
-    );
-  }
-  _confirmPasswordField(SignUpController controller) {
-    return MyTextField(
-      title: 'Confirm Password',
-      hintText: '***********',
-      isPassword: true,
-      obscureText: controller.isConfirmPasswordVisible.value,
-      controller: controller.confirmPasswordController,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter your password';
-        }
-        if (value.length < 8) {
-          return 'Password must be at least 8 characters';
-        }
-        if (value != controller.passwordController.text) {
-          return 'Password must match the password';
-        }
-
-        return null;
-      },
-      onPressed: () {
-        controller.toggleConfirmPasswordVisibility();
       },
     );
   }

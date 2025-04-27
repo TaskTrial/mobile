@@ -144,13 +144,7 @@ class MainViewController extends GetxController {
       departmentsModel = DepartmentsModel.fromJson(response.data);
       print(departmentsModel.toJson());
     } on DioException catch (e) {
-      print('---------------${e.response?.statusCode}---------');
-      if (e.response?.statusCode == 401 && await _refreshToken()) {
-        return await getDepartments(); // Retry after refresh
-      } else {
-       Constants.errorSnackBar(title: 'Error', message: e.toString());
-       print(e.toString());
-      }
+     _handleDioError(e);
     }
   }
   Future<void> getTeams() async {
@@ -165,13 +159,7 @@ class MainViewController extends GetxController {
       teamsModel = TeamsModel.fromJson(response.data);
       print(teamsModel.toJson());
     } on DioException catch (e) {
-      print('---------------${e.response?.statusCode}---------');
-      if (e.response?.statusCode == 401 && await _refreshToken()) {
-        return await getDepartments(); // Retry after refresh
-      } else {
-        Constants.errorSnackBar(title: 'Error', message: e.toString());
-        print(e.toString());
-      }
+      _handleDioError(e);
     }
   }
   Future<void> getAllProjects() async {
@@ -192,11 +180,7 @@ class MainViewController extends GetxController {
         print(proj.toJson());
       }
     } on DioException catch (e) {
-      if (e.response?.statusCode == 401 && await _refreshToken()) {
-        return await getAllProjects(); // Retry after refresh
-      } else {
-        _handleDioError(e);
-      }
+      _handleDioError(e);
     }
   }
   Future<void> getAllTasks() async {
@@ -216,11 +200,7 @@ class MainViewController extends GetxController {
         print(task.toJson());
       }
     } on DioException catch (e) {
-      if (e.response?.statusCode == 401 && await _refreshToken()) {
-        return await getAllTasks(); // Retry after refresh
-      } else {
-        _handleDioError(e);
-      }
+      _handleDioError(e);
     }
   }
   Future<bool> _refreshToken() async {
@@ -250,20 +230,24 @@ class MainViewController extends GetxController {
     Get.offAll(() => LoginScreen());
   }
   void _handleDioError(DioException e) {
-    isLoading.value = false;
-
     final message = e.response?.data['message'] ?? e.message;
-
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
+        Constants.errorSnackBar(title: 'Timeout', message: 'Please try again later.');
+        break;
       case DioExceptionType.receiveTimeout:
+        Constants.errorSnackBar(title: 'Timeout', message: 'Please try again later.');
+        break;
       case DioExceptionType.sendTimeout:
         Constants.errorSnackBar(title: 'Timeout', message: 'Please try again later.');
         break;
       case DioExceptionType.badResponse:
-        Constants.errorSnackBar(title: 'Error', message: message);
+        print(message);
+        Constants.errorSnackBar(title: 'Error', message: e.response!.data['message']);
         break;
       case DioExceptionType.unknown:
+         Constants.errorSnackBar(title: 'Error', message: 'Unknown error: $message');
+        break;
       case DioExceptionType.connectionError:
         Constants.errorSnackBar(title: 'Error', message: 'Network error: $message');
         break;

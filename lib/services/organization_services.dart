@@ -91,6 +91,36 @@ class OrganizationServices {
       _handleError(e);
     }
   }
+  static Future<void> addOwner({required userId})async{
+    String orgId = CacheHelper().getData(key: 'orgId');
+    List<String> userIds = [userId];
+    try {
+      final response = await Dio().post(
+          'http://192.168.1.5:3000/api/organization/$orgId/addOwner',
+          options: Options(
+            headers: {
+              'authorization':
+              'Bearer ${CacheHelper().getData(key: 'accessToken')}',
+            },
+          ),
+          data: {
+            "userIds": userIds,
+          });
+      Constants.successSnackBar(
+          title: 'Success', message: 'Owner Added Successfully !');
+      Get.delete<MainViewController>();
+      Get.offAll(
+            () => MainViewScreen(),
+        transition: Transition.fade,
+        duration: const Duration(milliseconds: 300),
+      );
+    }
+    on DioException catch (e)
+    {
+      _handleError(e);
+    }
+
+  }
 
 
 
