@@ -76,7 +76,6 @@ class OrganizationController extends GetxController{
     orgSizeRangeController.dispose();
     orgIndustryController.dispose();
     orgLogoUrlController.dispose();
-
     super.onClose();
   }
 }

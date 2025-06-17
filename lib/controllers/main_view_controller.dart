@@ -44,7 +44,7 @@ class MainViewController extends GetxController {
         projects: projectModel,
         tasks: tasks,
       ),
-      ProjectScreen(projects: projectModel,),
+      ProjectScreen(projects: projectModel,teams: teamsModel.data!.teams!,),
       ChatScreen(),
       TaskScreen(tasks: tasks,projects: projectModel,),
       MoreScreen(organization: organizationModel , departments: departmentsModel,teams: teamsModel,),
@@ -73,7 +73,7 @@ class MainViewController extends GetxController {
     final userId = CacheHelper().getData(key: 'id');
     try {
       final response = await Dio().get(
-        'http://192.168.1.5:3000/api/users/$userId',
+        'http://192.168.1.8:3000/api/users/$userId',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
       userModel = UserModel.fromJson(response.data);
@@ -115,7 +115,7 @@ class MainViewController extends GetxController {
     print(orgId);
     try {
       final response = await Dio().get(
-        'http://192.168.1.5:3000/api/organization/$orgId',
+        'http://192.168.1.8:3000/api/organization/$orgId',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
       print(response);
@@ -138,7 +138,7 @@ class MainViewController extends GetxController {
     final orgId = userModel.user?.organization['id'];
     try {
       final response = await Dio().get(
-        'http://192.168.1.5:3000/api/organizations/$orgId/departments/all',
+        'http://192.168.1.8:3000/api/organizations/$orgId/departments/all',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
       departmentsModel = DepartmentsModel.fromJson(response.data);
@@ -153,7 +153,7 @@ class MainViewController extends GetxController {
     final orgId = CacheHelper().getData(key: 'orgId');
     try {
       final response = await Dio().get(
-        'http://192.168.1.5:3000/api/organization/$orgId/teams/all',
+        'http://192.168.1.8:3000/api/organization/$orgId/teams/all',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
       teamsModel = TeamsModel.fromJson(response.data);
@@ -168,7 +168,7 @@ class MainViewController extends GetxController {
     final orgId = CacheHelper().getData(key: 'orgId');
     try {
       final response = await Dio().get(
-        'http://192.168.1.5:3000/api/organization/$orgId/projects',
+        'http://192.168.1.8:3000/api/organization/$orgId/projects',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
       List data=response.data['data']['activeProjects'];
@@ -189,7 +189,7 @@ class MainViewController extends GetxController {
     final orgId = CacheHelper().getData(key: 'orgId');
     try {
       final response = await Dio().get(
-        'http://192.168.1.5:3000/api/organization/$orgId/tasks',
+        'http://192.168.1.8:3000/api/organization/$orgId/tasks',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
       List data=response.data['data']['tasks'];
@@ -209,7 +209,7 @@ class MainViewController extends GetxController {
     if (refreshToken == null) return false;
     try {
       final response = await Dio().post(
-        'http://192.168.1.5:3000/api/auth/refreshAccessToken',
+        'http://192.168.1.8:3000/api/auth/refreshAccessToken',
         data: {
           'refreshToken': refreshToken,
         }

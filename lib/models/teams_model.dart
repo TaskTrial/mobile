@@ -52,7 +52,7 @@ class Team {
   String? deletedAt;
   String? avatar;
   List<Member>? members;
-  User? creator;
+  TeamUser? creator;
 
   Team({
     this.id,
@@ -82,7 +82,7 @@ class Team {
       deletedAt: json['deletedAt'],
       avatar: json['avatar'],
       members: (json['members'] as List?)?.map((e) => Member.fromJson(e)).toList(),
-      creator: json['creator'] != null ? User.fromJson(json['creator']) : null,
+      creator: json['creator'] != null ? TeamUser.fromJson(json['creator']) : null,
     );
   }
 
@@ -112,7 +112,7 @@ class Member {
   String? joinedAt;
   bool? isActive;
   String? deletedAt;
-  User? user;
+  TeamUser? user;
 
   Member({
     this.id,
@@ -134,7 +134,7 @@ class Member {
       joinedAt: json['joinedAt'],
       isActive: json['isActive'],
       deletedAt: json['deletedAt'],
-      user: json['user'] != null ? User.fromJson(json['user']) : null,
+      user: json['user'] != null ? TeamUser.fromJson(json['user']) : null,
     );
   }
 
@@ -152,17 +152,17 @@ class Member {
   }
 }
 
-class User {
+class TeamUser {
   String? id;
   String? firstName;
   String? lastName;
   String? email;
   String? profilePic;
 
-  User({this.id, this.firstName, this.lastName, this.email, this.profilePic});
+  TeamUser({this.id, this.firstName, this.lastName, this.email, this.profilePic});
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
+  factory TeamUser.fromJson(Map<String, dynamic> json) {
+    return TeamUser(
       id: json['id'],
       firstName: json['firstName'],
       lastName: json['lastName'],

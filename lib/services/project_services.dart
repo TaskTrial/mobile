@@ -9,6 +9,44 @@ import '../utils/constants.dart';
 import '../views/main_view_screen.dart';
 class ProjectServices {
  static String formatDate(DateTime date) => DateFormat('yyyy-MM-dd').format(date);
+
+ static Future<void> addMember({required userId ,required String teamId
+   ,required String role ,required String projectId
+ })async{
+   String orgId = CacheHelper().getData(key: 'orgId');
+   List<Map<String,String>> userIds = [
+     { "userId": userId,
+       "role": role
+     }
+   ];
+   print(userIds);
+   try {
+     final response = await Dio().post(
+         'http://192.168.1.8:3000/api/organization/$orgId/team/$teamId/project/$projectId/addMember',
+         options: Options(
+           headers: {
+             'authorization':
+             'Bearer ${CacheHelper().getData(key: 'accessToken')}',
+           },
+         ),
+         data: {
+           "members": userIds,
+         });
+     Constants.successSnackBar(
+         title: 'Success', message: '$role Added Successfully !');
+     Get.delete<MainViewController>();
+     Get.offAll(
+           () => MainViewScreen(),
+       transition: Transition.fade,
+       duration: const Duration(milliseconds: 300),
+     );
+   }
+   on DioException catch (e)
+   {
+     _handleError(e);
+   }
+
+ }
   static Future<void> createProject(
   {
     required TextEditingController nameController,
@@ -18,7 +56,8 @@ class ProjectServices {
     required RxDouble progress,
     required RxString selectedTeamId,
   }
-      ) async {
+      ) async
+  {
     Dio  dio = Dio();
     final projectData = {
       "name": nameController.text.trim(),
@@ -29,10 +68,10 @@ class ProjectServices {
     };
     String organizationId = CacheHelper().getData(key: 'orgId');
     String teamId =  selectedTeamId.value;
-    print('http://192.168.1.5:3000/organization/$organizationId/team/$teamId/project');
+    print('http://192.168.1.8:3000/organization/$organizationId/team/$teamId/project');
     try {
       final response = await dio.post(
-        'http://192.168.1.5:3000/api/organization/$organizationId/team/$teamId/project',
+        'http://192.168.1.8:3000/api/organization/$organizationId/team/$teamId/project',
         data: projectData,
         options: Options(
           headers: {
@@ -52,11 +91,12 @@ class ProjectServices {
     }
   }
 static Future<void> deleteProjectData({required String teamId,
-   required String projectId,})async{
+   required String projectId,})async
+{
    String orgId = CacheHelper().getData(key: 'orgId');
    try {
      final response = await Dio().delete(
-       'http://192.168.1.5:3000/api/organization/$orgId/team/$teamId/project/$projectId/delete',
+       'http://192.168.1.8:3000/api/organization/$orgId/team/$teamId/project/$projectId/delete',
        options: Options(
          headers: {
            'authorization':
@@ -87,7 +127,7 @@ static Future<void> deleteProjectData({required String teamId,
    final orgId = CacheHelper().getData(key: 'orgId');
    try {
      final response = await Dio().put(
-       'http://192.168.1.5:3000/api/organization/$orgId/team/$teamId/project/$projectId',
+       'http://192.168.1.8:3000/api/organization/$orgId/team/$teamId/project/$projectId',
        options: Options(
          headers: {
            'authorization':

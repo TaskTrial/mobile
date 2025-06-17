@@ -18,7 +18,7 @@ class OrganizationServices {
         ),
       });
       var response = await Dio().post(
-        'http://192.168.1.5:3000/api/organization/$organizationId/logo/upload',
+        'http://192.168.1.8:3000/api/organization/$organizationId/logo/upload',
         data: formData,
         options: Options(
           headers: {
@@ -58,9 +58,9 @@ class OrganizationServices {
       }) async
   {
     try {
-      print('http://192.168.1.5:3000/api/organization/$orgId');
+      print('http://192.168.1.8:3000/api/organization/$orgId');
       final response = await Dio().put(
-          'http://192.168.1.5:3000/api/organization/$orgId',
+          'http://192.168.1.8:3000/api/organization/$orgId',
           options: Options(
             headers: {
               'authorization':
@@ -96,7 +96,7 @@ class OrganizationServices {
     List<String> userIds = [userId];
     try {
       final response = await Dio().post(
-          'http://192.168.1.5:3000/api/organization/$orgId/addOwner',
+          'http://192.168.1.8:3000/api/organization/$orgId/addOwner',
           options: Options(
             headers: {
               'authorization':

@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/controllers/project/project_controller.dart';
 import 'package:task_trial/models/project_model.dart';
+import 'package:task_trial/models/teams_model.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/project/edit_project_screen.dart';
 import 'package:task_trial/views/project/project_card.dart';
 
 class ProjectScreen extends StatelessWidget {
-  const ProjectScreen({super.key, required this.projects});
+  const ProjectScreen({super.key, required this.projects, required this.teams});
   final List<ProjectModel> projects;
+  final List<Team> teams ;
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProjectController());
@@ -53,7 +55,7 @@ class ProjectScreen extends StatelessWidget {
                               },
                               child: ProjectCard(
                                 project: projects[index],
-
+                                team: getTeamById(projects[index].team!.id!),
                               ),
                             ),
                           );
@@ -91,7 +93,7 @@ class ProjectScreen extends StatelessWidget {
               ),
             ),
             Text(
-              " 3",
+              ' ${projects.length.toString() ?? '0'}',
               style: TextStyle(
                 fontSize:16,
                 fontFamily: Constants.primaryFont,
@@ -221,6 +223,13 @@ class ProjectScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // get team by team id
+ Team getTeamById(String teamId) {
+    // return team
+    return teams.firstWhere((team) => team.id == teamId, orElse: () => Team(id: teamId, name: 'Unknown Team', members: []));
+
   }
 
 }

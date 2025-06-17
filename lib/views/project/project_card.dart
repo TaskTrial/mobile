@@ -5,12 +5,14 @@ import 'package:get/get.dart';
 import 'package:task_trial/models/project_model.dart';
 import 'package:task_trial/views/project/project_detail_screen.dart';
 
+import '../../models/teams_model.dart';
 import '../../utils/constants.dart';
 
 class ProjectCard extends StatelessWidget {
   final ProjectModel project;
+  final Team team ;
   const ProjectCard({
-    super.key, required this.project,
+    super.key, required this.project, required this.team,
   }) ;
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,8 @@ class ProjectCard extends StatelessWidget {
               const Spacer(),
               GestureDetector(
                 onTap: () {
-                 Get.to(() => ProjectDetailScreen(project:project)
+                  print(team.members!.length);
+                 Get.to(() => ProjectDetailScreen(project:project ,team: team)
                  );
                 },
                 child: CircleAvatar(
@@ -87,6 +90,20 @@ class ProjectCard extends StatelessWidget {
                       fontSize: 14, fontWeight: FontWeight.w500,fontFamily: Constants.primaryFont)),
             ],
           ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Text('Team          ',
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w700,fontFamily: Constants.primaryFont)),
+
+              const Icon(Icons.group, size: 16),
+              const SizedBox(width: 5),
+              Text(project.team!.name!,
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w500,fontFamily: Constants.primaryFont)),
+            ],
+          ),
           const SizedBox(height: 12),
           Text(
             project.description!,
@@ -100,37 +117,52 @@ class ProjectCard extends StatelessWidget {
                 130, // You can adjust this depending on how many avatars
                 height: 40,
                 child:
-                // project..isNotEmpty || teamImages !=null?
-                // Row(
-                //   children: [
-                //     Expanded(
-                //       child: Stack(
-                //         children: List.generate(teamImages.length>4? 4:teamImages.length, (index) {
-                //           return Positioned(
-                //             left: index * 22.0,
-                //             child: CircleAvatar(
-                //               backgroundColor: Colors.white,
-                //               radius: 17,
-                //               child: CircleAvatar(
-                //                 radius: 15,
-                //                 backgroundImage: NetworkImage(
-                //                     teamImages[index]),
-                //               ),
-                //             ),
-                //           );
-                //         }),
-                //       ),
-                //     ),
-                //     if (teamImages.length > 4)
-                //       Text('+${teamImages.length - 4}',
-                //           style: TextStyle(color: Colors.grey,
-                //               fontFamily: Constants.primaryFont,
-                //               fontSize: 16,
-                //               fontWeight: FontWeight.w600)),
-                //
-                //   ],
-                // ):
-                Text(project.memberCount!=0?'Number of members :${project.memberCount}':'No team members found!'),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Stack(
+                        children: List.generate(project.members!.length>4? 4:project.members!.length, (index) {
+                          return Positioned(
+                            left: index * 22.0,
+                            child:
+                            project.members![index].profilePic == null ||
+                                project.members![index].profilePic == ""
+
+                            ?
+                                CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 17,
+                                  child: Icon(
+                                    Icons.person,
+                                    size: 30,
+                                    color: Colors.grey.withValues(alpha: 0.5),
+                                  ),
+
+                                )
+                            :CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 17,
+                              child: CircleAvatar(
+                                radius: 15,
+                                backgroundImage: NetworkImage(
+                                    project.members![index].profilePic!
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+                    if (project.members!.length > 4)
+                      Text('+${project.members!.length - 4}',
+                          style: TextStyle(color: Colors.grey,
+                              fontFamily: Constants.primaryFont,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600)),
+
+                  ],
+                )
+                // Text(project.memberCount!=0?'Number of members :${project.memberCount}':'No team members found!'),
               ),
               const Spacer(),
               Column(

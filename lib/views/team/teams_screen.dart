@@ -3,6 +3,7 @@ import 'package:task_trial/controllers/department_controller.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/controllers/team_controller.dart';
 import 'package:task_trial/models/departments_model.dart';
+import 'package:task_trial/models/organization_model.dart';
 import 'package:task_trial/models/teams_model.dart';
 import 'package:task_trial/utils/cache_helper.dart';
 import 'package:task_trial/utils/constants.dart';
@@ -12,8 +13,9 @@ import 'package:task_trial/views/team/edit_team_screen.dart';
 import 'package:task_trial/views/team/single_team_screen.dart';
 
 class TeamsScreen extends StatelessWidget {
-  const TeamsScreen({super.key, required this.teamsModel});
+  const TeamsScreen({super.key, required this.teamsModel, required this.organizationModel});
   final TeamsModel teamsModel ;
+  final OrganizationModel organizationModel;
   @override
   Widget build(BuildContext context) {
     const double avatarRadius = 16;
@@ -60,7 +62,7 @@ class TeamsScreen extends StatelessWidget {
             final team = teamsModel.data!.teams![index];
             return GestureDetector(
               onTap: (){
-                Get.to(()=>SingleTeamScreen(team: team));
+                Get.to(()=>SingleTeamScreen(team: team,organization: organizationModel,));
               },
                 onLongPress: () {
                   showModalBottomSheet(

@@ -20,7 +20,7 @@ class LoginAuthServices {
     try {
       isLoading.value = true;
       final response = await Dio().post(
-        'http://192.168.1.5:3000/api/auth/signin',
+        'http://192.168.1.8:3000/api/auth/signin',
         data: {
           'email': emailController.text,
           'password': passwordController.text,
@@ -84,7 +84,7 @@ class LoginAuthServices {
   }) async {
     try {
       final response = await Dio().post(
-        'http://192.168.1.5:3000/api/auth/forgotPassword',
+        'http://192.168.1.8:3000/api/auth/forgotPassword',
         data: {
           'email': emailController.text,
         },
@@ -136,7 +136,7 @@ class LoginAuthServices {
       required String args}) async {
     try {
       final response = await Dio().post(
-        'http://192.168.1.5:3000/api/auth/resetPassword',
+        'http://192.168.1.8:3000/api/auth/resetPassword',
         data: {
           "email": args,
           "otp": otpController.text,
@@ -186,7 +186,7 @@ class LoginAuthServices {
   static Future<void> loginWithGoogle() async {
     try {
       final result = await FlutterWebAuth2.authenticate(
-        url: "http://192.168.1.5:3000/api/auth/google",
+        url: "http://192.168.1.8:3000/api/auth/google",
         callbackUrlScheme: "tasktrial",
       );
       final uri = Uri.parse(result);
@@ -222,7 +222,7 @@ class SignUpAuthServices {
     try {
       isLoading.value = true;
       final response = await Dio().post(
-        'http://192.168.1.5:3000/api/auth/signup',
+        'http://192.168.1.8:3000/api/auth/signup',
         data: {
           'email': emailController.text,
           'password': passwordController.text,
@@ -288,7 +288,7 @@ class SignUpAuthServices {
     try {
       isLoading.value = true;
       final response = await Dio().post(
-        'http://192.168.1.5:3000/api/auth/verifyEmail',
+        'http://192.168.1.8:3000/api/auth/verifyEmail',
         data: {
           'email': email,
           'otp': codeController.text,

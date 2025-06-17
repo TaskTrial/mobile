@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/controllers/task/task_controller.dart';
 import 'package:task_trial/models/project_model.dart';
+import 'package:task_trial/models/teams_model.dart';
+import 'package:task_trial/services/project_services.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/project/edit_project_screen.dart';
 import 'package:task_trial/views/project/task_item.dart';
 
 class ProjectDetailScreen extends StatelessWidget {
-  const ProjectDetailScreen({super.key,required this.project});
+  const ProjectDetailScreen({super.key,required this.project, required this.team});
   final ProjectModel project;
+  final Team team ;
+
   @override
   Widget build(BuildContext context) {
     // ProjectDetailController controller = Get.put(ProjectDetailController(project: project));
@@ -63,39 +67,7 @@ class ProjectDetailScreen extends StatelessWidget {
                                 style: TextStyle(fontWeight: FontWeight.w500)),
                             const SizedBox(height: 8),
                             // Inside your Column (under "Assigned to")
-
-                            SizedBox(
-                              width: 120, // You can adjust this depending on how many avatars
-                              height: 40,
-                              child:
-                              // teamImages.isNotEmpty || teamImages!= null ?
-                              // Row(
-                              //   children: [
-                              //     Expanded(
-                              //       child: Stack(
-                              //         children: List.generate(teamImages.length>4?4:teamImages.length, (index) {
-                              //           return Positioned(
-                              //             left: index * 22.0,
-                              //             child: CircleAvatar(
-                              //               backgroundColor: Colors.white,
-                              //               radius: 17,
-                              //               child: CircleAvatar(
-                              //                 radius: 15,
-                              //                 backgroundImage: NetworkImage(teamImages[index]),
-                              //               ),
-                              //             ),
-                              //           );
-                              //         }),
-                              //       ),
-                              //     ),
-                              //     if (teamImages.length > 4)
-                              //       Text('+${teamImages.length - 4}',
-                              //           style: TextStyle(color: Colors.grey)),
-                              //   ],
-                              // )
-                              //     :
-                              const Center(child: Text("No team members found")),
-                            ),
+                           _assignee()
                           ],
                         ),
                         // Due Date
@@ -150,6 +122,311 @@ class ProjectDetailScreen extends StatelessWidget {
       ),
     );
   }
+
+  Widget _assignee() {
+    return GestureDetector(
+      onTap: _showAssigneesDialog,
+      child: Container(
+        width: 190,
+        height: 40,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.grey.withOpacity(0.1), width: 2),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Stack(
+                children:[ ...List.generate(
+                    project.members!.length > 4 ? 4 : project.members!.length,
+                        (index) {
+                      return Positioned(
+                        left: index * 22.0,
+                        child: project.members![index].profilePic == null
+                            ? CircleAvatar(
+                          backgroundColor: Colors.orange.withOpacity(0.2),
+                          radius: 17,
+                          child: Icon(Icons.person, size: 30, color: Colors.white),
+                        )
+                            : CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 17,
+                          child: CircleAvatar(
+                            radius: 15,
+                            backgroundImage: NetworkImage(project.members![index].profilePic!),
+                          ),
+                        ),
+                      );
+                    }
+                    ),
+                  Positioned(
+                    right: 0,
+                    child: GestureDetector(
+                      onTap: _showAddMemberDialog,
+                      child: CircleAvatar(
+                        backgroundColor: Constants.primaryColor,
+                        radius: 17,
+                        child: Icon(Icons.add, size: 30, color: Colors.white),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            if (project.members!.length > 4)
+              Text(
+                '+${project.members!.length - 4}',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontFamily: Constants.primaryFont,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+  void _showAssigneesDialog() {
+    final members = project.members ?? [];
+    Get.dialog(
+      AlertDialog(
+        backgroundColor: Colors.white,
+        title: Text(
+          'Project Members',
+          style: TextStyle(
+            fontFamily: Constants.primaryFont,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: SizedBox(
+          width: 300,
+          height: 400,
+          child: ListView.separated(
+            itemCount: members.length,
+            separatorBuilder: (_, __) => Divider(height: 15),
+            itemBuilder: (context, index) {
+              final user = members[index];
+              return ListTile(
+                leading: user.profilePic != null
+                    ? CircleAvatar(
+                  backgroundImage: NetworkImage(user.profilePic!),
+                )
+                    : CircleAvatar(
+                  backgroundColor: Colors.orange.withOpacity(0.3),
+                  child: Icon(Icons.person, color: Colors.white),
+                ),
+                title: Text('${user.firstName} ${user.lastName}',
+                    style: TextStyle(fontFamily: Constants.primaryFont)),
+                subtitle: Text(user.role ?? '',
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+              );
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text(
+              'Close',
+              style: TextStyle(
+                color: Constants.primaryColor,
+                fontWeight: FontWeight.bold,
+                fontFamily: Constants.primaryFont,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Constants.primaryColor,
+            ),
+            onPressed: () {
+              // Trigger add user logic
+              // You can navigate to another screen or show a form
+             // optionally close the dialog
+              Get.back();
+              _showAddMemberDialog();
+            },
+            child: Text(
+              'Add Person',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAddMemberDialog() {
+    final members = team.members ?? [];
+    String? projectId = project.id;
+    String? role;
+    Member? selectedMember;
+    List<String> roles = ['PROJECT_OWNER','MEMBER', 'LEADER','DEVELOPER','TESTER','DESIGNER']; // Define your allowed roles
+    Get.dialog(
+      AlertDialog(
+        backgroundColor: Colors.white,
+        title: Text(
+          'Assign Member To Project',
+          style: TextStyle(
+            fontFamily: Constants.primaryFont,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: StatefulBuilder(
+          builder: (context, setState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DropdownButton<Member>(
+                  borderRadius: BorderRadius.circular(10),
+                  dropdownColor: Colors.white,
+                  hint: Text('Select User'),
+                  value: selectedMember,
+                  isExpanded: true,
+                  items: members
+                      .where((member) =>
+                  isProjectMember(project.members!, member.userId!)==false)
+                      .map((member) => DropdownMenuItem<Member>(
+                    value: member,
+                    child: Row(
+                      children: [
+                        member.user!.profilePic != null
+                            ? CircleAvatar(
+                          radius: 15,
+                          backgroundColor: Colors.black,
+                          child: CircleAvatar(
+                            radius: 14,
+                            backgroundImage:
+                            NetworkImage(member.user!.profilePic!),
+                          ),
+                        )
+                            : const CircleAvatar(
+                          radius: 15,
+                          backgroundColor: Color(0xFFFFE3C5),
+                          child: Icon(Icons.person,
+                              size: 15, color: Colors.white),
+                        ),
+                        SizedBox(width: 10),
+                        Text('${member.user!.firstName} ${member.user!.lastName}'),
+                      ],
+                    ),
+                  ))
+                      .toList(),
+                  onChanged: (Member? value) {
+                    setState(() {
+                      selectedMember = value;
+                      role = null; // reset role if user changes
+                    });
+                  },
+                ),
+                if (selectedMember != null) ...[
+                  SizedBox(height: 10),
+                  DropdownButton<String>(
+                    isExpanded: true,
+                    hint: Text('Select Role'),
+                    value: role,
+                    items: roles
+                        .map((role) => DropdownMenuItem<String>(
+                      value: role,
+                      child: Text(role),
+                    ))
+                        .toList(),
+                    onChanged: (String? value) {
+                      setState(() {
+                        role = value;
+                      });
+                    },
+                  ),
+                ],
+              ],
+            );
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: Constants.primaryColor,
+                fontFamily: Constants.primaryFont,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Constants.primaryColor,
+            ),
+            onPressed:role != null && selectedMember != null?null: () {
+              if (selectedMember != null && role != null) {
+                ProjectServices.addMember(
+                  projectId: projectId!,
+                  userId: selectedMember!.id,
+                  teamId: team.id!,
+                  role: role!,
+                );
+                print('Selected User: ${selectedMember!.user!.firstName}, Role: $role');
+                Get.back();
+              }
+            },
+            child: Text('Add', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+  _confirmRemoveMemberDialog(Member member) {
+    Get.dialog(
+      AlertDialog(
+        backgroundColor: Colors.white,
+        title: Text('Confirm Removal' ,
+          style: TextStyle(
+            fontFamily: Constants.primaryFont,
+            fontWeight: FontWeight.bold,
+            color: Constants.primaryColor,
+          ),
+        ),
+        content: Text('Are you sure you want to remove ${member.user!.firstName} from this team?'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text('Cancel' ,
+              style: TextStyle(
+                color: Constants.primaryColor,
+                fontFamily: Constants.primaryFont,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Constants.primaryColor,
+            ),
+            onPressed: () {
+              // TeamServices.removeMember(userId: member.userId!, teamId: team.id!);
+              // Get.back();
+            },
+            child: Text('Remove' ,
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  bool isProjectMember(List<MemberModel> members ,String userId) {
+    for (var member in members) {
+      if (member.userId == userId) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   _priority(){
     return Container(
       padding: const EdgeInsets.only(top: 15,bottom: 15),

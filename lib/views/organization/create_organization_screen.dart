@@ -89,23 +89,8 @@ class CreateOrganizationScreen extends StatelessWidget {
                     return null;
                   },
                 ),
-                const SizedBox(height: 15),
-                MyTextField(
-                  radius: 20,
-                  title: "Contact Email",
-                  controller: controller.contactEmailController,
-                  hintText: 'Enter your contact email',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your Contact Email';
-                    }
-                    if (!GetUtils.isEmail(value)) {
-                      return 'Please enter a valid email address';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 30),
+
+                const SizedBox(height: 70),
                 Obx(() {
                   return controller.isLoading.value
                       ? const CircularProgressIndicator(

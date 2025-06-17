@@ -1,39 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_trial/controllers/team_controller.dart';
+import 'package:task_trial/models/organization_model.dart';
 import 'package:task_trial/models/teams_model.dart';
+import 'package:task_trial/services/team_services.dart';
+import 'package:task_trial/utils/cache_helper.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/team/edit_team_screen.dart';
 
+import '../../services/organization_services.dart';
 class SingleTeamScreen extends StatelessWidget {
-  const SingleTeamScreen({super.key, required this.team});
+  const SingleTeamScreen({super.key, required this.team, required this.organization});
   final Team team ;
+  final OrganizationModel organization ;
   @override
   Widget build(BuildContext context) {
     TeamController controller =Get.put(TeamController());
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    return Scaffold(
+    return  Scaffold(
       backgroundColor: Constants.backgroundColor,
-      body: Container(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 40),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _appBar(),
-              SizedBox(
-                height: height * 0.05,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0,left: 20,right: 20),
+              child: _appBar(),
+            ),
+            // Fixed at top
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: Column(
+                  children: [
+                    SizedBox(height: height * 0.01),
+                    _orgInfo(width, controller),
+                    SizedBox(height: height * 0.02),
+                    _ownersInfo(width),
+                    SizedBox(height: height * 0.02),
+                    _membersInfo(width, team.members!),
+                  ],
+                ),
               ),
-              _orgInfo(width, controller),
-              SizedBox( height:  height * 0.02,),
-              _ownersInfo(width),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
+
   }
-  _appBar(){
+  Widget _appBar(){
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -45,7 +61,6 @@ class SingleTeamScreen extends StatelessWidget {
               backgroundColor: Colors.white,
               child: Icon(Icons.arrow_back)),
         ),
-
         Text(
           'My Team',
           style: TextStyle(
@@ -92,7 +107,7 @@ class SingleTeamScreen extends StatelessWidget {
       ),
     );
   }
-  _orgInfo(double width,TeamController controller){
+  Widget _orgInfo(double width,TeamController controller){
     return Container(
       padding: const EdgeInsets.only(top: 10,left: 15,right: 15,bottom: 10),
       width: width,
@@ -119,7 +134,7 @@ class SingleTeamScreen extends StatelessWidget {
     );
 
   }
-  _creatorRow(Team team){
+  Widget _creatorRow(Team team){
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Row(
@@ -154,7 +169,7 @@ class SingleTeamScreen extends StatelessWidget {
       ),
     );
   }
-  _ownersInfo(double width){
+  Widget _ownersInfo(double width){
     return Container(
         padding: const EdgeInsets.only(top: 10,left: 15,right: 15,bottom: 10),
         width: width,
@@ -178,7 +193,7 @@ class SingleTeamScreen extends StatelessWidget {
         )
     );
   }
-  _picturePart(){
+  Widget _picturePart(){
    if( team.avatar == null || team.avatar!.isEmpty) {
      return CircleAvatar(
        radius: 40,
@@ -196,7 +211,7 @@ class SingleTeamScreen extends StatelessWidget {
    );
 
   }
-  _ownerPic(){
+  Widget _ownerPic(){
     if( team.avatar != null && team.avatar!.isNotEmpty) {
       return CircleAvatar(
         radius: 30,
@@ -216,6 +231,340 @@ class SingleTeamScreen extends StatelessWidget {
 
 
   }
+
+  _membersInfo(double width, List<Member> members) {
+    return Container(
+        padding:
+        const EdgeInsets.only(top: 10, left: 15, right: 15, bottom: 10),
+        width: width,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(
+            children: [
+              Text(
+                'Members',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: Constants.primaryFont,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900),
+              ),
+              Spacer(),
+              isOwnerOrLeader(organization.owners! ,team.members!)?
+              IconButton(
+                  onPressed: (){
+                _showAddOwnerDialog(organization);
+              }, icon:
+              CircleAvatar(
+                  backgroundColor: Constants.primaryColor,
+                  child: Icon(Icons.add ,color: Colors.white,)
+              )
+              ):
+                  SizedBox()
+
+            ],
+          ),
+          SizedBox(height: 10),
+          if (members.isEmpty || members.length == 1 && members[0].userId == team.creator!.id)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal:10.0),
+              child: Center(
+                child: Text(
+                  'No members in this team',
+                  style: TextStyle(
+                      color: Colors.grey,
+                      fontFamily: Constants.primaryFont,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
+                ),
+              ),
+            )
+          else
+          ...List.generate(
+            members.length,
+                (index) {
+              if(members[index].userId != team.creator!.id) {
+                return _memberRow(members[index]);
+              }
+              return const SizedBox.shrink();
+            },
+          )
+        ]));
+  }
+  _memberRow(Member member) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Row(
+        children: [
+          _userPic(member),
+          SizedBox(width: 10),
+          Expanded(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${member.user!.firstName!} ${member.user!.lastName}",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: Constants.primaryFont,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900),
+                    ),
+                    Text(
+                      member.role!,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: Constants.primaryFont,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                      member.user!.email!,
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontFamily: Constants.primaryFont,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500),
+                    ),
+
+                  ])),
+          if (isOwnerOrLeader(organization.owners!, team.members!))
+            IconButton(
+              onPressed: () {
+               _confirmRemoveMemberDialog(member);
+              },
+              icon: Icon(Icons.delete, color: Colors.red),
+            ),
+            // PopupMenuButton<String>(
+            //   icon: Icon(Icons.more_vert, color: Colors.black54),
+            //   onSelected: (String value) {
+            //     if (value == 'remove') {
+            //       TeamServices.removeMember(
+            //       userId: member.userId!,
+            //       teamId: team.id!
+            //       );
+            //     }
+            //   },
+            //   itemBuilder: (BuildContext context) => [
+            //     PopupMenuItem<String>(
+            //       value: 'remove',
+            //       child: Text('Remove from Team'),
+            //     ),
+            //   ],
+            // ),
+        ],
+      ),
+    );
+  }
+  _userPic(Member member) {
+    if (member.user!.profilePic != null) {
+      return CircleAvatar(
+        radius: 30,
+        backgroundColor: Colors.black,
+        child: CircleAvatar(
+          radius: 28,
+          backgroundImage: NetworkImage(member.user!.profilePic!),
+        ),
+      );
+    } else {
+      return const CircleAvatar(
+        radius: 30,
+        backgroundColor: Color(0xFFFFE3C5),
+        child: Icon(Icons.person, size: 30, color: Colors.white),
+      );
+    }
+  }
+  void _showAddOwnerDialog(OrganizationModel org) {
+    final users = org.users ?? [];
+    String? teamId = team.id;
+    String? role;
+    User? selectedUser;
+    List<String> roles = ['MEMBER', 'LEADER']; // Define your allowed roles
+
+    Get.dialog(
+      AlertDialog(
+        backgroundColor: Colors.white,
+        title: Text(
+          'Select User to Add as Team Member',
+          style: TextStyle(
+            fontFamily: Constants.primaryFont,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: StatefulBuilder(
+          builder: (context, setState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DropdownButton<User>(
+                  borderRadius: BorderRadius.circular(10),
+                  dropdownColor: Colors.white,
+                  hint: Text('Select User'),
+                  value: selectedUser,
+                  isExpanded: true,
+                  items: users
+                      .where((user) =>
+                  user.isOwner != true && isTeamMember(team.members!,user.id!)==false)
+                      .map((user) => DropdownMenuItem<User>(
+                    value: user,
+                    child: Row(
+                      children: [
+                        user.profilePic != null
+                            ? CircleAvatar(
+                          radius: 15,
+                          backgroundColor: Colors.black,
+                          child: CircleAvatar(
+                            radius: 14,
+                            backgroundImage:
+                            NetworkImage(user.profilePic!),
+                          ),
+                        )
+                            : const CircleAvatar(
+                          radius: 15,
+                          backgroundColor: Color(0xFFFFE3C5),
+                          child: Icon(Icons.person,
+                              size: 15, color: Colors.white),
+                        ),
+                        SizedBox(width: 10),
+                        Text('${user.firstName} ${user.lastName}'),
+                      ],
+                    ),
+                  ))
+                      .toList(),
+                  onChanged: (User? value) {
+                    setState(() {
+                      selectedUser = value;
+                      role = null; // reset role if user changes
+                    });
+                  },
+                ),
+                if (selectedUser != null) ...[
+                  SizedBox(height: 10),
+                  DropdownButton<String>(
+                    isExpanded: true,
+                    hint: Text('Select Role'),
+                    value: role,
+                    items: roles
+                        .map((role) => DropdownMenuItem<String>(
+                      value: role,
+                      child: Text(role),
+                    ))
+                        .toList(),
+                    onChanged: (String? value) {
+                      setState(() {
+                        role = value;
+                      });
+                    },
+                  ),
+                ],
+              ],
+            );
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: Constants.primaryColor,
+                fontFamily: Constants.primaryFont,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Constants.primaryColor,
+            ),
+            onPressed: () {
+              if (selectedUser != null && role != null) {
+                TeamServices.addMember(
+                  userId: selectedUser!.id,
+                  teamId: teamId!,
+                  role: role!,
+                );
+                print('Selected User: ${selectedUser!.firstName}, Role: $role');
+                Get.back();
+              }
+            },
+            child: Text('Add', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+  _confirmRemoveMemberDialog(Member member) {
+    Get.dialog(
+      AlertDialog(
+        backgroundColor: Colors.white,
+        title: Text('Confirm Removal' ,
+          style: TextStyle(
+            fontFamily: Constants.primaryFont,
+            fontWeight: FontWeight.bold,
+            color: Constants.primaryColor,
+          ),
+        ),
+        content: Text('Are you sure you want to remove ${member.user!.firstName} from this team?'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text('Cancel' ,
+              style: TextStyle(
+                color: Constants.primaryColor,
+                fontFamily: Constants.primaryFont,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Constants.primaryColor,
+            ),
+            onPressed: () {
+              TeamServices.removeMember(userId: member.userId!, teamId: team.id!);
+              Get.back();
+            },
+            child: Text('Remove' ,
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  bool isOwnerOrLeader(List<Owner> owners ,List<Member> members) {
+    String? userId = CacheHelper().getData(key: 'id');
+    for (var owner in owners) {
+      if (owner.id == userId) {
+        return true;
+      }
+    }
+    for (var member in members) {
+      if (member.userId == userId && (member.role == 'LEADER')) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool isTeamMember(List<Member> members ,String userId) {
+    for (var member in members) {
+      if (member.userId == userId) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+
+
 
 
 

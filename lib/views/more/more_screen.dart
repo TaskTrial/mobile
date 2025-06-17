@@ -43,7 +43,7 @@ class MoreScreen extends StatelessWidget {
 
             MoreButton(icon: Icons.people_alt,label: 'My Teams',
               onTap: () {
-                Get.to(()=> TeamsScreen(teamsModel: teams,));
+                Get.to(()=> TeamsScreen(teamsModel: teams, organizationModel:organization,));
               },
             )
 
