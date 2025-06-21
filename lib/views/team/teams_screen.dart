@@ -88,95 +88,114 @@ class TeamsScreen extends StatelessWidget {
       ),
     );
   }
-  _teamCard(Team team){
-   return Container(
+  _teamCard(Team team) {
+    return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Icon + colored circle
           _teamAvatar(team),
           const SizedBox(width: 16),
-          // Texts + overlapping avatars
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  team.name!,
+                  team.name ?? "Unnamed Team",
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     fontFamily: Constants.primaryFont,
+                    color: Color(0xFF2E3A59),
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Text(
                   team.description ?? 'No description',
                   style: const TextStyle(
                     fontSize: 14,
-                    color: Colors.grey,
+                    color: Color(0xFF7B8B9A),
                     fontFamily: Constants.primaryFont,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 15),
+                const SizedBox(height: 16),
                 Row(
                   children: [
-                    Text('Created at : ' ,
+                    const Icon(Icons.calendar_today, size: 14, color: Colors.grey),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Created: ',
                       style: TextStyle(
                         fontFamily: Constants.primaryFont,
-                        color: Colors.grey,
+                        color: Colors.grey.shade700,
                         fontSize: 12,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
                       Constants.formatDate(date: team.createdAt!),
                       style: TextStyle(
                         fontFamily: Constants.primaryFont,
-                        color: Colors.grey,
+                        color: Colors.grey.shade600,
                         fontSize: 12,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ],
                 ),
-                SizedBox( height: 5,),
+                const SizedBox(height: 10),
                 Row(
                   children: [
-                    Text('Created by : ' ,
+                    const Icon(Icons.person, size: 14, color: Colors.grey),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Created by: ',
                       style: TextStyle(
                         fontFamily: Constants.primaryFont,
-                        color: Colors.grey,
+                        color: Colors.grey.shade700,
                         fontSize: 12,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(width: 5,),
-                    (team.creator?.profilePic != null && team.creator!.profilePic!.isNotEmpty)? CircleAvatar(
-                      radius: 12,
-                      backgroundColor: Colors.white,
-                      backgroundImage: NetworkImage(
-                        team.creator!.profilePic!,
+                    if ((team.creator?.profilePic?.isNotEmpty ?? false)) ...[
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.network(
+                          team.creator!.profilePic!,
+                          width: 24,
+                          height: 24,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ): Container(),
-                    SizedBox(width: 5,),
-                    Text(
-                      '${team.creator!.firstName} ${team.creator!.lastName}',
-                      style: TextStyle(
-                        fontFamily: Constants.primaryFont,
-                        color: Colors.grey,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
+                      const SizedBox(width: 6),
+                    ],
+                    Flexible(
+                      child: Text(
+                        '${team.creator?.firstName ?? ''} ${team.creator?.lastName ?? ''}',
+                        style: TextStyle(
+                          fontFamily: Constants.primaryFont,
+                          color: Colors.grey.shade600,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),
@@ -184,6 +203,7 @@ class TeamsScreen extends StatelessWidget {
       ),
     );
   }
+
   _teamAvatar(Team team){
     if(team.avatar != null && team.avatar!.isNotEmpty){
       return CircleAvatar(

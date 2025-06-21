@@ -10,6 +10,40 @@ import '../views/main_view_screen.dart';
 class ProjectServices {
  static String formatDate(DateTime date) => DateFormat('yyyy-MM-dd').format(date);
 
+ static Future<void> removeMember({required String userId ,required String teamId
+    ,required String projectId
+ })async{
+   String orgId = CacheHelper().getData(key: 'orgId');
+   print('http://192.168.1.8:3000/api/organization/$orgId/team/$teamId/project/$projectId/removeMembe');
+   try {
+     final response = await Dio().delete(
+       'http://192.168.1.8:3000/api/organization/$orgId/team/$teamId/project/$projectId/removeMember',
+       options: Options(
+         headers: {
+           'authorization':
+           'Bearer ${CacheHelper().getData(key: 'accessToken')}',
+         },
+       ),
+       data: {
+         "userId": userId,
+       },
+     );
+     Constants.successSnackBar(
+         title: 'Success', message: 'Member Removed Successfully !');
+     Get.delete<MainViewController>();
+     Get.offAll(
+           () => MainViewScreen(),
+       transition: Transition.fade,
+       duration: const Duration(milliseconds: 300),
+     );
+   }
+   on DioException catch (e)
+   {
+     _handleError(e);
+   }
+
+ }
+
  static Future<void> addMember({required userId ,required String teamId
    ,required String role ,required String projectId
  })async{
@@ -20,6 +54,7 @@ class ProjectServices {
      }
    ];
    print(userIds);
+   print('http://192.168.1.8:3000/api/organization/$orgId/team/$teamId/project/$projectId/addMember');
    try {
      final response = await Dio().post(
          'http://192.168.1.8:3000/api/organization/$orgId/team/$teamId/project/$projectId/addMember',

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_trial/controllers/task/task_controller.dart';
 import 'package:task_trial/models/project_model.dart';
 import 'package:task_trial/models/teams_model.dart';
 import 'package:task_trial/services/project_services.dart';
@@ -9,9 +8,10 @@ import 'package:task_trial/views/project/edit_project_screen.dart';
 import 'package:task_trial/views/project/task_item.dart';
 
 class ProjectDetailScreen extends StatelessWidget {
-  const ProjectDetailScreen({super.key,required this.project, required this.team});
+  const ProjectDetailScreen(
+      {super.key, required this.project, required this.team});
   final ProjectModel project;
-  final Team team ;
+  final Team team;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class ProjectDetailScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-           _appBar(),
+            _appBar(),
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
@@ -33,25 +33,22 @@ class ProjectDetailScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                     Text(
+                    Text(
                       project.name!,
-                      style:
-                          TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: Constants.primaryFont,
-
-                          ),
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: Constants.primaryFont,
+                      ),
                     ),
                     const SizedBox(height: 8),
-                     Text(
+                    Text(
                       project.description!,
                       style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 18,
-                          fontFamily: Constants.primaryFont,
-                          fontWeight: FontWeight.w600,
-
+                        color: Colors.grey,
+                        fontSize: 18,
+                        fontFamily: Constants.primaryFont,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -67,7 +64,7 @@ class ProjectDetailScreen extends StatelessWidget {
                                 style: TextStyle(fontWeight: FontWeight.w500)),
                             const SizedBox(height: 8),
                             // Inside your Column (under "Assigned to")
-                           _assignee()
+                            _assignee()
                           ],
                         ),
                         // Due Date
@@ -75,10 +72,13 @@ class ProjectDetailScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: const [
                             Text("Due date",
-                                style: TextStyle(fontWeight: FontWeight.bold,fontFamily: Constants.primaryFont)),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: Constants.primaryFont)),
                             SizedBox(height: 8),
                             Text("Thursday, 20 July 2023",
-                                style: TextStyle(color: Colors.black,
+                                style: TextStyle(
+                                    color: Colors.black,
                                     fontFamily: Constants.primaryFont)),
                           ],
                         ),
@@ -86,32 +86,38 @@ class ProjectDetailScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 20),
                     _priority(),
-                     const SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     _status(),
                     const SizedBox(height: 30),
-                    Text('Tasks',
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: Constants.primaryFont,
-                        ),
+                    Text(
+                      'Tasks',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: Constants.primaryFont,
+                      ),
                     ),
                     const SizedBox(height: 10),
 
                     // Tasks List
                     Expanded(
-                      child: project.tasks!.isNotEmpty?ListView.builder(
-                          itemCount: project.tasks!.length,
-                          itemBuilder: (context, index) {
-                            Task task = project.tasks![index];
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 7),
-                              child: TaskItem(
-                                  title: task.title!,
-                                  hours: Constants.formatDate(date: task.dueDate!),
-                              ),
-                            );
-                          }, ): const Center(child: Text("No tasks found")),
+                      child: project.tasks!.isNotEmpty
+                          ? ListView.builder(
+                              itemCount: project.tasks!.length,
+                              itemBuilder: (context, index) {
+                                Task task = project.tasks![index];
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 7),
+                                  child: TaskItem(
+                                    title: task.title!,
+                                    hours: Constants.formatDate(
+                                        date: task.dueDate!),
+                                  ),
+                                );
+                              },
+                            )
+                          : const Center(child: Text("No tasks found")),
                     ),
                   ],
                 ),
@@ -135,30 +141,51 @@ class ProjectDetailScreen extends StatelessWidget {
           border: Border.all(color: Colors.grey.withOpacity(0.1), width: 2),
         ),
         child: Row(
+
           children: [
             Expanded(
               child: Stack(
-                children:[ ...List.generate(
-                    project.members!.length > 4 ? 4 : project.members!.length,
-                        (index) {
-                      return Positioned(
-                        left: index * 22.0,
-                        child: project.members![index].profilePic == null
-                            ? CircleAvatar(
-                          backgroundColor: Colors.orange.withOpacity(0.2),
-                          radius: 17,
-                          child: Icon(Icons.person, size: 30, color: Colors.white),
-                        )
-                            : CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 17,
-                          child: CircleAvatar(
-                            radius: 15,
-                            backgroundImage: NetworkImage(project.members![index].profilePic!),
-                          ),
+                children: [
+                  ...List.generate(
+                      project.members!.length > 4 ? 4 : project.members!.length,
+                      (index) {
+                    return Positioned(
+                      left: index * 22.0,
+                      child: project.members![index].profilePic == null
+                          ? CircleAvatar(
+                              radius: 17,
+                              backgroundColor: Colors.white,
+                              child: CircleAvatar(
+                                backgroundColor: Colors.orange,
+                                radius: 15,
+                                child: Icon(Icons.person,
+                                    size: 30, color: Colors.white),
+                              ),
+                            )
+                          : CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 17,
+                              child: CircleAvatar(
+                                radius: 15,
+                                backgroundImage: NetworkImage(
+                                    project.members![index].profilePic!),
+                              ),
+                            ),
+                    );
+                  }),
+                  if (project.members!.length > 4)
+                    Positioned(
+                      top: 4.5,
+                      left: 4.5*22.0,
+                      child: Text(
+                        '+${project.members!.length - 4}',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontFamily: Constants.primaryFont,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
                         ),
-                      );
-                    }
+                      ),
                     ),
                   Positioned(
                     right: 0,
@@ -174,21 +201,13 @@ class ProjectDetailScreen extends StatelessWidget {
                 ],
               ),
             ),
-            if (project.members!.length > 4)
-              Text(
-                '+${project.members!.length - 4}',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontFamily: Constants.primaryFont,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+
           ],
         ),
       ),
     );
   }
+
   void _showAssigneesDialog() {
     final members = project.members ?? [];
     Get.dialog(
@@ -212,16 +231,20 @@ class ProjectDetailScreen extends StatelessWidget {
               return ListTile(
                 leading: user.profilePic != null
                     ? CircleAvatar(
-                  backgroundImage: NetworkImage(user.profilePic!),
-                )
+                        backgroundImage: NetworkImage(user.profilePic!),
+                      )
                     : CircleAvatar(
-                  backgroundColor: Colors.orange.withOpacity(0.3),
-                  child: Icon(Icons.person, color: Colors.white),
-                ),
+                        backgroundColor: Colors.orange.withOpacity(0.3),
+                        child: Icon(Icons.person, color: Colors.white),
+                      ),
                 title: Text('${user.firstName} ${user.lastName}',
                     style: TextStyle(fontFamily: Constants.primaryFont)),
                 subtitle: Text(user.role ?? '',
                     style: TextStyle(fontSize: 12, color: Colors.grey)),
+                trailing: IconButton(onPressed: (){
+                  _confirmRemoveMemberDialog(members[index]);
+                }, icon:
+                    Icon(Icons.delete, color: Colors.red)),
               );
             },
           ),
@@ -245,7 +268,7 @@ class ProjectDetailScreen extends StatelessWidget {
             onPressed: () {
               // Trigger add user logic
               // You can navigate to another screen or show a form
-             // optionally close the dialog
+              // optionally close the dialog
               Get.back();
               _showAddMemberDialog();
             },
@@ -264,7 +287,14 @@ class ProjectDetailScreen extends StatelessWidget {
     String? projectId = project.id;
     String? role;
     Member? selectedMember;
-    List<String> roles = ['PROJECT_OWNER','MEMBER', 'LEADER','DEVELOPER','TESTER','DESIGNER']; // Define your allowed roles
+    List<String> roles = [
+      'PROJECT_OWNER',
+      'MEMBER',
+      'LEADER',
+      'DEVELOPER',
+      'TESTER',
+      'DESIGNER'
+    ];
     Get.dialog(
       AlertDialog(
         backgroundColor: Colors.white,
@@ -288,32 +318,34 @@ class ProjectDetailScreen extends StatelessWidget {
                   isExpanded: true,
                   items: members
                       .where((member) =>
-                  isProjectMember(project.members!, member.userId!)==false)
+                          isProjectMember(project.members!, member.userId!) ==
+                          false)
                       .map((member) => DropdownMenuItem<Member>(
-                    value: member,
-                    child: Row(
-                      children: [
-                        member.user!.profilePic != null
-                            ? CircleAvatar(
-                          radius: 15,
-                          backgroundColor: Colors.black,
-                          child: CircleAvatar(
-                            radius: 14,
-                            backgroundImage:
-                            NetworkImage(member.user!.profilePic!),
-                          ),
-                        )
-                            : const CircleAvatar(
-                          radius: 15,
-                          backgroundColor: Color(0xFFFFE3C5),
-                          child: Icon(Icons.person,
-                              size: 15, color: Colors.white),
-                        ),
-                        SizedBox(width: 10),
-                        Text('${member.user!.firstName} ${member.user!.lastName}'),
-                      ],
-                    ),
-                  ))
+                            value: member,
+                            child: Row(
+                              children: [
+                                member.user!.profilePic != null
+                                    ? CircleAvatar(
+                                        radius: 15,
+                                        backgroundColor: Colors.black,
+                                        child: CircleAvatar(
+                                          radius: 14,
+                                          backgroundImage: NetworkImage(
+                                              member.user!.profilePic!),
+                                        ),
+                                      )
+                                    : const CircleAvatar(
+                                        radius: 15,
+                                        backgroundColor: Color(0xFFFFE3C5),
+                                        child: Icon(Icons.person,
+                                            size: 15, color: Colors.white),
+                                      ),
+                                SizedBox(width: 10),
+                                Text(
+                                    '${member.user!.firstName} ${member.user!.lastName}'),
+                              ],
+                            ),
+                          ))
                       .toList(),
                   onChanged: (Member? value) {
                     setState(() {
@@ -330,9 +362,9 @@ class ProjectDetailScreen extends StatelessWidget {
                     value: role,
                     items: roles
                         .map((role) => DropdownMenuItem<String>(
-                      value: role,
-                      child: Text(role),
-                    ))
+                              value: role,
+                              child: Text(role),
+                            ))
                         .toList(),
                     onChanged: (String? value) {
                       setState(() {
@@ -361,40 +393,47 @@ class ProjectDetailScreen extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: Constants.primaryColor,
             ),
-            onPressed:role != null && selectedMember != null?null: () {
-              if (selectedMember != null && role != null) {
-                ProjectServices.addMember(
-                  projectId: projectId!,
-                  userId: selectedMember!.id,
-                  teamId: team.id!,
-                  role: role!,
-                );
-                print('Selected User: ${selectedMember!.user!.firstName}, Role: $role');
-                Get.back();
-              }
-            },
+            onPressed: role != null && selectedMember != null
+                ? null
+                : () {
+                    if (selectedMember != null && role != null) {
+                      ProjectServices.addMember(
+                        projectId: projectId!,
+                        userId: selectedMember!.user!.id,
+                        teamId: team.id!,
+                        role: role!,
+                      );
+                      print(
+                          'Selected User: ${selectedMember!.user!.firstName}, Role: $role');
+                      Get.back();
+                    }
+                  },
             child: Text('Add', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
     );
   }
-  _confirmRemoveMemberDialog(Member member) {
+
+  _confirmRemoveMemberDialog(MemberModel member) {
     Get.dialog(
       AlertDialog(
         backgroundColor: Colors.white,
-        title: Text('Confirm Removal' ,
+        title: Text(
+          'Confirm Removal',
           style: TextStyle(
             fontFamily: Constants.primaryFont,
             fontWeight: FontWeight.bold,
             color: Constants.primaryColor,
           ),
         ),
-        content: Text('Are you sure you want to remove ${member.user!.firstName} from this team?'),
+        content: Text(
+            'Are you sure you want to remove ${member.firstName} from this Project ?'),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: Text('Cancel' ,
+            child: Text(
+              'Cancel',
               style: TextStyle(
                 color: Constants.primaryColor,
                 fontFamily: Constants.primaryFont,
@@ -407,10 +446,11 @@ class ProjectDetailScreen extends StatelessWidget {
               backgroundColor: Constants.primaryColor,
             ),
             onPressed: () {
-              // TeamServices.removeMember(userId: member.userId!, teamId: team.id!);
-              // Get.back();
+              ProjectServices.removeMember(userId: member.userId!, teamId: project.team!.id!, projectId: project.id!);
+               Get.back();
             },
-            child: Text('Remove' ,
+            child: Text(
+              'Remove',
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -418,7 +458,8 @@ class ProjectDetailScreen extends StatelessWidget {
       ),
     );
   }
-  bool isProjectMember(List<MemberModel> members ,String userId) {
+
+  bool isProjectMember(List<MemberModel> members, String userId) {
     for (var member in members) {
       if (member.userId == userId) {
         return true;
@@ -427,24 +468,27 @@ class ProjectDetailScreen extends StatelessWidget {
     return false;
   }
 
-  _priority(){
+  _priority() {
     return Container(
-      padding: const EdgeInsets.only(top: 15,bottom: 15),
+      padding: const EdgeInsets.only(top: 15, bottom: 15),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.withOpacity(0.1),width: 2),
+        border: Border.all(color: Colors.grey.withOpacity(0.1), width: 2),
       ),
       child: Row(
         children: [
-          Icon(Icons.priority_high, color:
-          project.priority == "HIGH"
-              ? Colors.redAccent
-              : project.priority == "MEDIUM"
-              ? Colors.orangeAccent
-              :
-          Colors.green,),
-          const SizedBox(width: 5,),
+          Icon(
+            Icons.priority_high,
+            color: project.priority == "HIGH"
+                ? Colors.redAccent
+                : project.priority == "MEDIUM"
+                    ? Colors.orangeAccent
+                    : Colors.green,
+          ),
+          const SizedBox(
+            width: 5,
+          ),
           Text("Task Priority    ",
               style: TextStyle(
                   color: Colors.black,
@@ -452,40 +496,43 @@ class ProjectDetailScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold)),
           Text(project.priority!,
               style: TextStyle(
-                  color:
-                  project.priority == "HIGH"
+                  color: project.priority == "HIGH"
                       ? Colors.redAccent
                       : project.priority == "MEDIUM"
-                      ? Colors.orangeAccent
-                      :
-                  Colors.green
-                  ,
+                          ? Colors.orangeAccent
+                          : Colors.green,
                   fontFamily: Constants.primaryFont,
                   fontWeight: FontWeight.bold)),
         ],
       ),
     );
   }
-  _status(){
+
+  _status() {
     return Container(
-      padding: const EdgeInsets.only(top: 15,bottom: 15),
+      padding: const EdgeInsets.only(top: 15, bottom: 15),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.withOpacity(0.1),width: 2),
+        border: Border.all(color: Colors.grey.withOpacity(0.1), width: 2),
       ),
       child: Row(
         children: [
-          Icon(Icons.check_circle, color:
-          project.status == "ACTIVE"
-              ? Colors.blue
-              : project.status == "PLANNING"
-              ? Colors.orangeAccent
-              : project.status == "ON_HOLD"? Colors.purpleAccent:
-               project.status == "COMPLETED"? Colors.blueAccent:
-          Colors.redAccent,
+          Icon(
+            Icons.check_circle,
+            color: project.status == "ACTIVE"
+                ? Colors.blue
+                : project.status == "PLANNING"
+                    ? Colors.orangeAccent
+                    : project.status == "ON_HOLD"
+                        ? Colors.purpleAccent
+                        : project.status == "COMPLETED"
+                            ? Colors.blueAccent
+                            : Colors.redAccent,
           ),
-          const SizedBox(width: 5,),
+          const SizedBox(
+            width: 5,
+          ),
           Text("Task Status    ",
               style: TextStyle(
                   color: Colors.black,
@@ -493,22 +540,24 @@ class ProjectDetailScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold)),
           Text(project.status!,
               style: TextStyle(
-                  color:
-                  project.status == "ACTIVE"
+                  color: project.status == "ACTIVE"
                       ? Colors.blue
                       : project.status == "PLANNING"
-                      ? Colors.orangeAccent
-                      : project.status == "ON_HOLD"? Colors.purpleAccent:
-                  project.status == "COMPLETED"? Colors.blueAccent:
-                  Colors.redAccent,
+                          ? Colors.orangeAccent
+                          : project.status == "ON_HOLD"
+                              ? Colors.purpleAccent
+                              : project.status == "COMPLETED"
+                                  ? Colors.blueAccent
+                                  : Colors.redAccent,
                   fontFamily: Constants.primaryFont,
                   fontWeight: FontWeight.bold)),
         ],
       ),
     );
   }
-  _appBar(){
-    return   Padding(
+
+  _appBar() {
+    return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -523,8 +572,7 @@ class ProjectDetailScreen extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(50),
                   ),
-                  child: Icon(Icons.arrow_back))
-          ),
+                  child: Icon(Icons.arrow_back))),
           const Text(
             "Project Detail",
             style: TextStyle(
@@ -536,21 +584,21 @@ class ProjectDetailScreen extends StatelessWidget {
           ),
           IconButton(
               onPressed: () {
-               Get.to(()=> EditProjectScreen(project: project, teamId: project.team!.id!));
+                Get.to(() => EditProjectScreen(
+                    project: project, teamId: project.team!.id!));
               },
               icon: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color:Constants.primaryColor,
+                    color: Constants.primaryColor,
                     borderRadius: BorderRadius.circular(50),
                   ),
-                  child: Icon(Icons.edit , color: Colors.white,))
-          ),
-
+                  child: Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                  ))),
         ],
       ),
     );
   }
 }
-
-
