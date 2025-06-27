@@ -61,10 +61,10 @@ class CreateTaskController extends GetxController {
     String teamId =  selectedTeamId.value;
     String projectId =  selectedProjectId.value;
 
-    print('http://192.168.1.8:3000/api/organization/$organizationId/team/$teamId/project/$projectId/task/create');
+    print('http://192.168.1.4:3000/api/organization/$organizationId/team/$teamId/project/$projectId/task/create');
     try {
       final response = await dio.post(
-        'http://192.168.1.8:3000/api/organization/$organizationId/team/$teamId/project/$projectId/task/create',
+        'http://192.168.1.4:3000/api/organization/$organizationId/team/$teamId/project/$projectId/task/create',
         data: taskData,
         options: Options(
           headers: {

@@ -16,7 +16,7 @@ class Constants {
   static const String primaryFont = 'NunitoSans';
   static const String imagesPath = 'assets/images/';
   static const String tabsPath = 'assets/images/tabs/';
-  static const String baseUrl =  'https://192.168.1.8:3000/api/';
+  static const String baseUrl =  'https://192.168.1.4:3000/api/';
   static const String signUpUrl = 'auth/signup';
   static const String loginUrl = 'auth/signin';
 

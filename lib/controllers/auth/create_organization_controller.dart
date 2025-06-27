@@ -55,7 +55,7 @@ class CreateOrganizationController extends GetxController {
       final dio = Dio();
       final token = CacheHelper().getData(key: 'accessToken');
       final response = await dio.post(
-        'http://192.168.1.8:3000/api/organization',
+        'http://192.168.1.4:3000/api/organization',
         data: {
           'name': nameController.text,
           'industry': industryController.text,
@@ -98,7 +98,7 @@ class CreateOrganizationController extends GetxController {
     print('check org status');
     try {
       final response = await Dio().get(
-        'http://192.168.1.8:3000/api/organization/status',
+        'http://192.168.1.4:3000/api/organization/status',
         options: Options(
           headers: {
             'authorization': 'Bearer ${CacheHelper().getData(key: 'accessToken')}',
@@ -155,7 +155,7 @@ class CreateOrganizationController extends GetxController {
       final dio = Dio();
       final token = CacheHelper().getData(key: 'accessToken');
       final response = await dio.post(
-        'http://192.168.1.8:3000/api/organization/join',
+        'http://192.168.1.4:3000/api/organization/join',
         data: {
           "joinCode": joinCodeController.text
         },
@@ -182,7 +182,7 @@ class CreateOrganizationController extends GetxController {
     try {
       final refreshToken = CacheHelper().getData(key: 'refreshToken');
       final response = await Dio().post(
-        'http://192.168.1.8:3000/api/auth/refreshAccessToken',
+        'http://192.168.1.4:3000/api/auth/refreshAccessToken',
         data: {
           'refreshToken': refreshToken,
         },

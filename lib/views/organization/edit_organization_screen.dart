@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:task_trial/controllers/auth/create_organization_controller.dart';
 import 'package:task_trial/controllers/profile/organization_controller.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/widgets/edit_photo_button.dart';
@@ -12,144 +11,147 @@ class EditOrganizationScreen extends StatelessWidget {
   const EditOrganizationScreen({super.key});
   @override
   Widget build(BuildContext context) {
-
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return GetBuilder<OrganizationController>(
-        init: OrganizationController(),
-        builder: (controller) {
-          return Scaffold(
-            backgroundColor: Constants.backgroundColor,
-            body: Padding(
-              padding:
-              const EdgeInsets.only(left: 20, right: 20, top: 40, bottom: 40),
-              child: Column(
-                children: [
-                  _appBar(width),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Form(
-                          key:  controller.formKey,
-                          child: Column(children: [
-                            SizedBox(
-                              height: height * 0.02,
-                            ),
-                            _profileImage(controller),
-                            SizedBox(
-                              height: height * 0.02,
-                            ),
-                            _editProfileImage(controller),
-                            SizedBox(
-                              height: height * 0.02,
-                            ),
-                            _buildInputField(
-                                'Organization Name', controller.orgNameController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your name';
-                                  }
-                                  return null;
-                                }),
-                            SizedBox(
-                              height: height * 0.02,
-                            ),
-                            _buildInputField(
-                                'Industry', controller.orgIndustryController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your Industry';
-                                  }
-                                  return null;
-                                }),
-                            SizedBox(
-                              height: height * 0.02,
-                            ),
-                            _buildInputField('Organization Description',
-                                controller.orgDescriptionController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your Description';
-                                  }
-                                  return null;
-                                }),
-                            SizedBox(
-                              height: height * 0.02,
-                            ),
-                            _buildInputField(
-                                'Contact Email', controller.orgEmailController,
-                                // validator: (value) {
-                                //   if (value == null || value.isEmpty) {
-                                //     return 'Please enter your name';
-                                //   }
-                                //   if (!GetUtils.isEmail(value)) {
-                                //     return 'Please enter a valid email';
-                                //   }
-                                //   return null;
-                                // }
-                                ),
-                            SizedBox(
-                              height: height * 0.02,
-                            ),
-                            _buildInputField(
-                                'Contact Phone', controller.orgPhoneController,
-                                // validator: (value) {
-                                //   if (value == null || value.isEmpty) {
-                                //     return 'Please enter your name';
-                                //   }
-                                //
-                                //   return null;
-                                // }
-                                ),
-                            SizedBox(
-                              height: height * 0.02,
-                            ),
-                            _buildInputField(
-                                'Address', controller.orgAddressController,
-                                // validator: (value) {
-                                //   if (value == null || value.isEmpty) {
-                                //     return 'Please enter your name';
-                                //   }
-                                //   return null;
-                                // }
-                                ),
-                            SizedBox(
-                              height: height * 0.02,
-                            ),
-                            _buildInputField(
-                                'Website', controller.orgWebsiteController,
-                                // validator: (value) {
-                                //   if (value == null || value.isEmpty) {
-                                //     return 'Please enter your name';
-                                //   }
-                                //   if (!GetUtils.isURL(value)) {
-                                //     return 'Please enter a valid website';
-                                //   }
-                                //   return null;
-                                // }
-                                ),
-                            // SizedBox(
-                            //   height: height * 0.02,
-                            // ),
-                            // _editSizeRange(controller, 'Size Range',
-                            //     controller.orgSizeRangeController,
-                            //     validator: (value) {
-                            //       if (value == null || value.isEmpty) {
-                            //         return 'Choose a size range';
-                            //       }
-                            //       return null;
-                            //     }),
-                            SizedBox(height: height * 0.04,),
-                            _buildButtons(controller),
-                            SizedBox(height: height * 0.02,),
-
-                          ])),
-                    ),
+      init: OrganizationController(),
+      builder: (controller) {
+        return Scaffold(
+          backgroundColor: Constants.backgroundColor,
+          body: Padding(
+            padding:
+                const EdgeInsets.only(left: 20, right: 20, top: 40, bottom: 40),
+            child: Column(
+              children: [
+                _appBar(width),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Form(
+                        key: controller.formKey,
+                        child: Column(children: [
+                          SizedBox(
+                            height: height * 0.02,
+                          ),
+                          _profileImage(controller),
+                          SizedBox(
+                            height: height * 0.02,
+                          ),
+                          _editProfileImage(controller),
+                          SizedBox(
+                            height: height * 0.02,
+                          ),
+                          _buildInputField(
+                              'Organization Name', controller.orgNameController,
+                              validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your name';
+                            }
+                            return null;
+                          }),
+                          SizedBox(
+                            height: height * 0.02,
+                          ),
+                          _buildInputField(
+                              'Industry', controller.orgIndustryController,
+                              validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your Industry';
+                            }
+                            return null;
+                          }),
+                          SizedBox(
+                            height: height * 0.02,
+                          ),
+                          _buildInputField('Organization Description',
+                              controller.orgDescriptionController,
+                              validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your Description';
+                            }
+                            return null;
+                          }),
+                          SizedBox(
+                            height: height * 0.02,
+                          ),
+                          _buildInputField(
+                            'Contact Email', controller.orgEmailController,
+                            // validator: (value) {
+                            //   if (value == null || value.isEmpty) {
+                            //     return 'Please enter your name';
+                            //   }
+                            //   if (!GetUtils.isEmail(value)) {
+                            //     return 'Please enter a valid email';
+                            //   }
+                            //   return null;
+                            // }
+                          ),
+                          SizedBox(
+                            height: height * 0.02,
+                          ),
+                          _buildInputField(
+                            'Contact Phone', controller.orgPhoneController,
+                            // validator: (value) {
+                            //   if (value == null || value.isEmpty) {
+                            //     return 'Please enter your name';
+                            //   }
+                            //
+                            //   return null;
+                            // }
+                          ),
+                          SizedBox(
+                            height: height * 0.02,
+                          ),
+                          _buildInputField(
+                            'Address', controller.orgAddressController,
+                            // validator: (value) {
+                            //   if (value == null || value.isEmpty) {
+                            //     return 'Please enter your name';
+                            //   }
+                            //   return null;
+                            // }
+                          ),
+                          SizedBox(
+                            height: height * 0.02,
+                          ),
+                          _buildInputField(
+                            'Website', controller.orgWebsiteController,
+                            // validator: (value) {
+                            //   if (value == null || value.isEmpty) {
+                            //     return 'Please enter your name';
+                            //   }
+                            //   if (!GetUtils.isURL(value)) {
+                            //     return 'Please enter a valid website';
+                            //   }
+                            //   return null;
+                            // }
+                          ),
+                          // SizedBox(
+                          //   height: height * 0.02,
+                          // ),
+                          // _editSizeRange(controller, 'Size Range',
+                          //     controller.orgSizeRangeController,
+                          //     validator: (value) {
+                          //       if (value == null || value.isEmpty) {
+                          //         return 'Choose a size range';
+                          //       }
+                          //       return null;
+                          //     }),
+                          SizedBox(
+                            height: height * 0.04,
+                          ),
+                          _buildButtons(controller),
+                          SizedBox(
+                            height: height * 0.02,
+                          ),
+                        ])),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          );
-        },);
+          ),
+        );
+      },
+    );
   }
 
   _appBar(double width) {
@@ -187,7 +189,7 @@ class EditOrganizationScreen extends StatelessWidget {
               radius: 50,
               backgroundColor: Color(0xFFFFE3C5),
               child: Icon(Icons.account_balance_rounded,
-                  size: 50, color: Colors.brown),
+                  size: 50, color: Colors.white),
             )
           : controller.logoImage == null &&
                   (controller.org.logoUrl != null &&
@@ -211,6 +213,7 @@ class EditOrganizationScreen extends StatelessWidget {
                 ),
     );
   }
+
   _editProfileImage(OrganizationController controller) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

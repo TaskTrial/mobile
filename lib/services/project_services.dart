@@ -14,10 +14,10 @@ class ProjectServices {
     ,required String projectId
  })async{
    String orgId = CacheHelper().getData(key: 'orgId');
-   print('http://192.168.1.8:3000/api/organization/$orgId/team/$teamId/project/$projectId/removeMembe');
+   print('http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/project/$projectId/removeMembe');
    try {
      final response = await Dio().delete(
-       'http://192.168.1.8:3000/api/organization/$orgId/team/$teamId/project/$projectId/removeMember',
+       'http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/project/$projectId/removeMember',
        options: Options(
          headers: {
            'authorization':
@@ -54,10 +54,10 @@ class ProjectServices {
      }
    ];
    print(userIds);
-   print('http://192.168.1.8:3000/api/organization/$orgId/team/$teamId/project/$projectId/addMember');
+   print('http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/project/$projectId/addMember');
    try {
      final response = await Dio().post(
-         'http://192.168.1.8:3000/api/organization/$orgId/team/$teamId/project/$projectId/addMember',
+         'http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/project/$projectId/addMember',
          options: Options(
            headers: {
              'authorization':
@@ -103,10 +103,10 @@ class ProjectServices {
     };
     String organizationId = CacheHelper().getData(key: 'orgId');
     String teamId =  selectedTeamId.value;
-    print('http://192.168.1.8:3000/organization/$organizationId/team/$teamId/project');
+    print('http://192.168.1.4:3000/organization/$organizationId/team/$teamId/project');
     try {
       final response = await dio.post(
-        'http://192.168.1.8:3000/api/organization/$organizationId/team/$teamId/project',
+        'http://192.168.1.4:3000/api/organization/$organizationId/team/$teamId/project',
         data: projectData,
         options: Options(
           headers: {
@@ -131,7 +131,7 @@ static Future<void> deleteProjectData({required String teamId,
    String orgId = CacheHelper().getData(key: 'orgId');
    try {
      final response = await Dio().delete(
-       'http://192.168.1.8:3000/api/organization/$orgId/team/$teamId/project/$projectId/delete',
+       'http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/project/$projectId/delete',
        options: Options(
          headers: {
            'authorization':
@@ -162,7 +162,7 @@ static Future<void> deleteProjectData({required String teamId,
    final orgId = CacheHelper().getData(key: 'orgId');
    try {
      final response = await Dio().put(
-       'http://192.168.1.8:3000/api/organization/$orgId/team/$teamId/project/$projectId',
+       'http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/project/$projectId',
        options: Options(
          headers: {
            'authorization':

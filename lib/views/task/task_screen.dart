@@ -281,7 +281,7 @@ class TaskScreen extends StatelessWidget {
           ),
           _buildActionItem(
             icon: Icons.edit,
-            label: 'Edit Project',
+            label: 'Edit Task',
             color: Constants.primaryColor,
             onTap: () {
               Get.back();
@@ -291,7 +291,7 @@ class TaskScreen extends StatelessWidget {
           const SizedBox(height: 12),
           _buildActionItem(
             icon: Icons.delete,
-            label: 'Delete Project',
+            label: 'Delete Task',
             color: Colors.red,
             onTap: () {
               Get.back();

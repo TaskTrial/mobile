@@ -17,9 +17,9 @@ class EditTaskController extends GetxController {
     isLoading.value = true;
     final orgId = CacheHelper().getData(key: 'orgId');
     try {
-      print('http://192.168.1.8:3000/api/organization/$orgId/team/$teamId/project/$projectId/task/$taskId');
+      print('http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/project/$projectId/task/$taskId');
       final response = await Dio().put(
-        'http://192.168.1.8:3000/api/organization/$orgId/team/$teamId/project/$projectId/task/$taskId',
+        'http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/project/$projectId/task/$taskId',
         options: Options(
           headers: {
             'authorization':

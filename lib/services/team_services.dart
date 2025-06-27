@@ -12,10 +12,10 @@ class TeamServices {
   static Future<void> removeMember({required String userId ,required String teamId
   })async{
     String orgId = CacheHelper().getData(key: 'orgId');
-    print('http://192.168.1.8:3000/api/organization/$orgId/team/$teamId/members/$userId');
+    print('http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/members/$userId');
     try {
       final response = await Dio().delete(
-          'http://192.168.1.8:3000/api/organization/$orgId/team/$teamId/members/$userId',
+          'http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/members/$userId',
           options: Options(
             headers: {
               'authorization':
@@ -51,7 +51,7 @@ class TeamServices {
     ];
     try {
       final response = await Dio().post(
-          'http://192.168.1.8:3000/api/organization/$orgId/team/$teamId/addMember',
+          'http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/addMember',
           options: Options(
             headers: {
               'authorization':
