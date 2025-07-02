@@ -148,7 +148,7 @@ class ProjectDetailScreen extends StatelessWidget {
                 children: [
                   // Show up to 4 avatars
                   ...List.generate(
-                    project.members!.length > 4 ? 4 : project.members!.length,
+                    project.memberCount! > 4 ? 4 : project.memberCount!,
                     (index) {
                       print('project.members:');
                       project.members?.forEach((m) => print('${m.firstName} ${m.lastName}'));
@@ -182,7 +182,7 @@ class ProjectDetailScreen extends StatelessWidget {
                   ),
 
                   // +X indicator
-                  if (project.members!.length > 4)
+                  if (project.memberCount! > 4)
                     Positioned(
                       left: 4 * 22.0,
                       child: CircleAvatar(
@@ -192,7 +192,7 @@ class ProjectDetailScreen extends StatelessWidget {
                           radius: 15,
                           backgroundColor: Colors.grey.shade400,
                           child: Text(
-                            '+${project.members!.length - 4}',
+                            '+${project.memberCount! - 4}',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 12,

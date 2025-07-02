@@ -22,7 +22,7 @@ class MainViewController extends GetxController {
   final isLoading = false.obs;
   final PageController pageController = PageController(initialPage: 0);
   late List<Widget> pages;
-  final List<String> pageNames = ['Dashboard', 'Projects', 'Chat', 'Tasks', 'More'];
+  final List<String> pageNames = ['Dashboard', 'Projects',  'Tasks', 'More'];
   UserModel userModel = UserModel();
   OrganizationModel organizationModel = OrganizationModel();
   DepartmentsModel departmentsModel = DepartmentsModel();
@@ -45,7 +45,7 @@ class MainViewController extends GetxController {
         tasks: tasks,
       ),
       ProjectScreen(projects: projectModel,teams: teamsModel.data!.teams!,),
-      ChatScreen(),
+
       TaskScreen(tasks: tasks,projects: projectModel,),
       MoreScreen(organization: organizationModel , departments: departmentsModel,teams: teamsModel,),
     ];

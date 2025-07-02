@@ -141,8 +141,11 @@ class TaskScreen extends StatelessWidget {
         );
       },
       onTap: (){
-        print(teamId);
-        Get.to(()=>TaskDetailScreen(task: task,teamId:teamId ,));
+        // method to get project by id
+         ProjectModel? project = projects.firstWhere(
+          (p) => p.id == task.project!.id,
+          orElse: () => ProjectModel(),);
+        Get.to(()=>TaskDetailScreen(task: task,teamId:teamId,project: project));
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
@@ -181,37 +184,27 @@ class TaskScreen extends StatelessWidget {
                 const SizedBox(width: 6),
                 Text(Constants.formatDate(date: task.dueDate!), style: const TextStyle(fontSize: 12)),
                 const Spacer(),
-                SizedBox(
-                  width:
-                  122, // You can adjust this depending on how many avatars
-                  height: 35,
-                  child:
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Expanded(
-                        child: Stack(
-                          alignment: Alignment.topRight,
-                          children: List.generate(3, (index) {
-                            return Positioned(
-                              right: index * 22.0,
-                              child: CircleAvatar(
-                                backgroundColor: Colors.white,
-                                radius: 17,
-                                child: CircleAvatar(
-                                  radius: 15,
-                                  backgroundColor: Colors.orangeAccent.withOpacity(0.5),
-                                  child: Icon(Icons.person,color: Colors.white,),
-                                ),
-                              ),
-                            );
-                          }),
-                        ),
-                      ),
+                task.assignee != null ?
+                    task.assignee!.profilePic != null
+                        ? CircleAvatar(
+                            radius: 16,
+                            backgroundImage: NetworkImage(task.assignee!.profilePic!),
+                          )
+                        : CircleAvatar(
+                            radius: 16,
+                            backgroundColor: Constants.primaryColor.withOpacity(0.8),
+                            child: Text(
+                              task.assignee!.firstName!.substring(0, 1),
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontFamily: Constants.primaryFont,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              )
+                            )
+                        ) :
+                    SizedBox()
 
-                    ],
-                  ),
-                ),
               ],
             ),
           ],
@@ -284,8 +277,12 @@ class TaskScreen extends StatelessWidget {
             label: 'Edit Task',
             color: Constants.primaryColor,
             onTap: () {
+              ProjectModel? project = projects.firstWhere(
+                    (p) => p.id == task.project!.id,
+                orElse: () => ProjectModel(),);
+
               Get.back();
-              Get.to(() => EditTaskScreen(task: task,teamId: teamId,));
+              Get.to(() => EditTaskScreen(task: task,teamId: teamId,project: project!,));
             },
           ),
           const SizedBox(height: 12),

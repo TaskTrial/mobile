@@ -27,6 +27,7 @@ class TaskController extends GetxController {
    return '';
  }
 
+
   void setTasks(List<TaskModel> newTasks) {
     tasks.value = newTasks;
     filterTasks();

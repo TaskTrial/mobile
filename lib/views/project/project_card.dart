@@ -122,8 +122,8 @@ class ProjectCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Stack(
-                        children: List.generate(project.members!.length>4? 4:project.members!.length, (index) {
-                         print(project.members!.length);
+                        children: List.generate(project.memberCount!>4? 4:project.memberCount!, (index) {
+                         print(project.memberCount!);
                           return Positioned(
                             left: index * 22.0,
                             child:
@@ -153,8 +153,8 @@ class ProjectCard extends StatelessWidget {
                         }),
                       ),
                     ),
-                    if (project.members!.length > 4)
-                      Text('+${project.members!.length - 4}',
+                    if (project.memberCount! > 4)
+                      Text('+${project.memberCount! - 4}',
                           style: TextStyle(color: Colors.grey,
                               fontFamily: Constants.primaryFont,
                               fontSize: 16,

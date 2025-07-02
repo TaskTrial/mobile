@@ -9,7 +9,8 @@ import '../../utils/constants.dart';
 class EditTaskScreen extends StatelessWidget {
   final String teamId;
   final TaskModel task;
-  EditTaskScreen({super.key,  required this.teamId, required this.task});
+  final ProjectModel project;
+  EditTaskScreen({super.key,  required this.teamId, required this.task, required this.project});
   final formKey = GlobalKey<FormState>();
   final Map<String,Widget> icons={
     "LOW":const Icon(Icons.arrow_downward,color: Colors.greenAccent,),
@@ -29,6 +30,16 @@ class EditTaskScreen extends StatelessWidget {
     final descriptionController = TextEditingController(text: task.description);
     final RxString priority = (task.priority ?? "LOW").obs;
     final RxString status = (task.status ?? "TODO").obs;
+    final Rx<MemberModel> selectedAssignee = Rx<MemberModel>(
+        (task.assignee != null
+            ? (project.members ?? []).firstWhereOrNull(
+                (member) => member.userId == task.assignee!.id)
+            : null) ?? MemberModel(firstName: 'Not', lastName: 'Assigned')
+    );
+
+
+
+
     final Rx<DateTime> dueDate = DateTime.parse(task.dueDate ?? DateTime.now().toIso8601String()).obs;
     final controller = Get.put(EditTaskController());
     return Scaffold(
@@ -64,6 +75,10 @@ class EditTaskScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 Obx(() => _buildDatePicker("Due Date", dueDate, context)),
                 const SizedBox(height: 16),
+                Obx(() => _buildMemberDropdown("Assign To", selectedAssignee, project.members ?? [])),
+                const SizedBox(height: 16),
+
+
                 _buildLabelsField(labels, labelController),
                 const SizedBox(height: 24),
                 Obx(() => controller.isLoading.value
@@ -78,6 +93,7 @@ class EditTaskScreen extends StatelessWidget {
                   status.value,
                   dueDate.value,
                   labels.toList(),
+                  selectedAssignee.value.userId ?? '',
                 )),
               ],
             ),
@@ -168,6 +184,58 @@ class EditTaskScreen extends StatelessWidget {
       ],
     );
   }
+
+  Widget _buildMemberDropdown(String label, Rx<MemberModel> selected, List<MemberModel> members) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: Constants.primaryFont)),
+        const SizedBox(height: 6),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: DropdownButton<MemberModel>(
+            isExpanded: true,
+            value: members.contains(selected.value) ? selected.value : null,
+            dropdownColor: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            underline: const SizedBox(),
+            icon: const Icon(Icons.arrow_drop_down),
+            onChanged: (newValue) {
+              if (newValue != null) selected.value = newValue;
+            },
+            items: members.map((member) {
+              return DropdownMenuItem<MemberModel>(
+                value: member,
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 14,
+                      backgroundColor: Colors.grey.shade200,
+                      backgroundImage: member.profilePic != null
+                          ? NetworkImage(member.profilePic!)
+                          : null,
+                      child: member.profilePic == null
+                          ? const Icon(Icons.person, size: 16, color: Colors.white)
+                          : null,
+                    ),
+                    const SizedBox(width: 8),
+                    Text('${member.firstName ?? ''} ${member.lastName ?? ''}',
+                        style: const TextStyle(fontFamily: Constants.primaryFont)),
+                  ],
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+
   Widget _buildDatePicker(String label, Rx<DateTime> selectedDate, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,6 +282,7 @@ class EditTaskScreen extends StatelessWidget {
       String status,
       DateTime dueDate,
       List<String> labels,
+      String assignedTo
       ) {
     return ElevatedButton(
       onPressed: () {
@@ -230,6 +299,7 @@ class EditTaskScreen extends StatelessWidget {
                 "status": status,
               "dueDate": dueDate.toIso8601String(),
               "labels": labels,
+              "assignedTo": assignedTo,
             },
           );
         }
@@ -311,6 +381,7 @@ class EditTaskScreen extends StatelessWidget {
       ],
     );
   }
+
 
 
 }

@@ -10,9 +10,10 @@ import '../../models/task_model.dart';
 import 'edit_task_screen.dart';
 
 class TaskDetailScreen extends StatelessWidget {
-  const TaskDetailScreen({super.key,required this.task, required this.teamId});
+  const TaskDetailScreen({super.key,required this.task, required this.teamId, required this.project});
   final TaskModel task;
   final String teamId;
+  final ProjectModel project;
   @override
   Widget build(BuildContext context) {
 
@@ -65,41 +66,36 @@ class TaskDetailScreen extends StatelessWidget {
                             children: [
                               const Text("Assigned to",
                                   style: TextStyle(fontWeight: FontWeight.w500)),
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 5),
                               // Inside your Column (under "Assigned to")
-                  
-                              SizedBox(
-                                width: 120, // You can adjust this depending on how many avatars
-                                height: 40,
-                                child:
-                                // teamImages.isNotEmpty || teamImages!= null ?
-                                // Row(
-                                //   children: [
-                                //     Expanded(
-                                //       child: Stack(
-                                //         children: List.generate(teamImages.length>4?4:teamImages.length, (index) {
-                                //           return Positioned(
-                                //             left: index * 22.0,
-                                //             child: CircleAvatar(
-                                //               backgroundColor: Colors.white,
-                                //               radius: 17,
-                                //               child: CircleAvatar(
-                                //                 radius: 15,
-                                //                 backgroundImage: NetworkImage(teamImages[index]),
-                                //               ),
-                                //             ),
-                                //           );
-                                //         }),
-                                //       ),
-                                //     ),
-                                //     if (teamImages.length > 4)
-                                //       Text('+${teamImages.length - 4}',
-                                //           style: TextStyle(color: Colors.grey)),
-                                //   ],
-                                // )
-                                //     :
-                                const Center(child: Text("No team members found")),
-                              ),
+                              task.assignee == null ?
+                              Text("Not assigned yet !",
+                                  style: TextStyle(
+                                      fontFamily: Constants.primaryFont,
+                                      fontWeight: FontWeight.w500)):
+                            Row(
+                              children: [
+                               CircleAvatar(
+                                  radius: 20,
+                                  backgroundColor: Constants.primaryColor.withOpacity(0.5),
+                                  child: task.assignee!.profilePic != null && task.assignee!.profilePic!.isNotEmpty
+                                      ? CircleAvatar(
+                                    radius: 18,
+                                    backgroundImage: NetworkImage(task.assignee!.profilePic!),
+                                  )
+                                      : Icon(Icons.person, color: Colors.white,),
+                                ),
+                                const SizedBox(width: 10),
+                                Text('${task.assignee!.firstName!} ${task.assignee!.lastName!}',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: Constants.primaryFont,
+                                        fontWeight: FontWeight.bold)
+
+
+                               )
+                              ],
+                            )
                             ],
                           ),
                           // Due Date
@@ -188,7 +184,7 @@ class TaskDetailScreen extends StatelessWidget {
           ),
           IconButton(
               onPressed: () {
-               Get.to(()=> EditTaskScreen(task: task,teamId: teamId,) );
+               Get.to(()=> EditTaskScreen(task: task,teamId: teamId,project:  project,) );
               },
               icon: Container(
                   padding: const EdgeInsets.all(8),
@@ -423,6 +419,8 @@ class TaskDetailScreen extends StatelessWidget {
       ),
     );
   }
+
+
 
 
 
