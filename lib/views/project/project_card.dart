@@ -11,6 +11,7 @@ import '../../utils/constants.dart';
 class ProjectCard extends StatelessWidget {
   final ProjectModel project;
   final Team team ;
+
   const ProjectCard({
     super.key, required this.project, required this.team,
   }) ;
@@ -122,12 +123,12 @@ class ProjectCard extends StatelessWidget {
                     Expanded(
                       child: Stack(
                         children: List.generate(project.members!.length>4? 4:project.members!.length, (index) {
+                         print(project.members!.length);
                           return Positioned(
                             left: index * 22.0,
                             child:
                             project.members![index].profilePic == null ||
                                 project.members![index].profilePic == ""
-
                             ?
                                 CircleAvatar(
                               backgroundColor: Colors.white,
@@ -137,7 +138,6 @@ class ProjectCard extends StatelessWidget {
                                     size: 30,
                                     color: Colors.grey.withValues(alpha: 0.5),
                                   ),
-
                                 )
                             :CircleAvatar(
                               backgroundColor: Colors.white,
@@ -159,7 +159,6 @@ class ProjectCard extends StatelessWidget {
                               fontFamily: Constants.primaryFont,
                               fontSize: 16,
                               fontWeight: FontWeight.w600)),
-
                   ],
                 )
                 // Text(project.memberCount!=0?'Number of members :${project.memberCount}':'No team members found!'),
@@ -179,7 +178,7 @@ class ProjectCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text('${project.progress} hours',
+                  Text('${project.progress}% Progress',
                       style: const TextStyle(
                           fontWeight: FontWeight.w500, color: Color(0xFF3E4ADE))),
                 ],

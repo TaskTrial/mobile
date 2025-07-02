@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:task_trial/models/project_model.dart';
 import 'package:task_trial/models/teams_model.dart';
 import 'package:task_trial/services/project_services.dart';
+import 'package:task_trial/utils/cache_helper.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/project/edit_project_screen.dart';
 import 'package:task_trial/views/project/task_item.dart';
@@ -141,52 +142,68 @@ class ProjectDetailScreen extends StatelessWidget {
           border: Border.all(color: Colors.grey.withOpacity(0.1), width: 2),
         ),
         child: Row(
-
           children: [
             Expanded(
               child: Stack(
                 children: [
+                  // Show up to 4 avatars
                   ...List.generate(
-                      project.members!.length > 4 ? 4 : project.members!.length,
-                      (index) {
-                    return Positioned(
-                      left: index * 22.0,
-                      child: project.members![index].profilePic == null
-                          ? CircleAvatar(
-                              radius: 17,
-                              backgroundColor: Colors.white,
-                              child: CircleAvatar(
-                                backgroundColor: Colors.orange,
-                                radius: 15,
-                                child: Icon(Icons.person,
-                                    size: 30, color: Colors.white),
+                    project.members!.length > 4 ? 4 : project.members!.length,
+                    (index) {
+                      print('project.members:');
+                      project.members?.forEach((m) => print('${m.firstName} ${m.lastName}'));
+                      print('Count: ${project.members?.length}');
+
+                      return Positioned(
+                        left: index * 22.0,
+                        child: project.members![index].profilePic == null
+                            ? CircleAvatar(
+                                radius: 17,
+                                backgroundColor: Colors.white,
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.orange,
+                                  radius: 15,
+                                  child: Icon(Icons.person,
+                                      size: 16, color: Colors.white),
+                                ),
+                              )
+                            : CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: 17,
+                                child: CircleAvatar(
+                                  radius: 15,
+                                  backgroundImage: NetworkImage(
+                                    project.members![index].profilePic!,
+                                  ),
+                                ),
                               ),
-                            )
-                          : CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 17,
-                              child: CircleAvatar(
-                                radius: 15,
-                                backgroundImage: NetworkImage(
-                                    project.members![index].profilePic!),
-                              ),
-                            ),
-                    );
-                  }),
+                      );
+                    },
+                  ),
+
+                  // +X indicator
                   if (project.members!.length > 4)
                     Positioned(
-                      top: 4.5,
-                      left: 4.5*22.0,
-                      child: Text(
-                        '+${project.members!.length - 4}',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontFamily: Constants.primaryFont,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                      left: 4 * 22.0,
+                      child: CircleAvatar(
+                        radius: 17,
+                        backgroundColor: Colors.white,
+                        child: CircleAvatar(
+                          radius: 15,
+                          backgroundColor: Colors.grey.shade400,
+                          child: Text(
+                            '+${project.members!.length - 4}',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: Constants.primaryFont,
+                            ),
+                          ),
                         ),
                       ),
                     ),
+                  // Add button on the far right
                   Positioned(
                     right: 0,
                     child: GestureDetector(
@@ -194,14 +211,13 @@ class ProjectDetailScreen extends StatelessWidget {
                       child: CircleAvatar(
                         backgroundColor: Constants.primaryColor,
                         radius: 17,
-                        child: Icon(Icons.add, size: 30, color: Colors.white),
+                        child: Icon(Icons.add, size: 20, color: Colors.white),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
-
           ],
         ),
       ),
@@ -241,10 +257,13 @@ class ProjectDetailScreen extends StatelessWidget {
                     style: TextStyle(fontFamily: Constants.primaryFont)),
                 subtitle: Text(user.role ?? '',
                     style: TextStyle(fontSize: 12, color: Colors.grey)),
-                trailing: IconButton(onPressed: (){
-                  _confirmRemoveMemberDialog(members[index]);
-                }, icon:
-                    Icon(Icons.delete, color: Colors.red)),
+                trailing: user.userId != CacheHelper().getData(key: 'id')
+                    ? IconButton(
+                        onPressed: () {
+                          _confirmRemoveMemberDialog(members[index]);
+                        },
+                        icon: Icon(Icons.delete, color: Colors.red))
+                    : const SizedBox.shrink(),
               );
             },
           ),
@@ -285,8 +304,7 @@ class ProjectDetailScreen extends StatelessWidget {
   void _showAddMemberDialog() {
     final members = team.members ?? [];
     String? projectId = project.id;
-    String? role;
-    Member? selectedMember;
+    String? teamId = team.id;
     List<String> roles = [
       'PROJECT_OWNER',
       'MEMBER',
@@ -295,11 +313,16 @@ class ProjectDetailScreen extends StatelessWidget {
       'TESTER',
       'DESIGNER'
     ];
+
+    Map<Member, String?> selectedMembersWithRoles = {};
+    TextEditingController searchController = TextEditingController();
+    String searchQuery = '';
+
     Get.dialog(
       AlertDialog(
         backgroundColor: Colors.white,
         title: Text(
-          'Assign Member To Project',
+          'Assign Members To Project',
           style: TextStyle(
             fontFamily: Constants.primaryFont,
             fontWeight: FontWeight.bold,
@@ -307,73 +330,121 @@ class ProjectDetailScreen extends StatelessWidget {
         ),
         content: StatefulBuilder(
           builder: (context, setState) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                DropdownButton<Member>(
-                  borderRadius: BorderRadius.circular(10),
-                  dropdownColor: Colors.white,
-                  hint: Text('Select User'),
-                  value: selectedMember,
-                  isExpanded: true,
-                  items: members
-                      .where((member) =>
-                          isProjectMember(project.members!, member.userId!) ==
-                          false)
-                      .map((member) => DropdownMenuItem<Member>(
-                            value: member,
-                            child: Row(
-                              children: [
-                                member.user!.profilePic != null
-                                    ? CircleAvatar(
-                                        radius: 15,
-                                        backgroundColor: Colors.black,
-                                        child: CircleAvatar(
-                                          radius: 14,
-                                          backgroundImage: NetworkImage(
-                                              member.user!.profilePic!),
-                                        ),
-                                      )
-                                    : const CircleAvatar(
-                                        radius: 15,
-                                        backgroundColor: Color(0xFFFFE3C5),
-                                        child: Icon(Icons.person,
-                                            size: 15, color: Colors.white),
-                                      ),
-                                SizedBox(width: 10),
-                                Text(
-                                    '${member.user!.firstName} ${member.user!.lastName}'),
-                              ],
-                            ),
-                          ))
-                      .toList(),
-                  onChanged: (Member? value) {
-                    setState(() {
-                      selectedMember = value;
-                      role = null; // reset role if user changes
-                    });
-                  },
-                ),
-                if (selectedMember != null) ...[
-                  SizedBox(height: 10),
-                  DropdownButton<String>(
-                    isExpanded: true,
-                    hint: Text('Select Role'),
-                    value: role,
-                    items: roles
-                        .map((role) => DropdownMenuItem<String>(
-                              value: role,
-                              child: Text(role),
-                            ))
-                        .toList(),
-                    onChanged: (String? value) {
+            List<Member> filteredMembers = members
+                .where((member) =>
+                    isProjectMember(project.members!, member.userId!) ==
+                        false &&
+                    ('${member.user?.firstName ?? ''} ${member.user?.lastName ?? ''}')
+                        .toLowerCase()
+                        .contains(searchQuery.toLowerCase()))
+                .toList();
+
+            return SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Search Bar
+                  TextField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Search by name...',
+                      prefixIcon: Icon(Icons.search),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          color: Colors.grey.withOpacity(0.5),
+                          width: 1,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          color: Constants.primaryColor,
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    onChanged: (value) {
                       setState(() {
-                        role = value;
+                        searchQuery = value;
                       });
                     },
                   ),
+                  const SizedBox(height: 10),
+                  //  Member List with Checkboxes and Roles
+                  ...filteredMembers.map((member) {
+                    final isSelected =
+                        selectedMembersWithRoles.containsKey(member);
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Checkbox(
+                              value: isSelected,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  if (value == true) {
+                                    selectedMembersWithRoles[member] = null;
+                                  } else {
+                                    selectedMembersWithRoles.remove(member);
+                                  }
+                                });
+                              },
+                            ),
+                            if (member.user?.profilePic != null)
+                              CircleAvatar(
+                                radius: 15,
+                                backgroundImage:
+                                    NetworkImage(member.user!.profilePic!),
+                              )
+                            else
+                              const CircleAvatar(
+                                radius: 15,
+                                backgroundColor: Color(0xFFFFE3C5),
+                                child: Icon(Icons.person,
+                                    size: 15, color: Colors.white),
+                              ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                '${member.user?.firstName ?? ''} ${member.user?.lastName ?? ''}',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (isSelected)
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(left: 40.0, bottom: 10),
+                            child: DropdownButton<String>(
+                              isExpanded: true,
+                              hint: const Text('Select Role'),
+                              value: selectedMembersWithRoles[member],
+                              items: roles
+                                  .map((role) => DropdownMenuItem<String>(
+                                        value: role,
+                                        child: Text(role),
+                                      ))
+                                  .toList(),
+                              onChanged: (String? value) {
+                                setState(() {
+                                  selectedMembersWithRoles[member] = value;
+                                });
+                              },
+                            ),
+                          ),
+                      ],
+                    );
+                  }).toList(),
                 ],
-              ],
+              ),
             );
           },
         ),
@@ -393,22 +464,32 @@ class ProjectDetailScreen extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: Constants.primaryColor,
             ),
-            onPressed: role != null && selectedMember != null
-                ? null
-                : () {
-                    if (selectedMember != null && role != null) {
-                      ProjectServices.addMember(
-                        projectId: projectId!,
-                        userId: selectedMember!.user!.id,
-                        teamId: team.id!,
-                        role: role!,
-                      );
-                      print(
-                          'Selected User: ${selectedMember!.user!.firstName}, Role: $role');
-                      Get.back();
-                    }
-                  },
-            child: Text('Add', style: TextStyle(color: Colors.white)),
+            onPressed: () {
+              final validMembers = selectedMembersWithRoles.entries
+                  .where((entry) => entry.value != null)
+                  .map((entry) => {
+                        "userId": entry.key.userId!,
+                        "role": entry.value!,
+                      })
+                  .toList();
+
+              if (validMembers.isNotEmpty) {
+                ProjectServices.addMembers(
+                  projectId: projectId!,
+                  teamId: teamId!,
+                  userRoles: validMembers,
+                );
+                print('Added project members: $validMembers');
+                Get.back();
+              } else {
+                Get.snackbar(
+                    "Validation", "Please select roles for selected members.");
+              }
+            },
+            child: Text(
+              'Add',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -446,8 +527,11 @@ class ProjectDetailScreen extends StatelessWidget {
               backgroundColor: Constants.primaryColor,
             ),
             onPressed: () {
-              ProjectServices.removeMember(userId: member.userId!, teamId: project.team!.id!, projectId: project.id!);
-               Get.back();
+              ProjectServices.removeMember(
+                  userId: member.userId!,
+                  teamId: project.team!.id!,
+                  projectId: project.id!);
+              Get.back();
             },
             child: Text(
               'Remove',

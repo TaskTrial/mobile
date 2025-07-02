@@ -40,46 +40,41 @@ class TeamServices {
   }
 
 
-  static Future<void> addMember({required userId ,required String teamId
-  ,required String role
-  })async{
+  static Future<void> addMembers({
+    required String teamId,
+    required List<Map<String, String>> users,
+  }) async {
     String orgId = CacheHelper().getData(key: 'orgId');
-    List<Map<String,String>> userIds = [
-      { "userId": userId,
-        "role": role
-      }
-    ];
     try {
       final response = await Dio().post(
-          'http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/addMember',
-          options: Options(
-            headers: {
-              'authorization':
-              'Bearer ${CacheHelper().getData(key: 'accessToken')}',
-            },
-          ),
-          data: {
-            "members": userIds,
-          });
+        'http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/addMember',
+        options: Options(
+          headers: {
+            'authorization': 'Bearer ${CacheHelper().getData(key: 'accessToken')}',
+          },
+        ),
+        data: {
+          "members": users,
+        },
+      );
+
       Constants.successSnackBar(
-          title: 'Success', message: '$role Added Successfully !');
+          title: 'Success', message: 'Users Added Successfully!');
       Get.delete<MainViewController>();
       Get.offAll(
             () => MainViewScreen(),
         transition: Transition.fade,
         duration: const Duration(milliseconds: 300),
       );
-    }
-    on DioException catch (e)
-    {
+    } on DioException catch (e) {
       _handleError(e);
     }
-
   }
 
 
 
- static  void _handleError(DioException e){
+
+  static  void _handleError(DioException e){
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
         Constants.errorSnackBar(

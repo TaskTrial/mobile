@@ -380,15 +380,13 @@ class SingleTeamScreen extends StatelessWidget {
   void _showAddOwnerDialog(OrganizationModel org) {
     final users = org.users ?? [];
     String? teamId = team.id;
-    String? role;
-    User? selectedUser;
-    List<String> roles = ['MEMBER', 'LEADER']; // Define your allowed roles
-
+    Map<User, String?> selectedUsersWithRoles = {};
+    List<String> roles = ['MEMBER', 'LEADER'];
     Get.dialog(
       AlertDialog(
         backgroundColor: Colors.white,
         title: Text(
-          'Select User to Add as Team Member',
+          'Select Users to Add as Team Members',
           style: TextStyle(
             fontFamily: Constants.primaryFont,
             fontWeight: FontWeight.bold,
@@ -396,71 +394,77 @@ class SingleTeamScreen extends StatelessWidget {
         ),
         content: StatefulBuilder(
           builder: (context, setState) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                DropdownButton<User>(
-                  borderRadius: BorderRadius.circular(10),
-                  dropdownColor: Colors.white,
-                  hint: Text('Select User'),
-                  value: selectedUser,
-                  isExpanded: true,
-                  items: users
-                      .where((user) =>
-                  user.isOwner != true && isTeamMember(team.members!,user.id!)==false)
-                      .map((user) => DropdownMenuItem<User>(
-                    value: user,
-                    child: Row(
-                      children: [
-                        user.profilePic != null
-                            ? CircleAvatar(
-                          radius: 15,
-                          backgroundColor: Colors.black,
-                          child: CircleAvatar(
-                            radius: 14,
-                            backgroundImage:
-                            NetworkImage(user.profilePic!),
+            return SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: users
+                    .where((user) =>
+                user.isOwner != true &&
+                    isTeamMember(team.members!, user.id!) == false)
+                    .map((user) {
+                  final isSelected = selectedUsersWithRoles.containsKey(user);
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: isSelected,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                if (value == true) {
+                                  selectedUsersWithRoles[user] = null;
+                                } else {
+                                  selectedUsersWithRoles.remove(user);
+                                }
+                              });
+                            },
                           ),
-                        )
-                            : const CircleAvatar(
-                          radius: 15,
-                          backgroundColor: Color(0xFFFFE3C5),
-                          child: Icon(Icons.person,
-                              size: 15, color: Colors.white),
+                          if (user.profilePic != null)
+                            CircleAvatar(
+                              radius: 15,
+                              backgroundImage: NetworkImage(user.profilePic!),
+                            )
+                          else
+                            const CircleAvatar(
+                              radius: 15,
+                              backgroundColor: Color(0xFFFFE3C5),
+                              child: Icon(Icons.person,
+                                  size: 15, color: Colors.white),
+                            ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              '${user.firstName} ${user.lastName}',
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (isSelected)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 40.0, bottom: 10),
+                          child: DropdownButton<String>(
+                            isExpanded: true,
+                            hint: const Text('Select Role'),
+                            value: selectedUsersWithRoles[user],
+                            items: roles
+                                .map((role) => DropdownMenuItem<String>(
+                              value: role,
+                              child: Text(role),
+                            ))
+                                .toList(),
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedUsersWithRoles[user] = value;
+                              });
+                            },
+                          ),
                         ),
-                        SizedBox(width: 10),
-                        Text('${user.firstName} ${user.lastName}'),
-                      ],
-                    ),
-                  ))
-                      .toList(),
-                  onChanged: (User? value) {
-                    setState(() {
-                      selectedUser = value;
-                      role = null; // reset role if user changes
-                    });
-                  },
-                ),
-                if (selectedUser != null) ...[
-                  SizedBox(height: 10),
-                  DropdownButton<String>(
-                    isExpanded: true,
-                    hint: Text('Select Role'),
-                    value: role,
-                    items: roles
-                        .map((role) => DropdownMenuItem<String>(
-                      value: role,
-                      child: Text(role),
-                    ))
-                        .toList(),
-                    onChanged: (String? value) {
-                      setState(() {
-                        role = value;
-                      });
-                    },
-                  ),
-                ],
-              ],
+                    ],
+                  );
+                }).toList(),
+              ),
             );
           },
         ),
@@ -481,22 +485,35 @@ class SingleTeamScreen extends StatelessWidget {
               backgroundColor: Constants.primaryColor,
             ),
             onPressed: () {
-              if (selectedUser != null && role != null) {
-                TeamServices.addMember(
-                  userId: selectedUser!.id,
+              final validUsers = selectedUsersWithRoles.entries
+                  .where((entry) => entry.value != null)
+                  .map((entry) => {
+                "userId": entry.key.id!,
+                "role": entry.value!,
+              })
+                  .toList();
+
+              if (validUsers.isNotEmpty) {
+                TeamServices.addMembers(
                   teamId: teamId!,
-                  role: role!,
+                  users: validUsers,
                 );
-                print('Selected User: ${selectedUser!.firstName}, Role: $role');
+                print('Added users: $validUsers');
                 Get.back();
+              } else {
+                Constants.alertSnackBar(title: 'Validation', message: 'Please select roles for selected users.');
               }
             },
-            child: Text('Add', style: TextStyle(color: Colors.white)),
+            child: Text(
+              'Add',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
     );
   }
+
   _confirmRemoveMemberDialog(Member member) {
     Get.dialog(
       AlertDialog(

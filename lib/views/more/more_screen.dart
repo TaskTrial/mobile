@@ -26,7 +26,7 @@ class MoreScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(height: 20),
-            MoreButton(icon: Icons.account_balance_rounded,label: 'My Organization',
+            MoreButton(icon: Icons.account_balance_rounded,label: 'Organization',
             onTap: () {
               Get.to(() => OrganizationScreen(),
                 arguments:  organization,
@@ -34,14 +34,14 @@ class MoreScreen extends StatelessWidget {
             },
             ),
             SizedBox(height: 20),
-            MoreButton(icon: Icons.apartment,label: 'My Departments',
+            MoreButton(icon: Icons.apartment,label: 'Departments',
             onTap: () {
               Get.to(()=> DepartmentsScreen(departmentsModel: departments,));
             },
             ),
             SizedBox(height: 20),
 
-            MoreButton(icon: Icons.people_alt,label: 'My Teams',
+            MoreButton(icon: Icons.people_alt,label: 'Teams',
               onTap: () {
                 Get.to(()=> TeamsScreen(teamsModel: teams, organizationModel:organization,));
               },
