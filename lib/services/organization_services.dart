@@ -18,7 +18,7 @@ class OrganizationServices {
         ),
       });
       var response = await Dio().post(
-        'http://192.168.1.4:3000/api/organization/$organizationId/logo/upload',
+        'https://tasktrial-prod.vercel.app/api/organization/$organizationId/logo/upload',
         data: formData,
         options: Options(
           headers: {
@@ -58,9 +58,9 @@ class OrganizationServices {
       }) async
   {
     try {
-      print('http://192.168.1.4:3000/api/organization/$orgId');
+      print('https://tasktrial-prod.vercel.app/api/organization/$orgId');
       final response = await Dio().put(
-          'http://192.168.1.4:3000/api/organization/$orgId',
+          'https://tasktrial-prod.vercel.app/api/organization/$orgId',
           options: Options(
             headers: {
               'authorization':
@@ -96,7 +96,7 @@ class OrganizationServices {
     List<String> userIds = [userId];
     try {
       final response = await Dio().post(
-          'http://192.168.1.4:3000/api/organization/$orgId/addOwner',
+          'https://tasktrial-prod.vercel.app/api/organization/$orgId/addOwner',
           options: Options(
             headers: {
               'authorization':

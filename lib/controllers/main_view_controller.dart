@@ -73,7 +73,7 @@ class MainViewController extends GetxController {
     final userId = CacheHelper().getData(key: 'id');
     try {
       final response = await Dio().get(
-        'http://192.168.1.4:3000/api/users/$userId',
+        'https://tasktrial-prod.vercel.app/api/users/$userId',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
       userModel = UserModel.fromJson(response.data);
@@ -115,7 +115,7 @@ class MainViewController extends GetxController {
     print(orgId);
     try {
       final response = await Dio().get(
-        'http://192.168.1.4:3000/api/organization/$orgId',
+        'https://tasktrial-prod.vercel.app/api/organization/$orgId',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
       print(response);
@@ -138,7 +138,7 @@ class MainViewController extends GetxController {
     final orgId = userModel.user?.organization['id'];
     try {
       final response = await Dio().get(
-        'http://192.168.1.4:3000/api/organizations/$orgId/departments/all',
+        'https://tasktrial-prod.vercel.app/api/organizations/$orgId/departments/all',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
       departmentsModel = DepartmentsModel.fromJson(response.data);
@@ -153,7 +153,7 @@ class MainViewController extends GetxController {
     final orgId = CacheHelper().getData(key: 'orgId');
     try {
       final response = await Dio().get(
-        'http://192.168.1.4:3000/api/organization/$orgId/teams/all',
+        'https://tasktrial-prod.vercel.app/api/organization/$orgId/teams/all',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
       teamsModel = TeamsModel.fromJson(response.data);
@@ -168,7 +168,7 @@ class MainViewController extends GetxController {
     final orgId = CacheHelper().getData(key: 'orgId');
     try {
       final response = await Dio().get(
-        'http://192.168.1.4:3000/api/organization/$orgId/projects',
+        'https://tasktrial-prod.vercel.app/api/organization/$orgId/projects',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
       List data=response.data['data']['activeProjects'];
@@ -189,7 +189,7 @@ class MainViewController extends GetxController {
     final orgId = CacheHelper().getData(key: 'orgId');
     try {
       final response = await Dio().get(
-        'http://192.168.1.4:3000/api/organization/$orgId/tasks',
+        'https://tasktrial-prod.vercel.app/api/organization/$orgId/tasks',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
       List data=response.data['data']['tasks'];
@@ -209,7 +209,7 @@ class MainViewController extends GetxController {
     if (refreshToken == null) return false;
     try {
       final response = await Dio().post(
-        'http://192.168.1.4:3000/api/auth/refreshAccessToken',
+        'https://tasktrial-prod.vercel.app/api/auth/refreshAccessToken',
         data: {
           'refreshToken': refreshToken,
         }

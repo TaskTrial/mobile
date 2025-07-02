@@ -21,7 +21,7 @@ class LoginAuthServices {
     try {
       isLoading.value = true;
       final response = await Dio().post(
-        'http://192.168.1.4:3000/api/auth/signin',
+        'https://tasktrial-prod.vercel.app/api/auth/signin',
         data: {
           'email': emailController.text,
           'password': passwordController.text,
@@ -92,7 +92,7 @@ class LoginAuthServices {
   }) async {
     try {
       final response = await Dio().post(
-        'http://192.168.1.4:3000/api/auth/forgotPassword',
+        'https://tasktrial-prod.vercel.app/api/auth/forgotPassword',
         data: {
           'email': emailController.text,
         },
@@ -144,7 +144,7 @@ class LoginAuthServices {
       required String args}) async {
     try {
       final response = await Dio().post(
-        'http://192.168.1.4:3000/api/auth/resetPassword',
+        'https://tasktrial-prod.vercel.app/api/auth/resetPassword',
         data: {
           "email": args,
           "otp": otpController.text,
@@ -194,7 +194,7 @@ class LoginAuthServices {
   static Future<void> loginWithGoogle() async {
     try {
       final result = await FlutterWebAuth2.authenticate(
-        url: "http://192.168.1.4:3000/api/auth/google",
+        url: "https://tasktrial-prod.vercel.app/api/auth/google",
         callbackUrlScheme: "tasktrial",
       );
       final uri = Uri.parse(result);
@@ -230,7 +230,7 @@ class SignUpAuthServices {
     try {
       isLoading.value = true;
       final response = await Dio().post(
-        'http://192.168.1.4:3000/api/auth/signup',
+        'https://tasktrial-prod.vercel.app/api/auth/signup',
         data: {
           'email': emailController.text,
           'password': passwordController.text,
@@ -296,7 +296,7 @@ class SignUpAuthServices {
     try {
       isLoading.value = true;
       final response = await Dio().post(
-        'http://192.168.1.4:3000/api/auth/verifyEmail',
+        'https://tasktrial-prod.vercel.app/api/auth/verifyEmail',
         data: {
           'email': email,
           'otp': codeController.text,

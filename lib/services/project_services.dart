@@ -14,10 +14,10 @@ class ProjectServices {
     ,required String projectId
  })async{
    String orgId = CacheHelper().getData(key: 'orgId');
-   print('http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/project/$projectId/removeMembe');
+   print('https://tasktrial-prod.vercel.app/api/organization/$orgId/team/$teamId/project/$projectId/removeMembe');
    try {
      final response = await Dio().delete(
-       'http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/project/$projectId/removeMember',
+       'https://tasktrial-prod.vercel.app/api/organization/$orgId/team/$teamId/project/$projectId/removeMember',
        options: Options(
          headers: {
            'authorization':
@@ -51,11 +51,11 @@ class ProjectServices {
  }) async {
    String orgId = CacheHelper().getData(key: 'orgId');
    print(userRoles);
-   print('http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/project/$projectId/addMember');
+   print('https://tasktrial-prod.vercel.app/api/organization/$orgId/team/$teamId/project/$projectId/addMember');
 
    try {
      final response = await Dio().post(
-       'http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/project/$projectId/addMember',
+       'https://tasktrial-prod.vercel.app/api/organization/$orgId/team/$teamId/project/$projectId/addMember',
        options: Options(
          headers: {
            'authorization': 'Bearer ${CacheHelper().getData(key: 'accessToken')}',
@@ -99,10 +99,10 @@ class ProjectServices {
     };
     String organizationId = CacheHelper().getData(key: 'orgId');
     String teamId =  selectedTeamId.value;
-    print('http://192.168.1.4:3000/organization/$organizationId/team/$teamId/project');
+    print('https://tasktrial-prod.vercel.app/organization/$organizationId/team/$teamId/project');
     try {
       final response = await dio.post(
-        'http://192.168.1.4:3000/api/organization/$organizationId/team/$teamId/project',
+        'https://tasktrial-prod.vercel.app/api/organization/$organizationId/team/$teamId/project',
         data: projectData,
         options: Options(
           headers: {
@@ -127,7 +127,7 @@ static Future<void> deleteProjectData({required String teamId,
    String orgId = CacheHelper().getData(key: 'orgId');
    try {
      final response = await Dio().delete(
-       'http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/project/$projectId/delete',
+       'https://tasktrial-prod.vercel.app/api/organization/$orgId/team/$teamId/project/$projectId/delete',
        options: Options(
          headers: {
            'authorization':
@@ -158,7 +158,7 @@ static Future<void> deleteProjectData({required String teamId,
    final orgId = CacheHelper().getData(key: 'orgId');
    try {
      final response = await Dio().put(
-       'http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/project/$projectId',
+       'https://tasktrial-prod.vercel.app/api/organization/$orgId/team/$teamId/project/$projectId',
        options: Options(
          headers: {
            'authorization':

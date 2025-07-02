@@ -17,9 +17,9 @@ class EditTaskController extends GetxController {
     isLoading.value = true;
     final orgId = CacheHelper().getData(key: 'orgId');
     try {
-      print('http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/project/$projectId/task/$taskId');
+      print('https://tasktrial-prod.vercel.app/api/organization/$orgId/team/$teamId/project/$projectId/task/$taskId');
       final response = await Dio().put(
-        'http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/project/$projectId/task/$taskId',
+        'https://tasktrial-prod.vercel.app/api/organization/$orgId/team/$teamId/project/$projectId/task/$taskId',
         options: Options(
           headers: {
             'authorization':

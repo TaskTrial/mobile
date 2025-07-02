@@ -33,10 +33,10 @@ class TeamController extends GetxController{
       return;
     }
     isLoading.value = true;
-    print('http://192.168.1.4:3000/api/organization/$organizationId/team');
+    print('https://tasktrial-prod.vercel.app/api/organization/$organizationId/team');
     try {
       final response = await _dio.post(
-        'http://192.168.1.4:3000/api/organization/$organizationId/team',
+        'https://tasktrial-prod.vercel.app/api/organization/$organizationId/team',
         data: {
           "name": name.value,
         },
@@ -99,7 +99,7 @@ class TeamController extends GetxController{
     String orgId = CacheHelper().getData(key: 'orgId');
     try {
       final response = await Dio().put(
-          'http://192.168.1.4:3000/api/organization/$orgId/team/$teamId',
+          'https://tasktrial-prod.vercel.app/api/organization/$orgId/team/$teamId',
           options: Options(
             headers: {
               'authorization':
@@ -127,7 +127,7 @@ class TeamController extends GetxController{
     String orgId = CacheHelper().getData(key: 'orgId');
     try {
       final response = await Dio().delete(
-        'http://192.168.1.4:3000/api/organization/$orgId/team/$teamId',
+        'https://tasktrial-prod.vercel.app/api/organization/$orgId/team/$teamId',
         options: Options(
           headers: {
             'authorization':
@@ -160,7 +160,7 @@ class TeamController extends GetxController{
         ),
       });
       var response = await Dio().post(
-        'http://192.168.1.4:3000/api/organization/$organizationId/team/$teamId/avatar/upload',
+        'https://tasktrial-prod.vercel.app/api/organization/$organizationId/team/$teamId/avatar/upload',
         data: formData,
         options: Options(
           headers: {

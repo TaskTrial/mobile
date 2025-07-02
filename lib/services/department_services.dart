@@ -16,10 +16,10 @@ class DepartmentServices {
       return;
     }
     isLoading.value = true;
-    print('http://192.168.1.4:3000/organizations/$organizationId/departments/create');
+    print('https://tasktrial-prod.vercel.app/organizations/$organizationId/departments/create');
     try {
       final response = await dio.post(
-        'http://192.168.1.4:3000/api/organizations/$organizationId/departments/create',
+        'https://tasktrial-prod.vercel.app/api/organizations/$organizationId/departments/create',
         data: {
           "name": name.value,
           "description": description.value,
@@ -51,7 +51,7 @@ class DepartmentServices {
     String orgId = CacheHelper().getData(key: 'orgId');
     try {
       final response = await Dio().put(
-          'http://192.168.1.4:3000/api/organizations/$orgId/departments/$deptId',
+          'https://tasktrial-prod.vercel.app/api/organizations/$orgId/departments/$deptId',
           options: Options(
             headers: {
               'authorization':
@@ -79,7 +79,7 @@ class DepartmentServices {
     String orgId = CacheHelper().getData(key: 'orgId');
     try {
       final response = await Dio().delete(
-        'http://192.168.1.4:3000/api/organizations/$orgId/departments/$deptId/delete',
+        'https://tasktrial-prod.vercel.app/api/organizations/$orgId/departments/$deptId/delete',
         options: Options(
           headers: {
             'authorization':

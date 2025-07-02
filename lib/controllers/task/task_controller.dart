@@ -64,7 +64,7 @@ class TaskController extends GetxController {
     String orgId = CacheHelper().getData(key: 'orgId');
     try {
       final response = await Dio().delete(
-        'http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/project/$projectId/task/$taskId/delete',
+        'https://tasktrial-prod.vercel.app/api/organization/$orgId/team/$teamId/project/$projectId/task/$taskId/delete',
         options: Options(
           headers: {
             'authorization':

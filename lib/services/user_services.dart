@@ -21,7 +21,7 @@ class UserServices {
         ),
       });
       var response = await Dio().post(
-        'http://192.168.1.4:3000/api/users/${CacheHelper().getData(key: 'id')}/profile-picture',
+        'https://tasktrial-prod.vercel.app/api/users/${CacheHelper().getData(key: 'id')}/profile-picture',
         data: formData,
         options: Options(
           headers: {
@@ -56,7 +56,7 @@ class UserServices {
   {
     try {
       final response = await Dio().put(
-          'http://192.168.1.4:3000/api/users/${CacheHelper().getData(key: 'id')}',
+          'https://tasktrial-prod.vercel.app/api/users/${CacheHelper().getData(key: 'id')}',
           options: Options(
             headers: {
               'authorization':

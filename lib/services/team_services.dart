@@ -12,10 +12,10 @@ class TeamServices {
   static Future<void> removeMember({required String userId ,required String teamId
   })async{
     String orgId = CacheHelper().getData(key: 'orgId');
-    print('http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/members/$userId');
+    print('https://tasktrial-prod.vercel.app/api/organization/$orgId/team/$teamId/members/$userId');
     try {
       final response = await Dio().delete(
-          'http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/members/$userId',
+          'https://tasktrial-prod.vercel.app/api/organization/$orgId/team/$teamId/members/$userId',
           options: Options(
             headers: {
               'authorization':
@@ -47,7 +47,7 @@ class TeamServices {
     String orgId = CacheHelper().getData(key: 'orgId');
     try {
       final response = await Dio().post(
-        'http://192.168.1.4:3000/api/organization/$orgId/team/$teamId/addMember',
+        'https://tasktrial-prod.vercel.app/api/organization/$orgId/team/$teamId/addMember',
         options: Options(
           headers: {
             'authorization': 'Bearer ${CacheHelper().getData(key: 'accessToken')}',
