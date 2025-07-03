@@ -42,6 +42,12 @@ dependencies:
   image_picker: ^1.1.2
   flutter_web_auth_2: ^4.1.0
   lottie: ^3.3.1
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon.png"
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +75,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/tabs/
+    - assets/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
