@@ -4,29 +4,58 @@ import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/widgets/my_text_field.dart';
 import '../../controllers/auth/create_organization_controller.dart';
 
+
 class CreateOrganizationScreen extends StatelessWidget {
   const CreateOrganizationScreen({super.key});
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(CreateOrganizationController());
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Obx(() {
       if (!controller.initialize.value) {
-        return const Scaffold(
+        return Scaffold(
             backgroundColor: Colors.white,
-            body: Center(
-                child:  Text('TaskTrial' , style: TextStyle(
-                  fontFamily: Constants.primaryFont,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                  color: Constants.pageNameColor,
-                  letterSpacing: 3,
-                  wordSpacing: 5,
-                  height: 3,
-                  decoration: TextDecoration.none,
-                  decorationColor: Constants.pageNameColor,
-                  decorationStyle: TextDecorationStyle.solid,
-                  decorationThickness: 1.5,
-                ))
+            body: SizedBox(
+              width:screenWidth,
+              height: screenHeight,
+              child:  RefreshIndicator(
+                onRefresh: () async {
+                  Get.delete<CreateOrganizationScreen>();
+                  Get.offAll(
+                        () => CreateOrganizationScreen(),
+                    transition: Transition.fade,
+                  );
+                },
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: SizedBox(
+                    width: screenWidth,
+                    height: screenHeight,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Center(
+                            child:  Text('TaskTrial' , style: TextStyle(
+                              fontFamily: Constants.primaryFont,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30,
+                              color: Constants.pageNameColor,
+                              letterSpacing: 3,
+                              wordSpacing: 5,
+                              height: 3,
+                              decoration: TextDecoration.none,
+                              decorationColor: Constants.pageNameColor,
+                              decorationStyle: TextDecorationStyle.solid,
+                              decorationThickness: 1.5,
+                            ))
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             )
         );
       }

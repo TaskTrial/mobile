@@ -573,7 +573,7 @@ class ProjectDetailScreen extends StatelessWidget {
           const SizedBox(
             width: 5,
           ),
-          Text("Task Priority    ",
+          Text("Project Priority    ",
               style: TextStyle(
                   color: Colors.black,
                   fontFamily: Constants.primaryFont,
@@ -617,7 +617,7 @@ class ProjectDetailScreen extends StatelessWidget {
           const SizedBox(
             width: 5,
           ),
-          Text("Task Status    ",
+          Text("Project Status    ",
               style: TextStyle(
                   color: Colors.black,
                   fontFamily: Constants.primaryFont,

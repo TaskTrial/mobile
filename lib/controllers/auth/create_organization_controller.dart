@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,6 +8,8 @@ import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/main_view_screen.dart';
 import '../../utils/cache_helper.dart';
 import '../../views/auth/login_screen.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+
 
 class CreateOrganizationController extends GetxController {
   var isLoading = false.obs;
@@ -27,14 +31,40 @@ class CreateOrganizationController extends GetxController {
     _initialize();
   }
 
+  Future<bool> hasInternetConnection() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      return false;
+    }
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } on SocketException catch (_) {
+      return false;
+    }
+  }
+
   var initialize = false.obs;
   void _initialize() async {
     getLoading.value = true;
+    bool isOnline = await hasInternetConnection();
+    if (!isOnline) {
+      getLoading.value = false;
+      Get.snackbar(
+        'No Internet Connection',
+        'Please check your network and try again.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+
+      );
+      return;
+    }
     bool ref = await _refreshToken();
     print(ref);
     await orgStatus();
     getLoading.value = false;
-    if (hasOrganization.value==true) {
+    if (hasOrganization.value == true) {
       Get.offAll(() => MainViewScreen());
     } else {
       initialize.value = true;

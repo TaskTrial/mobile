@@ -16,7 +16,8 @@ class LoginAuthServices {
     required TextEditingController emailController,
     required TextEditingController passwordController,
     required RxBool isLoading,
-  }) async {
+  }) async
+  {
 
     try {
       isLoading.value = true;

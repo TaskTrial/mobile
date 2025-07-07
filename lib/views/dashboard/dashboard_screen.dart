@@ -7,6 +7,9 @@ import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/widgets/custom_drop_down_menu.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+import '../../controllers/main_view_controller.dart';
+import '../main_view_screen.dart';
+
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key, required this.tasks, required this.projects});
   final List<TaskModel> tasks ;
@@ -18,28 +21,39 @@ class DashboardScreen extends StatelessWidget {
      double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
         backgroundColor: Constants.backgroundColor,
-        body: SingleChildScrollView(
-          child: Container(
-              color: Colors.transparent,
-              padding: const EdgeInsets.only(
-                  left: 16.0, right: 16, top: 40, bottom: 16),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _overallPart(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _tasksPart(screenWidth),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _projectsPart(width: screenWidth),
-                  ],
-                ),
-              )),
+        body: RefreshIndicator(
+          color: Constants.primaryColor,
+          onRefresh: () async {
+            Get.delete<MainViewController>();
+            Get.offAll(
+                  () => MainViewScreen(),
+              transition: Transition.fade,
+            );
+          },
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Container(
+                color: Colors.transparent,
+                padding: const EdgeInsets.only(
+                    left: 16.0, right: 16, top: 40, bottom: 16),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _overallPart(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _tasksPart(screenWidth),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _projectsPart(width: screenWidth),
+                    ],
+                  ),
+                )),
+          ),
         ));
   }
 
