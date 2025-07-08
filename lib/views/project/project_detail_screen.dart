@@ -5,6 +5,8 @@ import 'package:task_trial/models/teams_model.dart';
 import 'package:task_trial/services/project_services.dart';
 import 'package:task_trial/utils/cache_helper.dart';
 import 'package:task_trial/utils/constants.dart';
+import 'package:task_trial/views/chat/chat_screen.dart';
+import 'package:task_trial/views/main_view_screen.dart';
 import 'package:task_trial/views/project/edit_project_screen.dart';
 import 'package:task_trial/views/project/task_item.dart';
 
@@ -16,7 +18,21 @@ class ProjectDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     // ProjectDetailController controller = Get.put(ProjectDetailController(project: project));
+    String aiMessage= """
+Project Overview:
+📌 **${project.name!.trim()}** is a project focused on ${project.description!.trim()}.
+🔄 It is currently in the **${project.status!.trim()}** phase with a **${project.priority}** priority level.
+👥 Assigned to **${project.memberCount}** team members.
+📅 Deadline: **${project.endDate}**.
+🧩 Number of tasks: **${project.tasks!.length}**.
+📝 Task list: ${project.tasks!.map((task) => task.title!).join(', ')}.
+
+ A💬 Feel free to ask me anything about this project — I’m here to help you analyze, plan, or improve it.
+ --> 
+""";
     return Scaffold(
       backgroundColor: const Color(0xFFF0E3DA), // Background beige
       body: SafeArea(
@@ -31,96 +47,134 @@ class ProjectDetailScreen extends StatelessWidget {
                 ),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      project.name!,
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: Constants.primaryFont,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      project.description!,
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 18,
-                        fontFamily: Constants.primaryFont,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Assigned To
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Row(
                           children: [
-                            const Text("Assigned to",
-                                style: TextStyle(fontWeight: FontWeight.w500)),
-                            const SizedBox(height: 8),
-                            // Inside your Column (under "Assigned to")
-                            _assignee()
-                          ],
-                        ),
-                        // Due Date
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text("Due date",
+                            SizedBox(
+                              width: screenWidth * 0.5,
+                              child: Text(
+                                project.name!,
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: Constants.primaryFont)),
-                            SizedBox(height: 8),
-                            Text("Thursday, 20 July 2023",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: Constants.primaryFont)),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    _priority(),
-                    const SizedBox(height: 20),
-                    _status(),
-                    const SizedBox(height: 30),
-                    Text(
-                      'Tasks',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: Constants.primaryFont,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-
-                    // Tasks List
-                    Expanded(
-                      child: project.tasks!.isNotEmpty
-                          ? ListView.builder(
-                              itemCount: project.tasks!.length,
-                              itemBuilder: (context, index) {
-                                Task task = project.tasks![index];
-                                return Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 7),
-                                  child: TaskItem(
-                                    title: task.title!,
-                                    hours: Constants.formatDate(
-                                        date: task.dueDate!),
-                                  ),
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: Constants.primaryFont,
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              "AI Assistant   ",
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey,
+                                fontFamily: Constants.primaryFont,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Get.to(() =>
+                                ChatScreen(initialMessage: aiMessage
+                                ,)
                                 );
                               },
-                            )
-                          : const Center(child: Text("No tasks found")),
+                              child: CircleAvatar(
+                                radius: 23,
+                                backgroundColor: Constants.primaryColor,
+                                child: const CircleAvatar(
+                                  radius: 22,
+                                  backgroundColor: Colors.white,
+                                  child: Icon(Icons.rocket_launch_outlined, size: 23, color: Colors.black),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          project.description!,
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 18,
+                            fontFamily: Constants.primaryFont,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Assigned To
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text("Assigned to",
+                                    style: TextStyle(fontWeight: FontWeight.w500)),
+                                const SizedBox(height: 8),
+                                // Inside your Column (under "Assigned to")
+                                _assignee()
+                              ],
+                            ),
+                            // Due Date
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const [
+                                Text("Due date",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: Constants.primaryFont)),
+                                SizedBox(height: 8),
+                                Text("Thursday, 20 July 2023",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: Constants.primaryFont)),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        _priority(),
+                        const SizedBox(height: 20),
+                        _status(),
+                        const SizedBox(height: 30),
+                        Text(
+                          'Tasks',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: Constants.primaryFont,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        // Remove `Expanded`, use fixed height or wrap in `ShrinkWrappingScrollView`
+                        project.tasks!.isNotEmpty
+                            ? ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: project.tasks!.length,
+                          itemBuilder: (context, index) {
+                            Task task = project.tasks![index];
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 7),
+                              child: TaskItem(
+                                title: task.title!,
+                                hours: Constants.formatDate(date: task.dueDate!),
+                              ),
+                            );
+                          },
+                        )
+                            : const Center(child: Text("No tasks found")),
+                      ],
                     ),
-                  ],
+                  )
+
                 ),
               ),
             ),

@@ -95,7 +95,7 @@ class MainViewScreen extends StatelessWidget {
     );
   }
   _floatingActionButton(MainViewController controller) {
-    return FloatingActionButton(
+    return controller.currentPageIndex.value!=2? FloatingActionButton(
       onPressed: () {
         CreateDialog.showCreateDialog(controller.teamsModel,controller.projectModel);
       },
@@ -109,7 +109,9 @@ class MainViewScreen extends StatelessWidget {
         color: Colors.white,
         size: 40,
       ),
-    );
+    ):
+      const SizedBox()
+    ;
   }
   _bottomNavigationBar(MainViewController controller) {
     return BottomNavigationBar(
@@ -126,8 +128,8 @@ class MainViewScreen extends StatelessWidget {
             '${Constants.tabsPath}selectedDashboard.png', 'Dashboard'),
         _bottomNavigationBarItem('${Constants.tabsPath}project.png',
             '${Constants.tabsPath}selectedProject.png', 'Projects'),
-        // _bottomNavigationBarItem('${Constants.tabsPath}chat.png',
-        //     '${Constants.tabsPath}selectedChat.png', 'Chat'),
+        _bottomNavigationBarItem('${Constants.tabsPath}chat.png',
+            '${Constants.tabsPath}selectedChat.png', 'Chat'),
         _bottomNavigationBarItem('${Constants.tabsPath}task.png',
             '${Constants.tabsPath}selectedTask.png', 'Tasks'),
         _bottomNavigationBarItem('${Constants.tabsPath}more.png',

@@ -108,7 +108,11 @@ class ProjectCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             project.description!,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600,fontFamily: Constants.primaryFont),
+            style: const TextStyle(
+                overflow: TextOverflow.ellipsis,
+                fontSize: 18, fontWeight: FontWeight.w600,fontFamily: Constants.primaryFont
+
+            ),
           ),
           const SizedBox(height: 20),
           Row(

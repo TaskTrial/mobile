@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../controllers/ai_controller.dart';
 import '../../controllers/project/project_controller.dart';
 import '../../models/project_model.dart';
+
+import '../../services/gemini_ai_service.dart';
 import '../../utils/constants.dart';
 
 class EditProjectScreen extends StatelessWidget {
@@ -12,20 +15,23 @@ class EditProjectScreen extends StatelessWidget {
   EditProjectScreen({super.key, required this.project, required this.teamId});
 
   final formKey = GlobalKey<FormState>();
-
-  @override
   @override
   Widget build(BuildContext context) {
+    final aiController = Get.put(AIController());
+
     final nameController = TextEditingController(text: project.name);
     final descriptionController = TextEditingController(text: project.description);
-    final budgetController =
-    TextEditingController(text: project.budget?.toString() ?? '0');
+    final budgetController = TextEditingController(text: project.budget?.toString() ?? '0');
     final RxString priority = (project.priority ?? "LOW").obs;
     final RxString status = (project.status ?? "PLANNING").obs;
     final Rx<DateTime> startDate = DateTime.parse(project.startDate ?? DateTime.now().toIso8601String()).obs;
     final Rx<DateTime> endDate = DateTime.parse(project.endDate ?? DateTime.now().toIso8601String()).obs;
     final progress = project.progress!.toDouble().obs;
     final controller = Get.put(ProjectController());
+    final RxBool showTranslationOptions = false.obs;
+    final Rx<TranslationDirection> translationDirection = TranslationDirection.englishToArabic.obs;
+
+
     return Scaffold(
       backgroundColor: Constants.backgroundColor,
       appBar: AppBar(
@@ -50,12 +56,133 @@ class EditProjectScreen extends StatelessWidget {
               children: [
                 _buildInputField("Name", nameController),
                 const SizedBox(height: 16),
-                _buildInputField("Description", descriptionController,
-                    maxLines: 3, maxLength: 200),
+                _buildInputField("Description", descriptionController, maxLines: 10, maxLength: 1000),
+                Obx(() => aiController.isLoading.value
+                    ? const Center(child: CircularProgressIndicator(color: Constants.primaryColor))
+                    : Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
+                      alignment: WrapAlignment.center,
+                      children: [
+                        _buildFlexibleAIButton(
+                          label: "Generate",
+                          icon: Icons.auto_fix_high_rounded,
+                          color: Colors.blueAccent,
+                          onPressed: () => _handleAIAction(
+                            aiController,
+                            descriptionController,
+                            "Generate: ",
+
+                          ),
+                        ),
+                        _buildFlexibleAIButton(
+                          label: "Translate",
+                          icon: Icons.translate,
+                          color: Colors.deepPurple,
+                          onPressed:(){
+                            showTranslationOptions.value = !showTranslationOptions.value;                          },
+                        ),
+                        _buildFlexibleAIButton(
+                          label: "Summarize",
+                          icon: Icons.summarize,
+                          color: Colors.teal,
+                          onPressed: () => _handleAIAction(
+                            aiController,
+                            descriptionController,
+                            "Summarize this in 2-3 lines: ",
+
+                          ),
+                        ),
+                  Obx(() => showTranslationOptions.value
+                      ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 8),
+                      const Text("Choose translation direction:",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontFamily: Constants.primaryFont)),
+                      const SizedBox(height: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: DropdownButton<TranslationDirection>(
+                          isExpanded: true,
+                          value: translationDirection.value,
+                          underline: const SizedBox(),
+                          onChanged: (val) {
+                            if (val != null) translationDirection.value = val;
+                          },
+                          items: [
+                            DropdownMenuItem(
+                              value: TranslationDirection.englishToArabic,
+                              child: const Text("English → Arabic"),
+                            ),
+                            DropdownMenuItem(
+                              value: TranslationDirection.arabicToEnglish,
+                              child: const Text("Arabic → English"),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Center(
+                        child: ElevatedButton.icon(
+                          icon: const Icon(Icons.check,color: Colors.white,),
+                          label: const Text("Translate Now",style: TextStyle(
+                            color:  Colors.white
+                          ),),
+
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.deepPurple,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          onPressed: () {
+                            final input = descriptionController.text.trim();
+                            if (input.isNotEmpty) {
+                              final prompt = translationDirection.value ==
+                                  TranslationDirection.englishToArabic
+                                  ? "Translate to Arabic, just the translation only, no explanation: $input"
+                                  : "Translate to English, just the translation only, no explanation: $input";
+
+                              aiController.generateAIText(
+                                prompt: prompt,
+                                onSuccess: (result) {
+                                  descriptionController.text = result;
+                                  showTranslationOptions.value = false; // hide after done
+                                },
+                                onError: (err) {
+                                  Get.snackbar("Error", err);
+                                },
+                              );
+                            } else {
+                              Get.snackbar("Input Required", "Please enter a description first.");
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  )
+                      : const SizedBox())
+
+                  ],
+                    ),
+                  ],
+                )),
                 const SizedBox(height: 16),
-                Obx(() => _buildDropdown("Priority", priority, ["LOW", "MEDIUM", "HIGH","ARGENT"])),
+                Obx(() => _buildDropdown("Priority", priority, ["LOW", "MEDIUM", "HIGH", "ARGENT"])),
                 const SizedBox(height: 16),
-                Obx(() => _buildDropdown("Status", status, ["PLANNING", "ACTIVE", "ON_HOLD","COMPLETED", "CANCELED"])),
+                Obx(() => _buildDropdown("Status", status, ["PLANNING", "ACTIVE", "ON_HOLD", "COMPLETED", "CANCELED"])),
                 const SizedBox(height: 16),
                 Obx(() => _buildDatePicker("Start Date", startDate, context)),
                 const SizedBox(height: 16),
@@ -64,9 +191,7 @@ class EditProjectScreen extends StatelessWidget {
                 Obx(() => _buildProgressSlider(progress)),
                 const SizedBox(height: 24),
                 Obx(() => controller.isLoading.value
-                    ? const CircularProgressIndicator(
-                  color: Constants.primaryColor,
-                )
+                    ? const CircularProgressIndicator(color: Constants.primaryColor)
                     : _buildSaveButton(
                   controller,
                   nameController,
@@ -84,6 +209,54 @@ class EditProjectScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildFlexibleAIButton({
+    required String label,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minWidth: 100),
+      child: ElevatedButton.icon(
+        onPressed: onPressed,
+        icon: Icon(icon, color: Colors.white),
+        label: Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontFamily: Constants.primaryFont,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _handleAIAction(
+      AIController aiController,
+      TextEditingController controller,
+      String prefix,
+      ) {
+    final input = controller.text.trim();
+    print("$prefix$input");
+    if (input.isNotEmpty) {
+      aiController.generateAIText(
+        prompt: "$prefix$input",
+        onSuccess: (result) => controller.text = result,
+        onError: (err) => Get.snackbar("Error", err),
+      );
+    } else {
+      Get.snackbar("Input Required", "Please enter a description first.");
+    }
   }
 
 
@@ -271,4 +444,7 @@ class EditProjectScreen extends StatelessWidget {
     );
   }
 
+
+
 }
+enum TranslationDirection { arabicToEnglish, englishToArabic }

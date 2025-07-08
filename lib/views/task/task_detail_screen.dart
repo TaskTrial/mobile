@@ -7,6 +7,7 @@ import 'package:task_trial/views/project/edit_project_screen.dart';
 import 'package:task_trial/views/project/task_item.dart';
 
 import '../../models/task_model.dart';
+import '../chat/chat_screen.dart';
 import 'edit_task_screen.dart';
 
 class TaskDetailScreen extends StatelessWidget {
@@ -16,7 +17,23 @@ class TaskDetailScreen extends StatelessWidget {
   final ProjectModel project;
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    String aiMessage= """
+📝 **Task Summary: ${task.title!.trim()}**
 
+📄 Description: ${task.description?.trim() ?? 'No description provided.'}
+📌 Status: **${task.status}**
+🎯 Priority: **${task.priority}**
+📅 Due Date: **${task.dueDate ?? 'Not set'}**
+⏳ Estimated Time: **${task.estimatedTime ?? 0} hours**
+📍 Project: **${task.project?.name ?? 'Unassigned'}**
+🗂 Labels: ${task.labels?.isNotEmpty == true ? task.labels!.join(', ') : 'None'}
+
+💬 Feel free to ask anything about this task?
+--> 
+"""
+    ;
     return Scaffold(
       backgroundColor: const Color(0xFFF0E3DA), // Background beige
       body: SafeArea(
@@ -35,14 +52,48 @@ class TaskDetailScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(task.title??'No title',
-                        style:
-                        TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: Constants.primaryFont,
-                  
-                        ),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: screenWidth * 0.5,
+                            child: Text(task.title??'No title',
+                              style:
+                              TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: Constants.primaryFont,
+
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            "AI Assistant   ",
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey,
+                              fontFamily: Constants.primaryFont,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Get.to(() =>
+                                  ChatScreen(initialMessage: aiMessage
+                                    ,)
+                              );
+                            },
+                            child: CircleAvatar(
+                              radius: 23,
+                              backgroundColor: Constants.primaryColor,
+                              child: const CircleAvatar(
+                                radius: 22,
+                                backgroundColor: Colors.white,
+                                child: Icon(Icons.rocket_launch_outlined, size: 23, color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 8),
                       Text(

@@ -6,7 +6,6 @@ import 'package:task_trial/models/organization_model.dart';
 import 'package:task_trial/utils/cache_helper.dart';
 import 'package:task_trial/utils/constants.dart';
 import 'package:task_trial/views/organization/edit_organization_screen.dart';
-
 import '../../services/organization_services.dart';
 
 class OrganizationScreen extends StatelessWidget {
