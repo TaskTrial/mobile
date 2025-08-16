@@ -5,6 +5,7 @@ import '../../core/constants/app_text_styles.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/utils/logger.dart';
 import '../controllers/auth_controller.dart';
+import 'project/projects_screen.dart';
 
 class MainViewScreen extends StatefulWidget {
   const MainViewScreen({super.key});
@@ -374,9 +375,7 @@ class ProjectsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Projects Page'),
-    );
+    return const ProjectsScreen();
   }
 }
 

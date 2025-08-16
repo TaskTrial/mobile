@@ -2,8 +2,11 @@ import 'package:get/get.dart';
 import '../../core/network/api_client.dart';
 import '../../core/storage/local_storage.dart';
 import '../../data/repositories/auth_repository.dart';
+import '../../data/repositories/project_repository.dart';
 import '../../domain/services/auth_service.dart';
+import '../../domain/services/project_service.dart';
 import '../../presentation/controllers/auth_controller.dart';
+import '../../presentation/controllers/project_controller.dart';
 
 class DependencyInjection {
   static Future<void> init() async {
@@ -41,9 +44,16 @@ class DependencyInjection {
       fenix: true,
     );
     
+    // Project Repository
+    Get.lazyPut<ProjectRepository>(
+      () => ProjectRepositoryImpl(
+        apiClient: Get.find<ApiClient>(),
+      ),
+      fenix: true,
+    );
+    
     // Add other repositories here as needed
     // Get.lazyPut<UserRepository>(() => UserRepositoryImpl(), fenix: true);
-    // Get.lazyPut<ProjectRepository>(() => ProjectRepositoryImpl(), fenix: true);
     // Get.lazyPut<TaskRepository>(() => TaskRepositoryImpl(), fenix: true);
     // Get.lazyPut<TeamRepository>(() => TeamRepositoryImpl(), fenix: true);
     // Get.lazyPut<OrganizationRepository>(() => OrganizationRepositoryImpl(), fenix: true);
@@ -58,9 +68,16 @@ class DependencyInjection {
       fenix: true,
     );
     
+    // Project Service
+    Get.lazyPut<ProjectService>(
+      () => ProjectService(
+        projectRepository: Get.find<ProjectRepository>(),
+      ),
+      fenix: true,
+    );
+    
     // Add other services here as needed
     // Get.lazyPut<UserService>(() => UserService(), fenix: true);
-    // Get.lazyPut<ProjectService>(() => ProjectService(), fenix: true);
     // Get.lazyPut<TaskService>(() => TaskService(), fenix: true);
     // Get.lazyPut<TeamService>(() => TeamService(), fenix: true);
     // Get.lazyPut<OrganizationService>(() => OrganizationService(), fenix: true);
@@ -75,9 +92,16 @@ class DependencyInjection {
       fenix: true,
     );
     
+    // Project Controller
+    Get.lazyPut<ProjectController>(
+      () => ProjectController(
+        projectService: Get.find<ProjectService>(),
+      ),
+      fenix: true,
+    );
+    
     // Add other controllers here as needed
     // Get.lazyPut<UserController>(() => UserController(), fenix: true);
-    // Get.lazyPut<ProjectController>(() => ProjectController(), fenix: true);
     // Get.lazyPut<TaskController>(() => TaskController(), fenix: true);
     // Get.lazyPut<TeamController>(() => TeamController(), fenix: true);
     // Get.lazyPut<OrganizationController>(() => OrganizationController(), fenix: true);
