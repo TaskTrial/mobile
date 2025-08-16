@@ -18,12 +18,16 @@ class AuthController extends GetxController {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final otpController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
   
   // Form validation
   final emailError = Rxn<String>();
   final passwordError = Rxn<String>();
   final confirmPasswordError = Rxn<String>();
   final otpError = Rxn<String>();
+  final firstNameError = Rxn<String>();
+  final lastNameError = Rxn<String>();
   
   AuthController({AuthService? authService})
       : _authService = authService ?? AuthService();
@@ -41,6 +45,8 @@ class AuthController extends GetxController {
     passwordController.dispose();
     confirmPasswordController.dispose();
     otpController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
     super.onClose();
   }
   
@@ -199,6 +205,34 @@ class AuthController extends GetxController {
     }
   }
   
+  // Register
+  Future<void> register() async {
+    if (isLoading.value) return;
+    
+    isLoading.value = true;
+    _clearErrors();
+    
+    try {
+      // TODO: Implement register functionality
+      Logger.info('Register functionality will be implemented');
+      
+      // Simulate API call
+      await Future.delayed(const Duration(seconds: 2));
+      
+      // For now, just show success and navigate to create organization
+      UiUtils.showSuccessSnackBar(
+        title: 'Success',
+        message: 'Registration successful!',
+      );
+      
+      AppRoutes.goToCreateOrganization();
+    } catch (e) {
+      Logger.error('Register controller error', error: e);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+  
   // Reset password
   Future<void> resetPassword(String token) async {
     if (isLoading.value) return;
@@ -304,12 +338,36 @@ class AuthController extends GetxController {
     }
   }
   
+  void validateFirstName() {
+    final firstName = firstNameController.text.trim();
+    if (firstName.isEmpty) {
+      firstNameError.value = 'First name is required';
+    } else if (firstName.length < 2) {
+      firstNameError.value = 'First name must be at least 2 characters';
+    } else {
+      firstNameError.value = null;
+    }
+  }
+  
+  void validateLastName() {
+    final lastName = lastNameController.text.trim();
+    if (lastName.isEmpty) {
+      lastNameError.value = 'Last name is required';
+    } else if (lastName.length < 2) {
+      lastNameError.value = 'Last name must be at least 2 characters';
+    } else {
+      lastNameError.value = null;
+    }
+  }
+  
   // Clear all form errors
   void _clearErrors() {
     emailError.value = null;
     passwordError.value = null;
     confirmPasswordError.value = null;
     otpError.value = null;
+    firstNameError.value = null;
+    lastNameError.value = null;
   }
   
   // Clear form data
@@ -318,6 +376,8 @@ class AuthController extends GetxController {
     passwordController.clear();
     confirmPasswordController.clear();
     otpController.clear();
+    firstNameController.clear();
+    lastNameController.clear();
     _clearErrors();
   }
   
@@ -327,6 +387,19 @@ class AuthController extends GetxController {
            passwordController.text.isNotEmpty &&
            emailError.value == null &&
            passwordError.value == null;
+  }
+  
+  bool get isRegisterFormValid {
+    return firstNameController.text.trim().isNotEmpty &&
+           lastNameController.text.trim().isNotEmpty &&
+           emailController.text.trim().isNotEmpty &&
+           passwordController.text.isNotEmpty &&
+           confirmPasswordController.text.isNotEmpty &&
+           firstNameError.value == null &&
+           lastNameError.value == null &&
+           emailError.value == null &&
+           passwordError.value == null &&
+           confirmPasswordError.value == null;
   }
   
   bool get isResetPasswordFormValid {
@@ -339,5 +412,10 @@ class AuthController extends GetxController {
   bool get isOtpFormValid {
     return otpController.text.trim().isNotEmpty &&
            otpError.value == null;
+  }
+  
+  bool get isEmailValid {
+    return emailController.text.trim().isNotEmpty &&
+           emailError.value == null;
   }
 }
